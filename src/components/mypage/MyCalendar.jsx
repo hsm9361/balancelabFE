@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
@@ -9,33 +9,34 @@ function MyCalendar() {
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
 
-  useEffect(() => {
-    // 실제 환경에서는 API 호출을 통해 데이터를 가져올 수 있습니다
-    setEvents(eventsData.events);
-    
-    // 초기 선택된 날짜에 해당하는 이벤트 로드
-    filterEventsByDate(date);
+  // 날짜 포맷팅 함수
+  const formatDate = useCallback((date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }, []);
+
+  // 선택된 날짜에 해당하는 이벤트 필터링
+  const filterEventsByDate = useCallback(
+    (selectedDate) => {
+      const formattedDate = formatDate(selectedDate);
+      const filteredEvents = events.filter(event => event.date === formattedDate);
+      setSelectedDateEvents(filteredEvents);
+    },
+    [events, formatDate] // events와 formatDate에 의존
+  );
+
+  // useEffect로 초기 데이터 로드 및 날짜 변경 시 필터링
+  useEffect(() => {
+    setEvents(eventsData.events); // 데이터 로드
+    filterEventsByDate(date); // 선택된 날짜 이벤트 필터링
+  }, [date, events, filterEventsByDate]);
 
   // 날짜 변경 핸들러
   const handleDateChange = (newDate) => {
     setDate(newDate);
     filterEventsByDate(newDate);
-  };
-
-  // 선택된 날짜에 해당하는 이벤트 필터링
-  const filterEventsByDate = (selectedDate) => {
-    const formattedDate = formatDate(selectedDate);
-    const filteredEvents = events.filter(event => event.date === formattedDate);
-    setSelectedDateEvents(filteredEvents);
-  };
-
-  // 날짜 포맷팅 함수 (YYYY-MM-DD)
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
   };
 
   // 이벤트가 있는 날짜 클래스 추가
@@ -64,7 +65,7 @@ function MyCalendar() {
   return (
     <div className={styles.tabContent}>
       <h2 className={styles.contentTitle}>캘린더</h2>
-      
+
       <div className={styles.calendarContainer}>
         {/* react-calendar 컴포넌트 */}
         <div className={styles.calendarWrapper}>
@@ -79,9 +80,11 @@ function MyCalendar() {
             prev2Label={null}
           />
         </div>
-        
+
         <div className={styles.scheduleList}>
-          <h4>{date.getFullYear()}년 {date.getMonth() + 1}월 {date.getDate()}일 기록</h4>
+          <h4>
+            {date.getFullYear()}년 {date.getMonth() + 1}월 {date.getDate()}일 기록
+          </h4>
           {selectedDateEvents.length > 0 ? (
             <ul className={styles.scheduleItems}>
               {selectedDateEvents.map(event => (
