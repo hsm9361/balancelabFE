@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../assets/css/pages/AnalysisPage.module.css';
+import styles from 'assets/css/pages/ImageAnalysisPage.module.css';
 
-function AnalysisPage() {
+function ImageAnalysisPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const navigate = useNavigate();
@@ -65,4 +65,4 @@ function AnalysisPage() {
   );
 }
 
-export default AnalysisPage; 
+export default ImageAnalysisPage; 

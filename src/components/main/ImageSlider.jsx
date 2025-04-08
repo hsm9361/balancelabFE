@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../../assets/css/pages/Home.module.css';
-import foodPlateImage1 from '../../assets/images/food-plate1.jpg';
-import foodPlateImage2 from '../../assets/images/food-plate2.jpg';
-import foodPlateImage3 from '../../assets/images/food-plate3.jpg';
+import styles from 'assets/css/pages/Home.module.css';
+import foodPlateImage1 from 'assets/images/food-plate1.jpg';
+import foodPlateImage2 from 'assets/images/food-plate2.jpg';
+import foodPlateImage3 from 'assets/images/food-plate3.jpg';
 
 const ImageSlider = () => {
   const [currentImage, setCurrentImage] = useState(0);

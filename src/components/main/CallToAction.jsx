@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../assets/css/pages/Home.module.css';
+import styles from 'assets/css/pages/Home.module.css';
 
 const CallToAction = ({ navigate }) => {
   return (

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import styles from '../assets/css/pages/mypage/mypage.module.css';
-import SideMenu from '../components/mypage/SideMenu';
-import MyInfo from '../components/mypage/MyInfo';
-import MyCalendar from '../components/mypage/MyCalendar';
-import MyBalance from '../components/mypage/MyBalance';
+import styles from 'assets/css/pages/mypage/mypage.module.css';
+import SideMenu from 'components/mypage/SideMenu';
+import MyInfo from 'components/mypage/MyInfo';
+import MyCalendar from 'components/mypage/MyCalendar';
+import MyBalance from 'components/mypage/MyBalance';
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('myInfo');

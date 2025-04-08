@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../assets/css/pages/mypage/mypage.module.css';
+import styles from 'assets/css/pages/mypage/mypage.module.css';
 
 function MyBalance() {
   // 더미 데이터 - 실제 구현 시 API나 상태관리를 통해 데이터 불러올 예정

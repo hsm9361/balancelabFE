@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../assets/css/pages/mypage/mypage.module.css';
+import styles from 'assets/css/pages/mypage/mypage.module.css';
 
 function SideMenu({ activeTab, setActiveTab }) {
   const menuItems = [
