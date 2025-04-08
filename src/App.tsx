@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/layouts/Header';
-import Footer from './components/layouts/Footer';
+import Header from './layouts/Header';
+import Footer from './layouts/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
-import './styles/global.css';
+import './assets/css/common/reset.css';
+import './assets/css/common/variables.css';
+import './App.css';
 
 function App() {
   return (
@@ -25,4 +27,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
