@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../assets/css/layouts/Header.module.css';
 
-const Header = () => {
+function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.headerContainer}>
@@ -10,13 +10,14 @@ const Header = () => {
           Balance Lab
         </Link>
         <nav className={styles.navMenu}>
-          <Link to="/" className={styles.navLink}>Home</Link>
-          <Link to="/about" className={styles.navLink}>About</Link>
-          <Link to="/contact" className={styles.navLink}>Contact</Link>
+          <Link to="/analysis" className={styles.navLink}>이미지분석</Link>
+          <Link to="/diet" className={styles.navLink}>식단</Link>
+          <Link to="/calendar" className={styles.navLink}>캘린더</Link>
+          <Link to="/mypage" className={styles.navLink}>마이페이지</Link>
         </nav>
       </div>
     </header>
   );
-};
+}
 
 export default Header; 

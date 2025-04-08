@@ -1,0 +1,94 @@
+.container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.content {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.flexContainer {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  padding: 20px;
+}
+
+.imageContainer {
+  flex: 1;
+  max-width: 500px;
+}
+
+.mainImage {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.textContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #2D3748;
+  margin: 0;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #4A5568;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.analyzeButton {
+  background-color: #2C5282;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.analyzeButton:hover {
+  background-color: #1A365D;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.analyzeButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .flexContainer {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .textContainer {
+    align-items: center;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+} 
