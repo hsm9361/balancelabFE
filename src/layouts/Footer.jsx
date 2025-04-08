@@ -6,7 +6,7 @@ function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
         <div className={styles.footerContent}>
-          <p>&copy; 2024 Balance Lab. All rights reserved.</p>
+          <p>&copy; 2024 Balance Lab. All rights reserved. test</p>
         </div>
       </div>
     </footer>
