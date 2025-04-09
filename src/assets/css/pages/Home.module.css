@@ -67,21 +67,17 @@
   color: #2D3748;
   margin: 0;
   position: relative;
-  overflow: hidden;
-  animation: float 2s ease-in-out infinite;
+  text-align: center;
+  animation: floatTitle 3s ease-in-out infinite;
 }
 
-.title::before {
-  content: "나의 식단을 분석해보세요";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  color: #7FB3FF;
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typing 3s steps(20) infinite;
+@keyframes floatTitle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 .title::after {
@@ -89,12 +85,29 @@
   position: absolute;
   bottom: -8px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
   width: 60%;
   height: 3px;
   background: #7FB3FF;
-  animation: underline 1.5s ease-in-out infinite alternate;
+  animation: underlineLoop 1.5s ease-in-out infinite;
 }
+
+@keyframes underlineLoop {
+  0% {
+    transform: translateX(-50%) scaleX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scaleX(0);
+    opacity: 0.5;
+  }
+}
+
 
 .description {
   font-size: clamp(1rem, 2.5vw, 1.5rem); /* 반응형 폰트 */
