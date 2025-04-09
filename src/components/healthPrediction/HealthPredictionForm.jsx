@@ -5,13 +5,13 @@ function HealthPredictionForm({ onSubmit }) {
     age: '',
     height: '',
     weight: '',
-    gender: 'male',
-    smokeDaily: 'no',
+    gender: '',
+    smokeDaily: '',
     drinkWeekly: '',
     exerciseWeekly: '',
-    historyDiabetes: 'no',
-    historyHypertension: 'no',
-    historyCardiovascular: 'no',
+    historyDiabetes: '',
+    historyHypertension: '',
+    historyCardiovascular: '',
     dailyCarbohydrate: '',
     dailySugar: '',
     dailyFat: '',
@@ -252,6 +252,7 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.dailyCarbohydrate}
           onChange={handleChange}
           min="0"
+          step='0.1'
           required
         />
       </div>
@@ -264,6 +265,7 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.dailySugar}
           onChange={handleChange}
           min="0"
+          step='0.1'
           required
         />
       </div>
@@ -276,6 +278,7 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.dailyFat}
           onChange={handleChange}
           min="0"
+          step='0.1'
           required
         />
       </div>
@@ -288,6 +291,7 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.dailySodium}
           onChange={handleChange}
           min="0"
+          step='0.1'
           required
         />
       </div>
@@ -300,6 +304,7 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.dailyFibrin}
           onChange={handleChange}
           min="0"
+          step='0.1'
           required
         />
       </div>
@@ -312,6 +317,7 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.dailyWater}
           onChange={handleChange}
           min="0"
+          step='0.1'
           required
         />
       </div>
