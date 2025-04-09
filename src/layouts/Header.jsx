@@ -11,6 +11,7 @@ function Header() {
         </Link>
         <nav className={styles.navMenu}>
           <Link to="/analysis" className={styles.navLink}>이미지분석</Link>
+          <Link to="/dietAnalysis" className={styles.navLink}>식단분석</Link>
           <Link to="/diet" className={styles.navLink}>식단</Link>
           <Link to="/calendar" className={styles.navLink}>캘린더</Link>
           <Link to="/mypage" className={styles.navLink}>마이페이지</Link>

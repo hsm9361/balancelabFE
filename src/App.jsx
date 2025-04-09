@@ -10,6 +10,8 @@ import MyPage from './pages/mypage/MyPage.jsx';
 import './App.css';
 import ImageAnalysisResultPage from './pages/imageAnalysis/ImageAnalysisResultPage.jsx';
 import LoadingPage from './components/imageAnalysis/LoadingPage.jsx';
+import DietAnalysisPage from './pages/dietAnalysis/DietAnalysisPage.jsx';
+import DietAnalysisResultPage from './pages/dietAnalysis/DietAnalysisResultPage.jsx';
 
 function App() {
   return (
@@ -23,6 +25,10 @@ function App() {
               <Route index element={<ImageAnalysisPage />} /> {/* /analysis */}
               <Route path="loading" element={<LoadingPage />} /> {/* /analysis/loading */}
               <Route path="result" element={<ImageAnalysisResultPage />} /> {/* /analysis/result */}
+            </Route>
+            <Route path="/dietAnalysis">
+              <Route index element={<DietAnalysisPage />} /> {/* /dietAnalysis */}
+              <Route path="result" element={<DietAnalysisResultPage />} /> {/* /dietAnalysis/result */}
             </Route>
             <Route path="/diet" element={<DietPage />} />
             <Route path="/calendar" element={<CalendarPage />} />

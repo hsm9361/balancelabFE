@@ -16,19 +16,13 @@
   margin-bottom: 30px; /* 여백 증가 */
 }
 
-/* 입력 필드와 버튼을 위한 스타일 */
-.foodInputSection,
-.analysisInfoSection {
-  width: 100%;
-}
-
 /* 이미지 업로드 영역 */
 .imageUploadArea {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 350px; /* 조금 더 크게 */
+  height: 350px; /* 좀 더 크게 */
   border: 2px dashed #7FB3FF; /* 메인 톤에 맞춘 색상 */
   border-radius: 20px; /* 둥글게 */
   overflow: hidden;
@@ -79,21 +73,29 @@
   transform: scale(1.05); /* 살짝 커짐 */
 }
 
-/* 미리보기 이미지 */
-.previewImage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 20px;
+/* 분석 버튼 */
+.analysisButton {
+  padding: 12px 24px;
+  background-color: #2C5282; /* 메인 톤 */
+  color: white;
+  border: none;
+  border-radius: 30px; /* 둥글게 */
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* 정보 섹션 */
-.infoSection {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.analysisButton:hover:not(:disabled) {
+  background-color: #1A365D;
+  transform: scale(1.05);
+}
+
+.analysisButton:disabled {
+  background-color: #d1d5db; /* 부드러운 회색 */
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* 타이틀 */
@@ -124,31 +126,6 @@
   font-size: 1.1rem;
   line-height: 1.6;
   max-width: 80%;
-}
-
-/* 분석 버튼 */
-.analysisButton {
-  padding: 12px 24px;
-  background-color: #2C5282; /* 메인 톤 */
-  color: white;
-  border: none;
-  border-radius: 30px; /* 둥글게 */
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.analysisButton:hover:not(:disabled) {
-  background-color: #1A365D;
-  transform: scale(1.05);
-}
-
-.analysisButton:disabled {
-  background-color: #d1d5db; /* 부드러운 회색 */
-  cursor: not-allowed;
-  box-shadow: none;
 }
 
 /* 애니메이션 키프레임 */
