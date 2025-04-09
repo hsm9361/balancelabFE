@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from 'assets/css/pages/DietAnalysisPage.module.css';
 
-function FoodInputSection({ foodText, setFoodText, handleAnalysis }) {
+function DietAnalysisInfoSection({ foodText, handleAnalysis }) {
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = !foodText.trim() || isLoading;
 
@@ -10,22 +10,15 @@ function FoodInputSection({ foodText, setFoodText, handleAnalysis }) {
     setTimeout(() => {
       handleAnalysis();
       setIsLoading(false);
-    }, 800); // 부드러운 전환
-  };
-
-  const handleInputChange = (e) => {
-    setFoodText(e.target.value);
+    }, 800); // 부드러운 전환을 위해 짧은 딜레이
   };
 
   return (
-    <div className={styles.inputSection}>
-      <textarea
-        className={styles.textArea}
-        value={foodText}
-        onChange={handleInputChange}
-        placeholder="예: 점심에 김밥이랑 떡볶이랑 아이스아메리카노 먹었어."
-        rows="3"
-      />
+    <div className={styles.infoSection}>
+      <h2 className={styles.title}>식단 분석</h2>
+      <p className={styles.description}>
+        먹은 음식을 간단히 입력하면 AI가 영양 정보를 분석해드립니다.
+      </p>
       <button
         className={`${styles.analysisButton} ${isLoading ? styles.loading : ''}`}
         onClick={handleClick}
@@ -41,4 +34,4 @@ function FoodInputSection({ foodText, setFoodText, handleAnalysis }) {
   );
 }
 
-export default FoodInputSection;
+export default DietAnalysisInfoSection;

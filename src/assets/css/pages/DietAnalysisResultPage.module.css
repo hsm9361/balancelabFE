@@ -3,102 +3,114 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e6eef9 100%);
+  padding: 80px 20px;
+  background: #F8FAFC;
 }
 
+/* 배경 장식 */
+.resultContainer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%2360A5FA" fill-opacity="0.05" d="M0,192L48,186.7C96,181,192,171,288,181.3C384,192,480,224,576,213.3C672,203,768,149,864,138.7C960,128,1056,160,1152,181.3C1248,203,1344,213,1392,218.7L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"%3E%3C/path%3E%3C/svg%3E');
+  z-index: 0;
+}
+
+/* 타이틀 */
 .title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 30px;
+  font-family: 'Sora', sans-serif;
+  color: #1E3A8A;
+  margin-bottom: 32px;
   text-align: center;
 }
 
-.resultContent {
+/* 콘텐츠 */
+.content {
   width: 100%;
   max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 40px;
+  position: relative;
+  z-index: 1;
 }
 
-.resultImage {
-  max-width: 100%;
-  height: auto;
-  border-radius: 15px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.resultImage:hover {
-  transform: scale(1.02);
-}
-
+/* 결과 텍스트 */
 .resultText {
-  font-size: 1.5rem;
-  color: #4a5568;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #4B5563;
   text-align: center;
+  line-height: 1.7;
+  font-family: 'Inter', sans-serif;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.6s ease-out 0.2s both;
 }
 
-.infoSection {
-  text-align: left;
-}
-
-.infoList {
-  list-style: none;
-  padding: 0;
-}
-
-.infoItem {
-  margin-bottom: 15px;
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-}
-
-.infoItem:hover {
-  transform: translateY(-3px);
-}
-
-.infoButton {
-  background: none;
-  border: none;
-  color: #2c5282;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0;
-}
-
-.infoText {
-  margin-top: 10px;
-  color: #4a5568;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
+/* 플레이스홀더 */
 .placeholder {
-  color: #718096;
-  font-style: italic;
+  font-size: 1.1rem;
+  color: #9CA3AF;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+/* 테이블 및 추가 정보 */
+.nutritionTable,
+.infoSection {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.6s ease-out 0.6s both;
+}
+
+/* 애니메이션 키프레임 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
+  .resultContainer {
+    padding: 60px 15px;
+  }
+
   .title {
     font-size: 2rem;
   }
 
-  .resultText {
-    font-size: 1.25rem;
+  .content {
+    gap: 30px;
   }
 
-  .infoItem {
-    padding: 10px;
+  .resultText,
+  .placeholder {
+    font-size: 1rem;
+    padding: 16px;
   }
 }

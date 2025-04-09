@@ -23,7 +23,7 @@ function Header() {
 
         <nav className={`${styles.navMenu} ${isOpen ? styles.open : ''}`}>
           <Link to="/analysis" className={styles.navLink} onClick={() => setIsOpen(false)}>이미지분석</Link>
-          <Link to="/dietAnalysis" className={styles.navLink}>식단분석</Link>
+          <Link to="/diet-analysis" className={styles.navLink}>식단분석</Link>
           <Link to="/diet" className={styles.navLink} onClick={() => setIsOpen(false)}>식단</Link>
           <Link to="/calendar" className={styles.navLink} onClick={() => setIsOpen(false)}>캘린더</Link>
           <Link to="/mypage" className={styles.navLink} onClick={() => setIsOpen(false)}>마이페이지</Link>
