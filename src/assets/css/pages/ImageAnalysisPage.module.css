@@ -1,0 +1,181 @@
+/* 컨테이너 스타일 - 메인과 유사한 배경 */
+.analysisContainer {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 업로드 섹션 */
+.uploadSection {
+  width: 100%;
+  margin-bottom: 30px; /* 여백 증가 */
+}
+
+/* 이미지 업로드 영역 */
+.imageUploadArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 350px; /* 조금 더 크게 */
+  border: 2px dashed #7FB3FF; /* 메인 톤에 맞춘 색상 */
+  border-radius: 20px; /* 둥글게 */
+  overflow: hidden;
+  position: relative;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.imageUploadArea:hover {
+  border-color: #2C5282; /* 호버 시 메인 버튼 색상 */
+}
+
+/* 업로드 플레이스홀더 */
+.uploadPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #4A5568;
+}
+
+/* 파일 입력 */
+.fileInput {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* 업로드 라벨 */
+.uploadLabel {
+  padding: 12px 24px;
+  background-color: #2C5282; /* 메인 버튼 색상 */
+  color: white;
+  border-radius: 30px; /* 더 둥글게 */
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.uploadLabel:hover {
+  background-color: #1A365D;
+  transform: scale(1.05); /* 살짝 커짐 */
+}
+
+/* 미리보기 이미지 */
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+/* 정보 섹션 */
+.infoSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 타이틀 */
+.title {
+  margin-bottom: 15px;
+  font-size: 2rem; /* 메인과 유사한 크기 */
+  font-weight: 700;
+  color: #2D3748;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: #7FB3FF; /* 메인 톤과 일치 */
+  animation: underline 1.5s ease-in-out infinite alternate;
+}
+
+/* 설명 */
+.description {
+  margin-bottom: 25px;
+  color: #4A5568;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 80%;
+}
+
+/* 분석 버튼 */
+.analysisButton {
+  padding: 12px 24px;
+  background-color: #2C5282; /* 메인 톤 */
+  color: white;
+  border: none;
+  border-radius: 30px; /* 둥글게 */
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.analysisButton:hover:not(:disabled) {
+  background-color: #1A365D;
+  transform: scale(1.05);
+}
+
+.analysisButton:disabled {
+  background-color: #d1d5db; /* 부드러운 회색 */
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 애니메이션 키프레임 */
+@keyframes underline {
+  0% {
+    transform: translateX(-50%) scaleX(0);
+  }
+  100% {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .analysisContainer {
+    padding: 15px;
+  }
+
+  .imageUploadArea {
+    height: 250px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .analysisButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}
