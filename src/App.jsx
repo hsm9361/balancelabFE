@@ -10,6 +10,7 @@ import MyPage from './pages/mypage/MyPage.jsx';
 import './App.css';
 import ImageAnalysisResultPage from './pages/imageAnalysis/ImageAnalysisResultPage.jsx';
 import LoadingPage from './components/imageAnalysis/LoadingPage.jsx';
+import HealthPrediction from './pages/healthPrediction/HealthPrediction.jsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/diet" element={<DietPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/healthprediction" element={<HealthPrediction />} /> {/* /healthprediction */}
           </Routes>
         </main>
         <Footer />
