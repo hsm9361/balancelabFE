@@ -36,17 +36,38 @@
 }
 
 .navLink {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 0;
   color: #4A5568;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
-  font-size: 1rem;
-  white-space: nowrap; /* ✅ 개별 링크 줄바꿈 방지 */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  width: 80%;
+  height: 2px;
+  background-color: #2C5282;
+  transition: transform 0.3s ease;
+  opacity: 0.8;
 }
 
 .navLink:hover {
   color: #2C5282;
+  transform: translateY(-2px);
 }
+
+.navLink:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
 
 .navButton {
   background-color: #2C5282;
@@ -113,5 +134,19 @@
     padding: 0.5rem 1rem;
     font-size: 1rem;
     width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .navLink {
+    padding: 1rem;
+  }
+
+  .navLink::after {
+    display: none; /* 밑줄 제거 */
+  }
+
+  .navLink:hover {
+    transform: none; /* 튀는 효과 제거 */
+    color: #2C5282;
   }
 }
