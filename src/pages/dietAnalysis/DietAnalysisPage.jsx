@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'assets/css/pages/DietAnalysisPage.module.css';
 import FoodInputSection from 'components/dietAnalysis/FoodInputSection';
+import dietImage from 'assets/images/diet-placeholder.jpg';
 
 function DietAnalysisPage() {
   const [foodText, setFoodText] = useState('');
@@ -23,9 +24,11 @@ function DietAnalysisPage() {
           아래에 먹은 음식을 입력하면 AI가 영양 정보를 분석합니다.
         </p>
         <div className={styles.imagePlaceholder}>
-          <span className={styles.placeholderText}>
-            식단 이미지를 준비 중입니다
-          </span>
+            <img
+                src={dietImage}
+                alt="식단 예시 이미지"
+                className={styles.placeholderImage}
+            />
         </div>
       </div>
       <FoodInputSection
