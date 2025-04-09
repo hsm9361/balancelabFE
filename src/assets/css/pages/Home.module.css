@@ -67,21 +67,17 @@
   color: #2D3748;
   margin: 0;
   position: relative;
-  overflow: hidden;
-  animation: float 2s ease-in-out infinite;
+  text-align: center;
+  animation: floatTitle 3s ease-in-out infinite;
 }
 
-.title::before {
-  content: "나의 식단을 분석해보세요";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  color: #7FB3FF;
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typing 3s steps(20) infinite;
+@keyframes floatTitle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 .title::after {
@@ -89,22 +85,53 @@
   position: absolute;
   bottom: -8px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
   width: 60%;
   height: 3px;
   background: #7FB3FF;
-  animation: underline 1.5s ease-in-out infinite alternate;
+  animation: underlineLoop 1.5s ease-in-out infinite;
 }
 
-/* 설명 텍스트 */
+@keyframes underlineLoop {
+  0% {
+    transform: translateX(-50%) scaleX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scaleX(0);
+    opacity: 0.5;
+  }
+}
+
+
 .description {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem); /* 반응형 폰트 */
   color: #4A5568;
-  line-height: 1.8;
-  margin: 0;
-  max-width: 80%;
-  opacity: 0;
-  animation: fadeInUp 1.5s ease-in-out forwards 0.5s;
+  font-weight: 400;
+  line-height: 1.5;
+  animation: fadeInText 1s ease-out forwards;
+  white-space: pre-wrap; /* 줄바꿈 잘 되도록 */
+  text-rendering: optimizeLegibility; /* 렌더링 최적화 */
+  -webkit-font-smoothing: antialiased; /* 맥용 부드럽게 */
+  -moz-osx-font-smoothing: grayscale;
+}
+  
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    letter-spacing: 0.05em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+  }
 }
 
 /* 분석 버튼 */
