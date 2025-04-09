@@ -96,15 +96,29 @@
   animation: underline 1.5s ease-in-out infinite alternate;
 }
 
-/* 설명 텍스트 */
 .description {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem); /* 반응형 폰트 */
   color: #4A5568;
-  line-height: 1.8;
-  margin: 0;
-  max-width: 80%;
-  opacity: 0;
-  animation: fadeInUp 1.5s ease-in-out forwards 0.5s;
+  font-weight: 400;
+  line-height: 1.5;
+  animation: fadeInText 1s ease-out forwards;
+  white-space: pre-wrap; /* 줄바꿈 잘 되도록 */
+  text-rendering: optimizeLegibility; /* 렌더링 최적화 */
+  -webkit-font-smoothing: antialiased; /* 맥용 부드럽게 */
+  -moz-osx-font-smoothing: grayscale;
+}
+  
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    letter-spacing: 0.05em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+  }
 }
 
 /* 분석 버튼 */
