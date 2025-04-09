@@ -2,23 +2,24 @@ import React, { useState } from 'react';
 
 function HealthPredictionForm({ onSubmit }) {
   const [formData, setFormData] = useState({
-    age: '',
+    age: '68',
     height: '',
     weight: '',
-    gender: '',
-    smokeDaily: '',
-    drinkWeekly: '',
-    exerciseWeekly: '',
-    historyDiabetes: '',
-    historyHypertension: '',
-    historyCardiovascular: '',
-    dailyCarbohydrate: '',
-    dailySugar: '',
-    dailyFat: '',
-    dailySodium: '',
-    dailyFibrin: '',
-    dailyWater: ''
+    gender: 'male',
+    smokeDaily: 'yes',
+    drinkWeekly: '5',
+    exerciseWeekly: '0',
+    historyDiabetes: 'no',
+    historyHypertension: 'yes',
+    historyCardiovascular: 'yes',
+    dailyCarbohydrate: '380',
+    dailySugar: '300',
+    dailyFat: '60',
+    dailySodium: '3500',
+    dailyFibrin: '3',
+    dailyWater: '300'
   });
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,16 +54,7 @@ function HealthPredictionForm({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit} className="prediction-form">
-      <div className="form-group">
-        <label>나이</label>
-        <input
-          type="number"
-          name="age"
-          value={formData.age}
-          onChange={handleChange}
-          required
-        />
-      </div>
+      
 
       <div className="form-group">
         <label>키 (cm)</label>
@@ -86,32 +78,6 @@ function HealthPredictionForm({ onSubmit }) {
           step="0.1"
           required
         />
-      </div>
-
-      <div className="form-group">
-        <label>성별</label>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="male"
-              checked={formData.gender === 'male'}
-              onChange={handleChange}
-            />
-            남성
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              value="female"
-              checked={formData.gender === 'female'}
-              onChange={handleChange}
-            />
-            여성
-          </label>
-        </div>
       </div>
 
       <div className="form-group">
@@ -140,30 +106,176 @@ function HealthPredictionForm({ onSubmit }) {
         </div>
       </div>
 
-      <div className="form-group">
+      <div className="form-group2">
         <label>주 음주 회수</label>
-        <input
-          type="number"
-          name="drinkWeekly"
-          value={formData.drinkWeekly}
-          onChange={handleChange}
-          min="0"
-          max="7"
-          required
-        />
+        <div className="radio-group2">
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="0"
+              checked={formData.drinkWeekly === '0'}
+              onChange={handleChange}
+            />
+            0회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="1"
+              checked={formData.drinkWeekly === '1'}
+              onChange={handleChange}
+            />
+            1회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="2"
+              checked={formData.drinkWeekly === '2'}
+              onChange={handleChange}
+            />
+            2회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="3"
+              checked={formData.drinkWeekly === '3'}
+              onChange={handleChange}
+            />
+            3회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="4"
+              checked={formData.drinkWeekly === '4'}
+              onChange={handleChange}
+            />
+            4회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="5"
+              checked={formData.drinkWeekly === '5'}
+              onChange={handleChange}
+            />
+            5회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="6"
+              checked={formData.drinkWeekly === '6'}
+              onChange={handleChange}
+            />
+            6회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="drinkWeekly"
+              value="7"
+              checked={formData.drinkWeekly === '7'}
+              onChange={handleChange}
+            />
+            7회
+          </label>
+        </div>
       </div>
 
-      <div className="form-group">
+      <div className="form-group2">
         <label>주 운동 회수</label>
-        <input
-          type="number"
-          name="exerciseWeekly"
-          value={formData.exerciseWeekly}
-          onChange={handleChange}
-          min="0"
-          max="7"
-          required
-        />
+        <div className="radio-group2">
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="0"
+              checked={formData.exerciseWeekly === '0'}
+              onChange={handleChange}
+            />
+            0회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="1"
+              checked={formData.exerciseWeekly === '1'}
+              onChange={handleChange}
+            />
+            1회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="2"
+              checked={formData.exerciseWeekly === '2'}
+              onChange={handleChange}
+            />
+            2회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="3"
+              checked={formData.exerciseWeekly === '3'}
+              onChange={handleChange}
+            />
+            3회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="4"
+              checked={formData.exerciseWeekly === '4'}
+              onChange={handleChange}
+            />
+            4회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="5"
+              checked={formData.exerciseWeekly === '5'}
+              onChange={handleChange}
+            />
+            5회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="6"
+              checked={formData.exerciseWeekly === '6'}
+              onChange={handleChange}
+            />
+            6회
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="exerciseWeekly"
+              value="7"
+              checked={formData.exerciseWeekly === '7'}
+              onChange={handleChange}
+            />
+            7회
+          </label>
+        </div>
       </div>
 
       <div className="form-group">
@@ -244,83 +356,7 @@ function HealthPredictionForm({ onSubmit }) {
         </div>
       </div>
 
-      <div className="form-group">
-        <label>일일 탄수화물 섭취량 (g)</label>
-        <input
-          type="number"
-          name="dailyCarbohydrate"
-          value={formData.dailyCarbohydrate}
-          onChange={handleChange}
-          min="0"
-          step='0.1'
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>일일 당 섭취량 (g)</label>
-        <input
-          type="number"
-          name="dailySugar"
-          value={formData.dailySugar}
-          onChange={handleChange}
-          min="0"
-          step='0.1'
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>일일 지방 섭취량 (g)</label>
-        <input
-          type="number"
-          name="dailyFat"
-          value={formData.dailyFat}
-          onChange={handleChange}
-          min="0"
-          step='0.1'
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>일일 나트륨 섭취량 (mg)</label>
-        <input
-          type="number"
-          name="dailySodium"
-          value={formData.dailySodium}
-          onChange={handleChange}
-          min="0"
-          step='0.1'
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>일일 섬유질 섭취량 (g)</label>
-        <input
-          type="number"
-          name="dailyFibrin"
-          value={formData.dailyFibrin}
-          onChange={handleChange}
-          min="0"
-          step='0.1'
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>일일 수분 섭취량 (ml)</label>
-        <input
-          type="number"
-          name="dailyWater"
-          value={formData.dailyWater}
-          onChange={handleChange}
-          min="0"
-          step='0.1'
-          required
-        />
-      </div>
+      
 
       <button type="submit" className="predict-button">예측하기</button>
     </form>

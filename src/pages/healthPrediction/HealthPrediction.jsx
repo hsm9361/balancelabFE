@@ -26,7 +26,7 @@ function HealthPrediction() {
   return (
     <div className="health-prediction">
       <h1>🧬 질병 예측 시스템</h1>
-      <h2>생활 습관, 가족력 등을 입력하여 질병 여부를 예측해보세요!</h2>
+      <h2>질병 위험군을 예측해보세요!</h2>
 
       <HealthPredictionForm onSubmit={handleSubmit} />
       {predictions && <HealthPredictionResults predictions={predictions} />}
