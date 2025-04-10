@@ -1,29 +1,24 @@
-import { apiClient } from './apiClient';
+// src/services/authService.js
+import axios from 'axios';
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
+const api = axios.create({
+  baseURL: 'http://localhost:8080',
+});
 
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-}
+export const loginWithGoogle = (): void => {
+  // OAuth2 리다이렉트 URL을 클라이언트 측 콜백 URL로 설정
+  const redirectUri = `${window.location.origin}/oauth/callback`;
+  window.location.href = `http://localhost:8080/oauth2/authorization/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
+};
 
-export const authService = {
-  login: async (credentials: LoginCredentials) => {
-    const response = await apiClient.post('/auth/login', credentials);
-    return response.data;
-  },
-  
-  getCurrentUser: async () => {
-    const response = await apiClient.get('/auth/me');
-    return response.data;
-  },
-  
-  logout: async () => {
-    await apiClient.post('/auth/logout');
-    localStorage.removeItem('token');
-  }
-}; 
+export const fetchUserInfo = async (token: string): Promise<{ username: string }> => {
+  const response = await api.get('/member/fetchUserInfo', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data; // { username: string } 형태로 반환
+};
+
+export const logout = (): void => {
+  // 서버 로그아웃 엔드포인트가 있다면 호출 가능
+  // 예: await api.post('/logout');
+};

@@ -150,3 +150,54 @@
     color: #2C5282;
   }
 }
+
+.authButton {
+  background: none;
+  border: none;
+  color: #4A5568;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease, transform 0.3s ease;
+  position: relative;
+}
+
+.authButton::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  width: 80%;
+  height: 2px;
+  background-color: #2C5282;
+  transition: transform 0.3s ease;
+  opacity: 0.8;
+}
+
+.authButton:hover {
+  color: #2C5282;
+  transform: translateY(-2px);
+}
+
+.authButton:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+@media (max-width: 768px) {
+  .authButton {
+    width: 100%;
+    padding: 1rem;
+    text-align: left;
+  }
+
+  .authButton::after {
+    display: none;
+  }
+
+  .authButton:hover {
+    transform: none;
+  }
+}
