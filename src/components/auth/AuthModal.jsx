@@ -126,6 +126,8 @@ const AuthModal = ({ isOpen, onClose, type = 'required', onLoginSuccess }) => {
       loginWindowRef.current.close();
     }
     onClose();
+    // 메인 페이지로 리다이렉트
+    window.location.href = '/';
   }, [onClose]);
 
   const fetchUserInfo = async (token) => {
