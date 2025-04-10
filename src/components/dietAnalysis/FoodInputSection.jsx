@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import styles from 'assets/css/pages/DietAnalysisPage.module.css';
 
-function FoodInputSection({ foodText, setFoodText, handleAnalysis }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const isDisabled = !foodText.trim() || isLoading;
+function FoodInputSection({ foodText, setFoodText, handleAnalysis, loading }) {
+  const [isLocalLoading, setIsLocalLoading] = useState(false); // 로컬 로딩 상태
+  const isDisabled = !foodText.trim() || loading || isLocalLoading;
 
-  const handleClick = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      handleAnalysis();
-      setIsLoading(false);
-    }, 800); // 부드러운 전환
+  const handleClick = async () => {
+    setIsLocalLoading(true);
+    await handleAnalysis();
+    setIsLocalLoading(false);
   };
 
   const handleInputChange = (e) => {
@@ -25,13 +23,14 @@ function FoodInputSection({ foodText, setFoodText, handleAnalysis }) {
         onChange={handleInputChange}
         placeholder="예: 점심에 김밥이랑 떡볶이랑 아이스아메리카노 먹었어."
         rows="3"
+        disabled={loading} // 로딩 중 입력 비활성화
       />
       <button
-        className={`${styles.analysisButton} ${isLoading ? styles.loading : ''}`}
+        className={`${styles.analysisButton} ${loading || isLocalLoading ? styles.loading : ''}`}
         onClick={handleClick}
         disabled={isDisabled}
       >
-        {isLoading ? (
+        {loading || isLocalLoading ? (
           <span className={styles.spinner}></span>
         ) : (
           '분석 시작'
