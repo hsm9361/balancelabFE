@@ -8,18 +8,25 @@ function HealthPrediction() {
 
   const handleSubmit = async (inputData) => {
     try {
-      const response = await fetch('http://192.168.0.66:5000/api/predict', {
+      const response = await fetch('http://localhost:8000/predict/health', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(inputData),
       });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || '서버 응답 오류');
+      }
+  
       const data = await response.json();
       setPredictions(data);
     } catch (error) {
       console.error('Error:', error);
-      alert('예측 중 오류가 발생했습니다. 다시 시도해주세요.');
+      alert(`예측 중 오류가 발생했습니다: ${error.message}`);
     }
   };
 

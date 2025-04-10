@@ -16,6 +16,12 @@
   margin-bottom: 30px; /* 여백 증가 */
 }
 
+/* 입력 필드와 버튼을 위한 스타일 */
+.foodInputSection,
+.analysisInfoSection {
+  width: 100%;
+}
+
 /* 이미지 업로드 영역 */
 .imageUploadArea {
   display: flex;
