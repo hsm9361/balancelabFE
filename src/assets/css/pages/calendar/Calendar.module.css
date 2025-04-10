@@ -1,0 +1,97 @@
+.calendarPageContainer {
+    padding: 2rem;
+  }
+  
+  .pageTitle {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .contentWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .daySelector {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .daySelector button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    background: #e0e0e0;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .daySelector .activeDay {
+    background: #4CAF50;
+    color: white;
+  }
+  
+  .contentArea {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .dailyMealInfo {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  
+  .dailyMealInfo h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mealBlock {
+    margin-bottom: 1.5rem;
+  }
+  
+  .mealBlock strong {
+    display: inline-block;
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+  }
+  
+  .mealBlock ul {
+    padding-left: 1rem;
+  }
+  
+  .noEvent {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .buttonSection {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .actionBtn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .actionBtn:hover {
+    background: #45a049;
+  }
