@@ -1,6 +1,6 @@
-// components/calendar/DaySelector.jsx
+// ✅ components/calendar/DaySelector.jsx
 import React from 'react';
-import styles from '../../../assets/css/pages/calendar/Calendar.module.css';
+import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 
 
 const days = ['월', '화', '수', '목', '금', '토', '일'];

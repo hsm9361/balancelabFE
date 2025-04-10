@@ -1,7 +1,8 @@
-// components/calendar/CalendarActionButtons.jsx
+// ✅ components/calendar/CalendarActionButtons.jsx (변경 없음)
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../../assets/css/pages/calendar/Calendar.module.css';
+import styles from 'assets/css/pages/calendar/calendarPage.module.css';
+
 
 
 function CalendarActionButtons() {

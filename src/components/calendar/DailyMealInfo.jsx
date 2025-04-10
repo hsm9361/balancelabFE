@@ -1,8 +1,7 @@
-// components/calendar/DailyMealInfo.jsx
+// ✅ components/calendar/DailyMealInfo.jsx
 import React from 'react';
 import eventsData from 'data/events.json';
-import styles from '../../../assets/css/pages/calendar/Calendar.module.css';
-
+import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 
 function DailyMealInfo({ selectedDay }) {
   const today = new Date();

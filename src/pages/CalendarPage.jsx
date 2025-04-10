@@ -1,6 +1,6 @@
 // pages/CalendarPage.jsx
 import React, { useState } from 'react';
-import styles from '../assets/css/pages/calendar/Calendar.module.css';
+import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 import DaySelector from 'components/calendar/DaySelector';
 import DailyMealInfo from 'components/calendar/DailyMealInfo';
 import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
