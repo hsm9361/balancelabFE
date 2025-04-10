@@ -1,0 +1,81 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.modalTitle {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.modalBody {
+  margin-bottom: 1.5rem;
+  color: #666;
+  text-align: center;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primaryButton {
+  composes: button;
+  background: #007bff;
+  color: white;
+}
+
+.primaryButton:hover {
+  background: #0056b3;
+}
+
+.secondaryButton {
+  composes: button;
+  background: #6c757d;
+  color: white;
+}
+
+.secondaryButton:hover {
+  background: #5a6268;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
