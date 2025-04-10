@@ -1,0 +1,729 @@
+/* 전체적인 변수 설정 - 통일감 있는 디자인을 위한 색상과 간격 정의 */
+:root {
+  --primary-color: #3182CE;
+  --primary-light: #EBF8FF;
+  --primary-dark: #2B6CB0;
+  --accent-color: #4FD1C5;
+  --accent-dark: #38B2AC;
+  --text-primary: #2D3748;
+  --text-secondary: #4A5568;
+  --text-light: #718096;
+  --background-light: #FFFFFF;
+  --background-gray: #F7FAFC;
+  --border-color: #E2E8F0;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition-normal: all 0.3s ease;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 전역 스타일 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-light);
+}
+
+/* 마이페이지 전체 레이아웃 */
+.myPageContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--background-light);
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.pageTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+.contentWrapper {
+  display: flex;
+  min-height: 600px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background-color: var(--background-light);
+  transition: var(--transition-normal);
+}
+
+/* 미디어 쿼리 - 반응형 레이아웃 */
+@media (max-width: 768px) {
+  .contentWrapper {
+    flex-direction: column;
+  }
+  
+  .pageTitle {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .pageTitle::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* 사이드 메뉴 스타일 */
+.sideMenu {
+  width: 240px;
+  background-color: var(--primary-color);
+  transition: var(--transition-normal);
+}
+
+.menuList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuItem {
+  padding: 16px 24px;
+  cursor: pointer;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  transition: var(--transition-normal);
+  position: relative;
+  border-left: 3px solid transparent;
+}
+
+.menuItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.menuItem.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-left: 3px solid var(--accent-color);
+  font-weight: 600;
+}
+
+/* 미디어 쿼리 - 모바일 메뉴 */
+@media (max-width: 768px) {
+  .sideMenu {
+    width: 100%;
+  }
+  
+  .menuList {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .menuItem {
+    flex: 1;
+    text-align: center;
+    padding: 14px 10px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  
+  .menuItem.active {
+    border-left: none;
+    border-bottom: 3px solid var(--accent-color);
+  }
+}
+
+/* 콘텐츠 영역 */
+.contentArea {
+  flex: 1;
+  padding: 30px;
+  background-color: var(--background-light);
+  overflow-y: auto;
+}
+
+.tabContent {
+  animation: fadeIn 0.4s ease;
+  max-width: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contentTitle {
+  font-size: 22px;
+  margin-bottom: 25px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 600;
+  position: relative;
+}
+
+.contentTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary-color);
+}
+
+/* 내정보 탭 스타일 */
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  background-color: var(--background-gray);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+}
+
+.profileSection:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.profileImage {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 4px solid white;
+  transition: var(--transition-normal);
+}
+
+.profileImage:hover {
+  transform: scale(1.05);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.editButton {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.editButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.userInfoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background-color: var(--background-gray);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.infoItem {
+  display: flex;
+  padding: 16px 20px;
+  transition: var(--transition-normal);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.infoItem:hover {
+  background-color: rgba(49, 130, 206, 0.05);
+}
+
+.label {
+  font-weight: 500;
+  width: 120px;
+  color: var(--text-secondary);
+}
+
+.value {
+  flex: 1;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+/* 캘린더 탭 스타일 */
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* react-calendar 커스터마이징 */
+.calendarWrapper {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background-color: var(--background-light);
+  margin-bottom: 25px;
+}
+
+/* global.css 또는 index.css에 추가해야 할 스타일 */
+:global(.react-calendar) {
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-family);
+}
+
+:global(.react-calendar__navigation) {
+  background-color: var(--primary-color);
+  padding: 10px;
+  color: white;
+}
+
+:global(.react-calendar__navigation button) {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+:global(.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.react-calendar__month-view__weekdays) {
+  background-color: var(--primary-light);
+  padding: 5px 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: var(--primary-color);
+}
+
+:global(.react-calendar__month-view__days__day) {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+:global(.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus) {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+:global(.react-calendar__tile--now) {
+  background-color: rgba(79, 209, 197, 0.2) !important;
+  font-weight: bold;
+}
+
+:global(.react-calendar__tile--active) {
+  background-color: var(--primary-color) !important;
+  color: white;
+}
+
+/* 이벤트가 있는 날짜 스타일 */
+.hasEvent {
+  position: relative;
+}
+
+.hasEvent::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+}
+
+.scheduleList {
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  background-color: var(--background-gray);
+  box-shadow: var(--shadow-sm);
+}
+
+.scheduleList h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.scheduleList h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: var(--primary-color);
+}
+
+.scheduleItems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.scheduleItem {
+  display: flex;
+  padding: 12px 15px;
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  background-color: white;
+  transition: var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+  align-items: center;
+}
+
+.scheduleItem:last-child {
+  margin-bottom: 0;
+}
+
+.scheduleItem:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.eventIcon {
+  font-size: 18px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.scheduleTitle {
+  font-weight: 500;
+  color: var(--text-primary);
+  width: 100px;
+}
+
+.scheduleDetails {
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.noEvents {
+  text-align: center;
+  padding: 20px 0;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+/* MyBalance 탭 스타일 */
+.balanceContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 18px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+.nutritionCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.nutritionCard {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--shadow-md);
+  background-color: white;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.nutritionCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: var(--primary-color);
+}
+
+.nutritionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.nutritionIcon {
+  font-size: 28px;
+  background-color: var(--primary-light);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.nutritionInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.nutritionValue {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.nutritionLabel {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+.chartSection {
+  padding: 25px;
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.barChart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 220px;
+  padding: 20px 0;
+  position: relative;
+}
+
+.barChart::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.barContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50px;
+  position: relative;
+}
+
+.bar {
+  width: 30px;
+  background-color: var(--primary-color);
+  border-radius: 6px 6px 0 0;
+  transition: height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
+
+.bar::before {
+  content: attr(data-value);
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+
+.barContainer:hover .bar {
+  background-color: var(--accent-color);
+}
+
+.barContainer:hover .bar::before {
+  opacity: 1;
+}
+
+.barLabel {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.historySection {
+  border-radius: var(--radius-lg);
+  padding: 25px;
+  background-color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historyItem {
+  display: flex;
+  padding: 15px;
+  border-radius: var(--radius-md);
+  background-color: var(--background-gray);
+  transition: var(--transition-normal);
+}
+
+.historyItem:hover {
+  background-color: var(--primary-light);
+  transform: translateX(4px);
+}
+
+.historyDate {
+  width: 100px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.historyMeal {
+  width: 60px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.historyCalories {
+  flex: 1;
+  text-align: right;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+  .contentArea {
+    padding: 20px 15px;
+  }
+  
+  .nutritionCards {
+    grid-template-columns: 1fr;
+  }
+  
+  .infoContainer, .calendarContainer, .balanceContainer {
+    gap: 20px;
+  }
+  
+  .profileSection, .chartSection, .historySection {
+    padding: 20px 15px;
+  }
+  
+  .barChart {
+    height: 180px;
+  }
+  
+  .scheduleDate, .historyDate {
+    width: 80px;
+  }
+}
+
+/* 테블릿 반응형 스타일 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nutritionCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 애니메이션 효과 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.nutritionCard:hover .nutritionValue {
+  animation: pulse 1s infinite;
+}

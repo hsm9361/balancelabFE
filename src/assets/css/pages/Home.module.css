@@ -1,0 +1,251 @@
+/* 컨테이너 스타일 - 원래 그라디언트 복원 */
+.container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 콘텐츠 영역 */
+.content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  padding: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* 이미지 컨테이너 */
+.imageContainer {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+  height: 400px;
+}
+
+/* 메인 이미지 */
+.mainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 0;
+  left: 100%;
+  transition: all 1s ease-in-out;
+  opacity: 0;
+  transform: scale(1.1);
+}
+
+.mainImage.active {
+  left: 0;
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 텍스트 컨테이너 */
+.textContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+/* 타이틀 스타일 */
+.title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #2D3748;
+  margin: 0;
+  position: relative;
+  text-align: center;
+  animation: floatTitle 3s ease-in-out infinite;
+}
+
+@keyframes floatTitle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  width: 60%;
+  height: 3px;
+  background: #7FB3FF;
+  animation: underlineLoop 1.5s ease-in-out infinite;
+}
+
+@keyframes underlineLoop {
+  0% {
+    transform: translateX(-50%) scaleX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scaleX(0);
+    opacity: 0.5;
+  }
+}
+
+
+.description {
+  font-size: clamp(1rem, 2.5vw, 1.5rem); /* 반응형 폰트 */
+  color: #4A5568;
+  font-weight: 400;
+  line-height: 1.5;
+  animation: fadeInText 1s ease-out forwards;
+  white-space: pre-wrap; /* 줄바꿈 잘 되도록 */
+  text-rendering: optimizeLegibility; /* 렌더링 최적화 */
+  -webkit-font-smoothing: antialiased; /* 맥용 부드럽게 */
+  -moz-osx-font-smoothing: grayscale;
+}
+  
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    letter-spacing: 0.05em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+  }
+}
+
+/* 분석 버튼 */
+.analyzeButton {
+  background-color: #2C5282;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.analyzeButton:hover {
+  background-color: #1A365D;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.analyzeButton:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* 애니메이션 키프레임 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes underline {
+  0% {
+    transform: translateX(-50%) scaleX(0);
+  }
+  100% {
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .imageContainer {
+    flex: none;
+    max-width: 100%;
+    height: 250px;
+    order: -1;
+  }
+
+  .textContainer {
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .analyzeButton {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}
