@@ -4,9 +4,12 @@ import SideMenu from 'components/mypage/SideMenu';
 import MyInfo from 'components/mypage/MyInfo';
 import MyCalendar from 'components/mypage/MyCalendar';
 import MyBalance from 'components/mypage/MyBalance';
+import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
+import AddMealModal from 'components/calendar/AddMealModal'; // ✅ 모달 컴포넌트 import
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('myInfo');
+  const [showModal, setShowModal] = useState(false); // ✅ 모달 상태 추가
 
   const renderContent = () => {
     switch (activeTab) {
@@ -28,8 +31,22 @@ function MyPage() {
         <SideMenu activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className={styles.contentArea}>
           {renderContent()}
+          {activeTab === 'calendar' && (
+  <CalendarActionButtons onAddClick={() => setShowModal(true)} />
+)}
         </div>
       </div>
+
+      {/* ✅ 모달은 항상 최상단에서 렌더링되도록! */}
+      {showModal && (
+        <AddMealModal
+          onClose={() => setShowModal(false)}
+          onSubmit={(type, menu) => {
+            console.log('기록 추가됨:', type, menu);
+            setShowModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }
