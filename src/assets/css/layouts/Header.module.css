@@ -150,3 +150,16 @@
     color: #2C5282;
   }
 }
+
+.authButton {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 10px;
+}
+
+.authButton:hover {
+  text-decoration: underline;
+}
