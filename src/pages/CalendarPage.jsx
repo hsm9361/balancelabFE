@@ -1,11 +1,25 @@
-import React from 'react';
+// pages/CalendarPage.jsx
+import React, { useState } from 'react';
+import styles from 'assets/css/pages/calendar/calendarPage.module.css';
+import DaySelector from 'components/calendar/DaySelector';
+import DailyMealInfo from 'components/calendar/DailyMealInfo';
+import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
 
 function CalendarPage() {
+  const [selectedDay, setSelectedDay] = useState(new Date().getDay() - 1); // 0 = 월요일
+
   return (
-    <div>
-      <h1>캘린더</h1>
+    <div className={styles.calendarPageContainer}>
+      <h1 className={styles.pageTitle}>식단 기록</h1>
+      <div className={styles.contentWrapper}>
+        <DaySelector selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+        <div className={styles.contentArea}>
+          <DailyMealInfo selectedDay={selectedDay} />
+          <CalendarActionButtons />
+        </div>
+      </div>
     </div>
   );
 }
 
-export default CalendarPage; 
+export default CalendarPage;
