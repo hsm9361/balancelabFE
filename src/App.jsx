@@ -14,6 +14,9 @@ import LoadingPage from './components/imageAnalysis/LoadingPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AuthCallback from './components/AuthCallback.jsx';
 import HealthPrediction from './pages/healthPrediction/HealthPrediction.jsx';
+import DietAnalysisPage from './pages/dietAnalysis/DietAnalysisPage.jsx';
+import DietAnalysisResultPage from './pages/dietAnalysis/DietAnalysisResultPage.jsx';
+import DietLoadingPage from './components/dietAnalysis/DietLoadingPage.jsx';
 
 function App() {
   return (
@@ -31,6 +34,11 @@ function App() {
             <Route path="/analysis/loading" element={<LoadingPage />} />
             <Route path="/analysis/result" element={<ImageAnalysisResultPage />} />
             <Route path="/diet" element={<DietPage />} />
+            <Route path="/diet-analysis">
+              <Route index element={<DietAnalysisPage />} />
+              <Route path="loading" element={<DietLoadingPage />} />
+              <Route path="result" element={<DietAnalysisResultPage />} />
+            </Route>
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/mypage" element={<MyPage />} />
           </Route>
