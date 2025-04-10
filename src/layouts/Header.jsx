@@ -52,6 +52,9 @@ const Header = memo(() => {
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           <nav className={`${styles.navMenu} ${isOpen ? styles.open : ''}`}>
+            <Link to="/healthprediction" className={styles.navLink} onClick={closeMenu}>
+            건강예측
+            </Link>
             <Link to="/analysis" className={styles.navLink} onClick={closeMenu}>
               이미지분석
             </Link>
