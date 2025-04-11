@@ -773,3 +773,30 @@ body {
 .subMenuItem:hover {
   color: var(--accent-color);
 }
+.subMenu {
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.subMenu.open {
+  max-height: 200px; /* 충분히 큰 값 */
+  opacity: 1;
+}
+
+
+/* 하위 항목 스타일 */
+.subMenuItem {
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.95); /* 기존 메뉴와 유사한 흰색 */
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.subMenuItem:hover {
+  color: var(--accent-color);
+}
