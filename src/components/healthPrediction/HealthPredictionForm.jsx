@@ -57,7 +57,7 @@ function HealthPredictionForm({ onSubmit }) {
       
 
       <div className="form-group">
-        <label>키 (cm)</label>
+        <label>키를 입력해주세요 (cm)</label>
         <input
           type="number"
           name="height"
@@ -69,7 +69,7 @@ function HealthPredictionForm({ onSubmit }) {
       </div>
 
       <div className="form-group">
-        <label>몸무게 (kg)</label>
+        <label>몸무게를 입력해주세요 (kg)</label>
         <input
           type="number"
           name="weight"
@@ -81,7 +81,7 @@ function HealthPredictionForm({ onSubmit }) {
       </div>
 
       <div className="form-group">
-        <label>흡연 여부</label>
+        <label>흡연하시나요?</label>
         <div className="radio-group">
           <label>
             <input
@@ -91,7 +91,7 @@ function HealthPredictionForm({ onSubmit }) {
               checked={formData.smokeDaily === 'yes'}
               onChange={handleChange}
             />
-            흡연
+            예
           </label>
           <label>
             <input
@@ -101,13 +101,13 @@ function HealthPredictionForm({ onSubmit }) {
               checked={formData.smokeDaily === 'no'}
               onChange={handleChange}
             />
-            비흡연
+            아니요
           </label>
         </div>
       </div>
 
       <div className="form-group2">
-        <label>주 음주 회수</label>
+        <label>일주일에 몇 번 술을 드시나요?</label>
         <div className="radio-group2">
           <label>
             <input
@@ -193,7 +193,7 @@ function HealthPredictionForm({ onSubmit }) {
       </div>
 
       <div className="form-group2">
-        <label>주 운동 회수</label>
+        <label>일주일에 몇 번 운동하시나요?</label>
         <div className="radio-group2">
           <label>
             <input
@@ -279,7 +279,7 @@ function HealthPredictionForm({ onSubmit }) {
       </div>
 
       <div className="form-group">
-        <label>당뇨 가족력이 있으신가요?</label>
+        <label>가족 중 당뇨병 환자가 있으신가요?</label>
         <div className="radio-group">
           <label>
             <input
@@ -331,7 +331,7 @@ function HealthPredictionForm({ onSubmit }) {
       </div>
 
       <div className="form-group">
-        <label>심혈관질환 가족력이 있으신가요?</label>
+        <label>가족 중 심혈관 질환을 앓고 계신 분이 있나요?</label>
         <div className="radio-group">
           <label>
             <input
@@ -358,7 +358,7 @@ function HealthPredictionForm({ onSubmit }) {
 
       
 
-      <button type="submit" className="predict-button">예측하기</button>
+      <button type="submit" className="predict-button">결과 확인하기</button>
     </form>
   );
 }
