@@ -80,17 +80,11 @@ function DietAnalysisResultPage() {
                 : '없음'}
             </p>
             <p className={styles.label}>다음 식단 제안</p>
-            <ul className={styles.suggestionList}>
-              {Array.isArray(analysisResult?.next_meal_suggestion) && analysisResult.next_meal_suggestion.length > 0 ? (
-                analysisResult.next_meal_suggestion.map((suggestion, index) => (
-                  <li key={index} className={styles.suggestionItem}>
-                    {suggestion}
-                  </li>
-                ))
-              ) : (
-                <p className={styles.placeholder}>제안 없음</p>
-              )}
-            </ul>
+            <p className={styles.value}>
+              {Array.isArray(analysisResult?.next_meal_suggestion) && analysisResult.next_meal_suggestion.length > 0
+                ? analysisResult.next_meal_suggestion.join(', ')
+                : '제안 없음'}
+            </p>
           </div>
         </section>
       </div>
