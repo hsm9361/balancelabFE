@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
+import { FaCircleUser } from 'react-icons/fa6';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { HiDocumentReport } from 'react-icons/hi';
 
 function SideMenu({ activeTab, setActiveTab }) {
-  const [calendarOpen, setCalendarOpen] = useState(false);
-
-  const handleItemClick = (id) => {
-    if (id === 'calendar') {
-      setCalendarOpen(prev => !prev);
-    } else {
-      setActiveTab(id);
-    }
-  };
+  const menuItems = [
+    { id: 'myInfo', name: '내정보', icon: <FaCircleUser />  },
+    { id: 'calendar', name: '캘린더', icon: <FaCalendarAlt/> },
+    { id: 'myBalance', name: 'MyBalance', icon: <HiDocumentReport/> }
+  ];
 
   return (
     <div className={styles.sideMenu}>

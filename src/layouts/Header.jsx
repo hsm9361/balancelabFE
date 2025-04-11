@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import styles from '../assets/css/layouts/Header.module.css';
 import useAuth from '../hooks/useAuth';
 import AuthModal from '../components/auth/AuthModal';
+import logo from 'assets/images/logo.svg'; // logo.svg 파일 경로에 맞게 수정
 
 const Header = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
@@ -153,6 +154,7 @@ const Header = memo(() => {
       <header className={styles.header}>
         <div className={styles.headerContainer}>
           <Link to="/" className={styles.logo}>
+            <img src={logo} alt="Balance Lab Logo" className={styles.logoImage} />
             Balance Lab
           </Link>
           <button
@@ -168,9 +170,6 @@ const Header = memo(() => {
             </Link>
             <Link to="/analysis" className={styles.navLink} onClick={closeMenu}>
               이미지분석
-            </Link>
-            <Link to="/diet" className={styles.navLink} onClick={closeMenu}>
-              식단
             </Link>
             <Link to="/diet-analysis" className={styles.navLink} onClick={closeMenu}
             >식단분석
