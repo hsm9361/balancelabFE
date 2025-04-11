@@ -144,3 +144,94 @@
   gap: 1rem;
   margin-top: 1rem;
 }
+.toggleWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; /* 버튼 줄바꿈 가능하게 */
+}
+.toggleWrapper button {
+  padding: 0.6rem 1.2rem;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.fadeSlideIn {
+  animation: fadeSlide 0.4s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.dayButton {
+  padding: 0.6rem 1.2rem;
+  background: var(--primary-light);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: bold;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dayButton:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.dayButton.activeDay {
+  background: var(--primary-color);
+  color: white;
+}
+
+.mealCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.mealCard {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.mealTime {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.mealContents {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.nutritionInfo {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.addButton {
+  margin: 0 auto;
+  padding: 0.8rem 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}

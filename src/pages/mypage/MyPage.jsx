@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import SideMenu from 'components/mypage/SideMenu';
 import MyInfo from 'components/mypage/MyInfo';
-import MyCalendar from 'components/mypage/MyCalendar';
+import WeekCalendar from 'components/mypage/WeekCalendar';
 import MyBalance from 'components/mypage/MyBalance';
 import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
 import AddMealModal from 'components/calendar/AddMealModal'; // ✅ 모달 컴포넌트 import
+import MonthCalendar from 'components/mypage/MonthCalendar';
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('myInfo');
@@ -15,14 +16,17 @@ function MyPage() {
     switch (activeTab) {
       case 'myInfo':
         return <MyInfo />;
-      case 'calendar':
-        return <MyCalendar />;
+      case 'calendar-week':
+        return <WeekCalendar />;
+      case 'calendar-month':
+        return <MonthCalendar />;
       case 'myBalance':
         return <MyBalance />;
       default:
         return <MyInfo />;
     }
   };
+  
 
   return (
     <div className={styles.myPageContainer}>

@@ -22,9 +22,17 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2C5282;
+  color: #2c5282;
   text-decoration: none;
-  flex-shrink: 0; /* ✅ 공간 부족 시 줄어들지 않게 */
+  flex-shrink: 0;
+  display: flex; /* 로고와 텍스트를 수평으로 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  gap: 0.5rem; /* 로고와 텍스트 사이 간격 */
+}
+
+.logoImage {
+  width: 32px; /* 로고 크기 조정 */
+  height: 32px;
 }
 
 .navMenu {

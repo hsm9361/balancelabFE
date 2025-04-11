@@ -1,22 +1,22 @@
 /* 전체적인 변수 설정 - 통일감 있는 디자인을 위한 색상과 간격 정의 */
 :root {
-  --primary-color: #3182CE;
-  --primary-light: #EBF8FF;
-  --primary-dark: #2B6CB0;
-  --accent-color: #4FD1C5;
-  --accent-dark: #38B2AC;
-  --text-primary: #2D3748;
-  --text-secondary: #4A5568;
-  --text-light: #718096;
-  --background-light: #FFFFFF;
-  --background-gray: #F7FAFC;
-  --border-color: #E2E8F0;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --primary-color: #4A90E2; /* 더 밝고 생동감 있는 블루 */
+  --primary-light: #E6F0FA; /* 부드러운 블루-화이트 배경 */
+  --primary-dark: #357ABD; /* 살짝 어두운 블루로 신뢰감 강화 */
+  --accent-color: #50E3C2; /* 생동감 있는 청록색 */
+  --accent-dark: #40C4B4; /* 살짝 어두운 청록색 */
+  --text-primary: #1A3C6D; /* 더 깊은 블루로 텍스트 색상 변경 */
+  --text-secondary: #5A7391; /* 부드러운 회색-블루 */
+  --text-light: #A3BFFA; /* 밝은 블루로 포인트 텍스트 */
+  --background-light: #F9FBFF; /* 아주 밝은 블루-화이트 배경 */
+  --background-gray: #EDF5FF; /* 밝은 블루-그레이 */
+  --border-color: #D6E4FF; /* 부드러운 블루 보더 */
+  --shadow-sm: 0 2px 4px rgba(74, 144, 226, 0.1);
+  --shadow-md: 0 6px 12px rgba(74, 144, 226, 0.15);
+  --shadow-lg: 0 12px 20px rgba(74, 144, 226, 0.2);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --transition-normal: all 0.3s ease;
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -50,6 +50,11 @@ body {
   color: var(--text-primary);
   position: relative;
   padding-bottom: 10px;
+  transition: var(--transition-normal);
+}
+
+.pageTitle:hover {
+  transform: translateY(-2px); /* 호버 시 살짝 위로 이동 */
 }
 
 .pageTitle::after {
@@ -93,10 +98,18 @@ body {
 /* 사이드 메뉴 스타일 */
 .sideMenu {
   width: 240px;
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, #E6F0FA 0%, #D6E4FF 100%); /* 밝은 블루 그라디언트 */
   transition: var(--transition-normal);
 }
 
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+}
 .menuList {
   list-style-type: none;
   padding: 0;
@@ -105,24 +118,26 @@ body {
 
 .menuItem {
   padding: 16px 24px;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
+  background-color: transparent;
+  border-left: 4px solid transparent;
   transition: var(--transition-normal);
-  position: relative;
-  border-left: 3px solid transparent;
+  cursor: pointer;
 }
 
 .menuItem:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: rgba(74, 144, 226, 0.1);
+  color: var(--primary-dark);
 }
 
 .menuItem.active {
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
-  border-left: 3px solid var(--accent-color);
-  font-weight: 600;
+  background-color: rgba(74, 144, 226, 0.2);
+  border-left: 4px solid var(--primary-color);
+  color: var(--primary-dark);
+  font-weight: 700;
 }
 
 /* 미디어 쿼리 - 모바일 메뉴 */
@@ -137,16 +152,20 @@ body {
   }
   
   .menuItem {
-    flex: 1;
-    text-align: center;
-    padding: 14px 10px;
     border-left: none;
     border-bottom: 3px solid transparent;
+    justify-content: center;
   }
-  
+
   .menuItem.active {
-    border-left: none;
-    border-bottom: 3px solid var(--accent-color);
+    border-bottom: 3px solid #2C5282;
+    background-color: rgba(44, 82, 130, 0.12);
+    color: #2C5282;
+  }
+
+  .menuIcon {
+    font-size: 18px;
+    margin-right: 4px;
   }
 }
 
@@ -513,7 +532,7 @@ body {
   align-items: center;
   gap: 15px;
   box-shadow: var(--shadow-md);
-  background-color: white;
+  background: linear-gradient(145deg, #FFFFFF 0%, #F9FBFF 100%); /* 부드러운 화이트-블루 그라디언트 */
   transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
@@ -526,23 +545,28 @@ body {
   left: 0;
   width: 4px;
   height: 100%;
-  background-color: var(--primary-color);
+  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color)); /* 그라디언트 보더 */
 }
 
 .nutritionCard:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.02); /* 살짝 확대하며 위로 이동 */
   box-shadow: var(--shadow-lg);
 }
 
 .nutritionIcon {
   font-size: 28px;
-  background-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--primary-light), var(--accent-color)); /* 아이콘 배경에 그라디언트 추가 */
   width: 50px;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.nutritionCard:hover .nutritionIcon {
+  animation: bounce 0.5s ease; /* 아이콘에 바운스 애니메이션 추가 */
 }
 
 .nutritionInfo {
@@ -726,4 +750,53 @@ body {
 
 .nutritionCard:hover .nutritionValue {
   animation: pulse 1s infinite;
+}
+.toggleWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; /* 버튼 줄바꿈 가능하게 */
+}
+.subMenu {
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+}
+
+.subMenuItem {
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.subMenuItem:hover {
+  color: var(--accent-color);
+}
+.subMenu {
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.subMenu.open {
+  max-height: 200px; /* 충분히 큰 값 */
+  opacity: 1;
+}
+
+
+/* 하위 항목 스타일 */
+.subMenuItem {
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.95); /* 기존 메뉴와 유사한 흰색 */
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.subMenuItem:hover {
+  color: var(--accent-color);
 }
