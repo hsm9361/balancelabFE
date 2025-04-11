@@ -727,3 +727,25 @@ body {
 .nutritionCard:hover .nutritionValue {
   animation: pulse 1s infinite;
 }
+.toggleWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; /* 버튼 줄바꿈 가능하게 */
+}
+.subMenu {
+  padding-left: 1rem;
+  margin-top: 0.3rem;
+}
+
+.subMenuItem {
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.subMenuItem:hover {
+  color: var(--accent-color);
+}

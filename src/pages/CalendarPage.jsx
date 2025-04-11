@@ -1,22 +1,37 @@
-// pages/CalendarPage.jsx
+// src/pages/CalendarPage.jsx
 import React, { useState } from 'react';
 import styles from 'assets/css/pages/calendar/calendarPage.module.css';
-import DaySelector from 'components/calendar/DaySelector';
-import DailyMealInfo from 'components/calendar/DailyMealInfo';
-import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
+import Calendar from 'components/mypage/MyCalendar';
+import CalendarWeek from 'components/mypage/MyCalendar2';
+
+
+
 
 function CalendarPage() {
-  const [selectedDay, setSelectedDay] = useState(new Date().getDay() - 1); // 0 = 월요일
+  const [viewMode, setViewMode] = useState('month'); // 'month' or 'week'
 
   return (
     <div className={styles.calendarPageContainer}>
-      <h1 className={styles.pageTitle}>식단 기록</h1>
+      <h1 className={styles.pageTitle}>주간 캘린더</h1>
+      <div className={styles.toggleWrapper}>
+  <button
+    className={viewMode === 'week' ? styles.activeToggle : ''}
+    onClick={() => setViewMode('week')}
+  >
+    주간
+  </button>
+  <button
+    className={viewMode === 'month' ? styles.activeToggle : ''}
+    onClick={() => setViewMode('month')}
+  >
+    월간
+  </button>
+</div>
+
+
+
       <div className={styles.contentWrapper}>
-        <DaySelector selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
-        <div className={styles.contentArea}>
-          <DailyMealInfo selectedDay={selectedDay} />
-          <CalendarActionButtons />
-        </div>
+        {viewMode === 'month' ? <Calendar /> : <CalendarWeek />}
       </div>
     </div>
   );

@@ -144,3 +144,18 @@
   gap: 1rem;
   margin-top: 1rem;
 }
+.toggleWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap; /* 버튼 줄바꿈 가능하게 */
+}
+.toggleWrapper button {
+  padding: 0.6rem 1.2rem;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}

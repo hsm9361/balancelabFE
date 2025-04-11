@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import SideMenu from 'components/mypage/SideMenu';
 import MyInfo from 'components/mypage/MyInfo';
-import MyCalendar from 'components/mypage/MyCalendar';
+import MyCalendar2 from 'components/mypage/MyCalendar2';
 import MyBalance from 'components/mypage/MyBalance';
 import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
 import AddMealModal from 'components/calendar/AddMealModal'; // ✅ 모달 컴포넌트 import
@@ -16,7 +16,7 @@ function MyPage() {
       case 'myInfo':
         return <MyInfo />;
       case 'calendar':
-        return <MyCalendar />;
+        return <MyCalendar2 />;
       case 'myBalance':
         return <MyBalance />;
       default:
