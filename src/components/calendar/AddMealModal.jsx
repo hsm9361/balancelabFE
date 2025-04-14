@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 import axios from 'axios';
 
-function AddMealModal({ onClose, onSubmit }) {
+function AddMealModal({ onClose, onSubmit,selectedDate }) {
   const [mealType, setMealType] = useState('morning');
   const [menus, setMenus] = useState([{ name: '', grams: '' }]);
   const [unitTypes, setUnitTypes] = useState(['g']); // 기본 단위
@@ -32,7 +32,7 @@ function AddMealModal({ onClose, onSubmit }) {
       intakeAmount: parseFloat(m.grams),
       unit: unitTypes[i],
       category: mealType,
-      eatenDate: new Date().toISOString() // 현재 날짜/시간
+      eatenDate: new Date(selectedDate).toISOString()
     })).filter(m => m.foodName && m.intakeAmount);
   
     if (cleaned.length === 0) return;
@@ -77,7 +77,7 @@ function AddMealModal({ onClose, onSubmit }) {
                   type="text"
                   value={menu.name}
                   onChange={(e) => handleMenuChange(index, 'name', e.target.value)}
-                  placeholder={`예: ${menuLabel}`}
+                  placeholder={`예: 치킨`}
                   style={{ marginRight: '0.5rem', width: '60%' }}
                 />
               </label>

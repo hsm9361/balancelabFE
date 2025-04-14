@@ -65,18 +65,19 @@ export default function WeekCalendar() {
           : mealType === 'lunch'
             ? '12:00 ~ 13:30'
             : '18:00 ~ 19:30',
-      items: menus.map((m) => `${m.name} (${m.servings}인분)`),
+      items: menus.map((m) => `${m.foodName} (${m.intakeAmount}${m.unit})`), // ✅ 여기 고침
       carb: 0,
       protein: 0,
       kcal: 0,
     };
-
+  
     setMealData((prev) => ({
       ...prev,
       [selectedDay]: [...(prev[selectedDay] || []), newMeal],
     }));
     setShowModal(false);
   };
+  
 
   const meals = mealData[selectedDay] || [];
 
@@ -128,6 +129,7 @@ export default function WeekCalendar() {
         <AddMealModal
           onClose={() => setShowModal(false)}
           onSubmit={handleAddMeal}
+          selectedDate={weekDates[days.indexOf(selectedDay)]}
         />
       )}
     </div>
