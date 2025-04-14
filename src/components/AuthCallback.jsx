@@ -27,6 +27,8 @@ const AuthCallback = () => {
         const decodedData = decodeURIComponent(encodedData);
         const authData = JSON.parse(decodedData);
 
+        console.log('Received auth data:', authData); // 디버그 로그 추가
+
         if (authData.type !== 'LOGIN_SUCCESS') {
           throw new Error('Invalid authentication response');
         }
@@ -36,24 +38,29 @@ const AuthCallback = () => {
           authData.hasRequiredInfo = 'N';
         }
 
+        console.log('Processing auth data with hasRequiredInfo:', authData.hasRequiredInfo); // 디버그 로그 추가
+
         // 부모 창으로 인증 정보 전달
         if (window.opener) {
-          window.opener.postMessage(
-            {
-              type: 'LOGIN_SUCCESS',
-              username: authData.username,
-              email: authData.email,
-              accessToken: authData.accessToken,
-              refreshToken: authData.refreshToken,
-              hasRequiredInfo: authData.hasRequiredInfo
-            },
-            window.location.origin
-          );
-          // 팝업 창 닫기
-          window.close();
+          const messageData = {
+            type: 'LOGIN_SUCCESS',
+            username: authData.username,
+            email: authData.email,
+            accessToken: authData.accessToken,
+            refreshToken: authData.refreshToken,
+            hasRequiredInfo: authData.hasRequiredInfo
+          };
+
+          console.log('Sending message to parent:', messageData); // 디버그 로그 추가
+
+          window.opener.postMessage(messageData, window.location.origin);
+          
+          // 메시지 전달 후 약간의 지연을 두고 창 닫기
+          setTimeout(() => {
+            window.close();
+          }, 500); // 지연 시간을 늘림
         } else {
           // 팝업이 아닌 경우 (직접 URL 접근 등)
-          // 로컬 스토리지에 데이터 저장
           const storageData = {
             state: {
               user: {
@@ -71,7 +78,6 @@ const AuthCallback = () => {
           localStorage.setItem('accessToken', authData.accessToken);
           localStorage.setItem('refreshToken', authData.refreshToken);
           
-          // 메인 페이지로 이동 (모달은 Header에서 처리)
           navigate('/');
         }
       } catch (err) {
@@ -85,7 +91,11 @@ const AuthCallback = () => {
             },
             window.location.origin
           );
-          window.close();
+          
+          // 에러 메시지 전달 후 약간의 지연을 두고 창 닫기
+          setTimeout(() => {
+            window.close();
+          }, 100);
         } else {
           navigate('/');
         }

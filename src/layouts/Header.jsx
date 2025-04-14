@@ -18,31 +18,41 @@ const Header = memo(() => {
   const loginWindowRef = useRef(null);
 
   const handleGoogleLogin = useCallback(() => {
-    // 이미 열린 창이 있다면 닫기
-    if (loginWindowRef.current) {
-      loginWindowRef.current.close();
-    }
+    try {
+      // 이미 열린 창이 있다면 닫기 시도
+      try {
+        if (loginWindowRef.current) {
+          loginWindowRef.current.close();
+        }
+      } catch (closeError) {
+        console.error('Error closing existing login window:', closeError);
+      }
+      loginWindowRef.current = null;
 
-    // 팝업 창 크기와 위치 계산
-    const width = 500;
-    const height = 600;
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
+      // 팝업 창 크기와 위치 계산
+      const width = 500;
+      const height = 600;
+      const left = window.screenX + (window.outerWidth - width) / 2;
+      const top = window.screenY + (window.outerHeight - height) / 2;
 
-    // 구글 로그인 URL에 redirect_uri 추가
-    const redirectUri = encodeURIComponent('http://localhost:3000/oauth/callback');
-    const googleAuthUrl = `http://localhost:8080/oauth2/authorization/google?redirect_uri=${redirectUri}`;
-    
-    loginWindowRef.current = window.open(
-      googleAuthUrl,
-      'Google Login',
-      `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
-    );
+      // 구글 로그인 URL에 redirect_uri 추가
+      const redirectUri = encodeURIComponent('http://localhost:3000/oauth/callback');
+      const googleAuthUrl = `http://localhost:8080/oauth2/authorization/google?redirect_uri=${redirectUri}`;
+      
+      loginWindowRef.current = window.open(
+        googleAuthUrl,
+        'Google Login',
+        `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
+      );
 
-    if (loginWindowRef.current) {
-      loginWindowRef.current.focus();
-    } else {
-      console.error('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+      if (loginWindowRef.current) {
+        loginWindowRef.current.focus();
+      } else {
+        console.error('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+      }
+    } catch (error) {
+      console.error('Failed to open login window:', error);
+      loginWindowRef.current = null;
     }
   }, []);
 
@@ -110,40 +120,34 @@ const Header = memo(() => {
     }
 
     const { type, error, ...authData } = event.data;
+    console.log('Received login message:', { type, authData }); // 디버그 로그 추가
 
     if (type === 'LOGIN_SUCCESS') {
       try {
         // hasRequiredInfo 값이 없는 경우 'N'으로 설정
         if (!authData.hasRequiredInfo) {
-          authData.hasRequiredInfo = 'n';
+          authData.hasRequiredInfo = 'N';
         }
 
-        const authState = await handleAuthData(authData);
-        if (authState) {
-          // 팝업 창 닫기
-          if (loginWindowRef.current) {
-            loginWindowRef.current.close();
-            loginWindowRef.current = null;
-          }
-          // 햄버거 메뉴 닫기
-          setIsOpen(false);
+        console.log('Processing login with hasRequiredInfo:', authData.hasRequiredInfo); // 디버그 로그 추가
 
-          // hasRequiredInfo가 'N'인 경우 모달 표시
-          if (authData.hasRequiredInfo === 'n') {
-            setTimeout(() => {
-              setShowRequiredInfoModal(true);
-            }, 100); // 팝업이 완전히 닫힌 후 모달 표시
-          }
+        // 햄버거 메뉴 닫기
+        setIsOpen(false);
+
+        // 인증 상태 업데이트
+        const authState = await handleAuthData(authData);
+        console.log('Updated auth state:', authState); // 디버그 로그 추가
+
+        // hasRequiredInfo가 'N'인 경우 모달 표시
+        if (authState && (authData.hasRequiredInfo === 'N' || authData.hasRequiredInfo === 'n')) {
+          console.log('Showing required info modal'); // 디버그 로그 추가
+          setShowRequiredInfoModal(true);
         }
       } catch (err) {
         console.error('Failed to process login:', err);
       }
     } else if (type === 'LOGIN_ERROR') {
       console.error('Login error:', error);
-      if (loginWindowRef.current) {
-        loginWindowRef.current.close();
-        loginWindowRef.current = null;
-      }
     }
   }, [updateAuthState]);
 
