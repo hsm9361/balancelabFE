@@ -64,6 +64,8 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.height}
           onChange={handleChange}
           step="0.1"
+          min="100"
+          max="250"
           required
         />
       </div>
@@ -76,6 +78,8 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.weight}
           onChange={handleChange}
           step="0.1"
+          min="20"
+          max="250"
           required
         />
       </div>
