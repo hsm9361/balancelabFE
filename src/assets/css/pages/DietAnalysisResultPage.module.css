@@ -151,6 +151,18 @@
   font-size: 1.2rem;
 }
 
+/* 기존 스타일 유지, 아래만 추가 */
+.foodNutrition {
+  margin-bottom: 20px;
+}
+
+.foodTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1E3A8A;
+  margin-bottom: 10px;
+}
+
 /* 애니메이션 */
 @keyframes fadeIn {
   from {
