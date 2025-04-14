@@ -9,11 +9,16 @@ function PredictionResult() {
   const { inputData, predictions } = location.state || {};
   const [isSaving, setIsSaving] = useState(false);
 
+  const memberId = localStorage.getItem('memberId');
+  const email = localStorage.getItem('email');
+
   useEffect(() => {
     console.log('Received data:', { inputData, predictions }); // 디버깅을 위한 로그
   }, [inputData, predictions]);
 
   const handleConsultClick = async () => {
+    console.log("아이디"+memberId)
+    console.log("이메일"+email)
     try {
       setIsSaving(true);
       
@@ -22,17 +27,25 @@ function PredictionResult() {
         ...inputData,
         diabetesProba: predictions.diabetes,
         hypertensionProba: predictions.hypertension,
-        cdvProba: predictions.cardiovascular
+        cvdProba: predictions.cardiovascular,
+        email:email
       };
-
-      const response = await fetch('http://localhost:8080/api/health-prediction/save_prediction', {
+      console.log(saveData)
+      // 저장 요청
+      const response = await fetch('http://localhost:8080/api/health-prediction/savePrediction', {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(saveData),
       });
+
+      if (response.status === 401) {
+        // 인증되지 않은 경우 로그인 페이지로 이동
+        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        return;
+      }
 
       if (!response.ok) {
         throw new Error('예측 결과 저장에 실패했습니다.');
@@ -72,7 +85,7 @@ function PredictionResult() {
           onClick={handleConsultClick}
           disabled={isSaving}
         >
-          {isSaving ? '저장 중...' : '저장 후 AI에게 식단 추천받기'}
+          {isSaving ? '저장 중...' : '저장 후 AI에게 상담받기'}
         </button>
       </div>
     </div>
