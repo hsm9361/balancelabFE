@@ -6,22 +6,8 @@
   padding: 80px 20px;
   background: #F8FAFC;
   position: relative;
-  overflow: hidden;
 }
 
-/* 배경 장식 */
-.resultContainer::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%2360A5FA" fill-opacity="0.05" d="M0,192L48,186.7C96,181,192,171,288,181.3C384,192,480,224,576,213.3C672,203,768,149,864,138.7C960,128,1056,160,1152,181.3C1248,203,1344,213,1392,218.7L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"%3E%3C/path%3E%3C/svg%3E');
-  z-index: 0;
-}
-
-/* 타이틀 */
 .title {
   font-size: 2.5rem;
   font-weight: 700;
@@ -29,153 +15,36 @@
   color: #1E3A8A;
   margin-bottom: 40px;
   text-align: center;
-  z-index: 1;
 }
 
-/* 콘텐츠 */
 .content {
   width: 100%;
   max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 40px;
-  position: relative;
-  z-index: 1;
+  background: #FFFFFF;
+  padding: 24px;
+  border-radius: 12px;
 }
 
-/* 섹션 */
 .section {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.sectionTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1E3A8A;
-  font-family: 'Sora', sans-serif;
-  text-align: left;
+.pdf-capture,
+.pdf-capture .card,
+.pdf-capture h2,
+.pdf-capture h3,
+.pdf-capture td,
+.pdf-capture li {
+  background: #FFFFFF !important;
+  opacity: 1 !important;
+  color: #000000 !important;
 }
 
-/* 카드 */
-.card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeIn 0.6s ease-out both;
-}
-
-/* 라벨과 값 */
-.label {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #4B5563;
-  font-family: 'Inter', sans-serif;
-  margin-bottom: 4px;
-}
-
-.value {
-  font-size: 1.1rem;
-  color: #1F2937;
-  font-family: 'Inter', sans-serif;
-  line-height: 1.7;
-  margin-bottom: 16px;
-}
-
-/* 영양소 테이블 */
-.nutritionTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-}
-
-.nutritionTable th,
-.nutritionTable td {
-  padding: 12px 16px;
-  text-align: center;
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  color: #1F2937;
-}
-
-.nutritionTable th {
-  background: #60A5FA;
-  color: #FFFFFF;
-  font-weight: 600;
-  border-radius: 8px 8px 0 0;
-}
-
-.nutritionTable td {
-  background: rgba(255, 255, 255, 0.95);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.nutritionTable tr:last-child td {
-  border-bottom: none;
-}
-
-/* 플레이스홀더 */
-.placeholder {
-  font-size: 1.1rem;
-  color: #9CA3AF;
-  text-align: center;
-  font-family: 'Inter', sans-serif;
-  padding: 16px;
-}
-
-/* 제안 리스트 */
-.suggestionList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.suggestionItem {
-  font-size: 1.1rem;
-  color: #1F2937;
-  font-family: 'Inter', sans-serif;
-  line-height: 1.7;
-  position: relative;
-  padding-left: 20px;
-}
-
-.suggestionItem::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: #60A5FA;
-  font-size: 1.2rem;
-}
-
-/* 기존 스타일 유지, 아래만 추가 */
-.foodNutrition {
-  margin-bottom: 20px;
-}
-
-.foodTitle {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #1E3A8A;
-  margin-bottom: 10px;
-}
-
-/* 애니메이션 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 반응형 디자인 */
 @media (max-width: 768px) {
   .resultContainer {
     padding: 60px 15px;
@@ -185,24 +54,7 @@
     font-size: 2rem;
   }
 
-  .sectionTitle {
-    font-size: 1.3rem;
-  }
-
-  .card {
+  .content {
     padding: 16px;
-  }
-
-  .label,
-  .value,
-  .nutritionTable th,
-  .nutritionTable td,
-  .suggestionItem {
-    font-size: 0.95rem;
-  }
-
-  .nutritionTable th,
-  .nutritionTable td {
-    padding: 10px;
   }
 }
