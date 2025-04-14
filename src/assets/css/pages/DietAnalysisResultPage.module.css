@@ -34,15 +34,21 @@
   gap: 16px;
 }
 
-.pdf-capture,
-.pdf-capture .card,
+.pdf-capture [class*="DietAnalysis_card__"],
+.pdf-capture [class*="DietAnalysis_nutritionTable__"] td,
 .pdf-capture h2,
 .pdf-capture h3,
-.pdf-capture td,
 .pdf-capture li {
   background: #FFFFFF !important;
   opacity: 1 !important;
   color: #000000 !important;
+  animation: none !important;
+}
+
+.pdf-capture [class*="DietAnalysis_nutritionTable__"] th {
+  background: #60A5FA !important;
+  color: #FFFFFF !important;
+  opacity: 1 !important;
 }
 
 @media (max-width: 768px) {
