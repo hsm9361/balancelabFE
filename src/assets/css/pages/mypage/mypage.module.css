@@ -757,10 +757,7 @@ body {
   gap: 10px;
   flex-wrap: wrap; /* 버튼 줄바꿈 가능하게 */
 }
-.subMenu {
-  padding-left: 1rem;
-  margin-top: 0.3rem;
-}
+
 
 .subMenuItem {
   padding: 8px 24px;
@@ -774,6 +771,8 @@ body {
   color: var(--accent-color);
 }
 .subMenu {
+  display: block;              /* ✅ 블록 요소로 바꾸기 */
+  width: 100%;                 /* ✅ 부모 li 기준 너비 맞추기 */
   padding-left: 1rem;
   margin-top: 0.3rem;
   overflow: hidden;
@@ -792,6 +791,7 @@ body {
 .subMenuItem {
   padding: 8px 24px;
   font-size: 0.9rem;
+  flex-direction: column; /* ✅ 세로 정렬로 강제 */
   color: rgba(255, 255, 255, 0.95); /* 기존 메뉴와 유사한 흰색 */
   cursor: pointer;
   transition: 0.2s;

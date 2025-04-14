@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 import AddMealModal from 'components/calendar/AddMealModal';
-
+import axios from 'axios';
 const days = ['월', '화', '수', '목', '금', '토', '일'];
 
 const initialData = {
@@ -28,7 +28,7 @@ export default function WeekCalendar() {
           : mealType === 'lunch'
           ? '12:00 ~ 13:30'
           : '18:00 ~ 19:30',
-      items: menus.map((m) => `${m.name} (${m.servings}인분)`),
+      items: menus.map((m) => `${m.name} (${m.grams} g)`),
       carb: 0,
       protein: 0,
       kcal: 0,
