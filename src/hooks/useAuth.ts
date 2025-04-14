@@ -3,13 +3,14 @@ import { useCallback, useEffect, useState } from 'react';
 
 interface User {
   username: string;
-  email: string;
+  email?: string;
+  hasRequiredInfo?: 'Y' | 'N';
 }
 
 interface AuthState {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   status: 'authenticated' | 'unauthenticated';
 }
 
@@ -86,6 +87,7 @@ const useAuth = () => {
   return {
     user: authState?.user || null,
     isAuthenticated: !!authState,
+    hasRequiredInfo: authState?.user?.hasRequiredInfo === 'Y',
     accessToken: authState?.accessToken || null,
     refreshToken: authState?.refreshToken || null,
     updateAuthState,

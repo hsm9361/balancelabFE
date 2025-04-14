@@ -5,11 +5,13 @@ import { Menu, X } from 'lucide-react';
 import styles from '../assets/css/layouts/Header.module.css';
 import useAuth from '../hooks/useAuth';
 import AuthModal from '../components/auth/AuthModal';
+import RequiredInfoModal from '../components/auth/RequiredInfoModal';
 import logo from 'assets/images/logo.svg'; // logo.svg 파일 경로에 맞게 수정
 
 const Header = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showRequiredInfoModal, setShowRequiredInfoModal] = useState(false);
   const [authModalType, setAuthModalType] = useState('required');
   const { user, handleLogout, isAuthenticated, updateAuthState } = useAuth();
   const navigate = useNavigate();
@@ -69,12 +71,13 @@ const Header = memo(() => {
   // 사용자 정보 저장 및 설정
   const handleAuthData = async (authData) => {
     try {
-      const { username, email, accessToken, refreshToken } = authData;
+      const { username, email, accessToken, refreshToken, hasRequiredInfo } = authData;
       
       const authState = {
         user: {
           username: username || email,
           email,
+          hasRequiredInfo
         },
         accessToken,
         refreshToken,
@@ -110,6 +113,11 @@ const Header = memo(() => {
 
     if (type === 'LOGIN_SUCCESS') {
       try {
+        // hasRequiredInfo 값이 없는 경우 'N'으로 설정
+        if (!authData.hasRequiredInfo) {
+          authData.hasRequiredInfo = 'n';
+        }
+
         const authState = await handleAuthData(authData);
         if (authState) {
           // 팝업 창 닫기
@@ -119,6 +127,13 @@ const Header = memo(() => {
           }
           // 햄버거 메뉴 닫기
           setIsOpen(false);
+
+          // hasRequiredInfo가 'N'인 경우 모달 표시
+          if (authData.hasRequiredInfo === 'n') {
+            setTimeout(() => {
+              setShowRequiredInfoModal(true);
+            }, 100); // 팝업이 완전히 닫힌 후 모달 표시
+          }
         }
       } catch (err) {
         console.error('Failed to process login:', err);
@@ -198,6 +213,10 @@ const Header = memo(() => {
         isOpen={showAuthModal}
         onClose={handleCloseModal}
         type={authModalType}
+      />
+      <RequiredInfoModal
+        isOpen={showRequiredInfoModal}
+        onClose={() => setShowRequiredInfoModal(false)}
       />
     </>
   );

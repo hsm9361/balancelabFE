@@ -31,6 +31,11 @@ const AuthCallback = () => {
           throw new Error('Invalid authentication response');
         }
 
+        // hasRequiredInfo 값이 없는 경우 'N'으로 설정
+        if (!authData.hasRequiredInfo) {
+          authData.hasRequiredInfo = 'N';
+        }
+
         // 부모 창으로 인증 정보 전달
         if (window.opener) {
           window.opener.postMessage(
@@ -39,7 +44,8 @@ const AuthCallback = () => {
               username: authData.username,
               email: authData.email,
               accessToken: authData.accessToken,
-              refreshToken: authData.refreshToken
+              refreshToken: authData.refreshToken,
+              hasRequiredInfo: authData.hasRequiredInfo
             },
             window.location.origin
           );
@@ -53,6 +59,7 @@ const AuthCallback = () => {
               user: {
                 username: authData.username || authData.email,
                 email: authData.email,
+                hasRequiredInfo: authData.hasRequiredInfo
               },
               accessToken: authData.accessToken,
               refreshToken: authData.refreshToken,
@@ -64,6 +71,7 @@ const AuthCallback = () => {
           localStorage.setItem('accessToken', authData.accessToken);
           localStorage.setItem('refreshToken', authData.refreshToken);
           
+          // 메인 페이지로 이동 (모달은 Header에서 처리)
           navigate('/');
         }
       } catch (err) {
