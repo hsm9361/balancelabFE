@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 
 function HealthPredictionForm({ onSubmit }) {
   const [formData, setFormData] = useState({
-    age: '68',
+    age: '55',
     height: '',
     weight: '',
     gender: 'male',
-    smokeDaily: 'yes',
-    drinkWeekly: '5',
-    exerciseWeekly: '0',
-    historyDiabetes: 'no',
-    historyHypertension: 'yes',
-    historyCardiovascular: 'yes',
-    dailyCarbohydrate: '380',
+    smokeDaily: '',
+    drinkWeekly: '',
+    exerciseWeekly: '',
+    historyDiabetes: '',
+    historyHypertension: '',
+    historyCardiovascular: '',
+    dailyCarbohydrate: '300',
     dailySugar: '300',
-    dailyFat: '60',
-    dailySodium: '3500',
-    dailyFibrin: '3',
-    dailyWater: '300'
+    dailyFat: '50',
+    dailySodium: '5000',
+    dailyFibrin: '10',
+    dailyWater: '1000'
   });
   
 
@@ -64,6 +64,8 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.height}
           onChange={handleChange}
           step="0.1"
+          min="100"
+          max="250"
           required
         />
       </div>
@@ -76,6 +78,8 @@ function HealthPredictionForm({ onSubmit }) {
           value={formData.weight}
           onChange={handleChange}
           step="0.1"
+          min="20"
+          max="250"
           required
         />
       </div>

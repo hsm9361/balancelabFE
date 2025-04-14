@@ -77,6 +77,7 @@ const AuthCallback = () => {
           localStorage.setItem('auth-storage', JSON.stringify(storageData));
           localStorage.setItem('accessToken', authData.accessToken);
           localStorage.setItem('refreshToken', authData.refreshToken);
+          localStorage.setItem('email',authData.email)
           
           navigate('/');
         }

@@ -1,0 +1,58 @@
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  
+  .backButton,
+  .saveButton {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .backButton {
+    background: #E5E7EB;
+    color: #1F2937;
+    border: none;
+  }
+  
+  .backButton:hover {
+    background: #D1D5DB;
+  }
+  
+  .saveButton {
+    background: #60A5FA;
+    color: #FFFFFF;
+    border: none;
+  }
+  
+  .saveButton:hover {
+    background: #3B82F6;
+  }
+  
+  .saveButton:disabled,
+  .backButton:disabled {
+    background: #D1D5DB;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  @media (max-width: 768px) {
+    .buttonContainer {
+      flex-direction: column;
+      gap: 12px;
+    }
+  
+    .backButton,
+    .saveButton {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+    }
+  }

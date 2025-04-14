@@ -13,9 +13,11 @@ import LoadingPage from './components/imageAnalysis/LoadingPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import AuthCallback from './components/AuthCallback.jsx';
 import HealthPrediction from './pages/healthPrediction/HealthPrediction.jsx';
+import PredictionResult from './pages/healthPrediction/PredictionResult.jsx';
 import DietAnalysisPage from './pages/dietAnalysis/DietAnalysisPage.jsx';
 import DietAnalysisResultPage from './pages/dietAnalysis/DietAnalysisResultPage.jsx';
 import DietLoadingPage from './components/dietAnalysis/DietLoadingPage.jsx';
+import DietConsulting from './pages/dietConsulting/DietConsulting.jsx';
 
 function App() {
   return (
@@ -28,7 +30,9 @@ function App() {
           
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/healthprediction" element={<HealthPrediction />} /> {/* /healthprediction */}
+            <Route path="/healthprediction" element={<HealthPrediction />} />
+            <Route path="/healthprediction/result" element={<PredictionResult />} />
+            <Route path="/diet-consulting" element={<DietConsulting />} />
             <Route path="/analysis" element={<ImageAnalysisPage />} />
             <Route path="/analysis/loading" element={<LoadingPage />} />
             <Route path="/analysis/result" element={<ImageAnalysisResultPage />} />

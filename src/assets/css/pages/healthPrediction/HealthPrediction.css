@@ -74,7 +74,7 @@
   border: none;
   border-radius: 8px;
   font-size: 0.8rem;
-  width: 100%;
+  width: 80%;
   box-sizing: border-box;
   height: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -355,4 +355,50 @@
 .radio-group input[type="radio"]:hover,
 .radio-group2 input[type="radio"]:hover {
   border-color: #1A365D;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.back-button {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #45a049;
+}
+
+.consult-button {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.consult-button:hover {
+  background-color: #1976D2;
+}
+
+.consult-button:disabled {
+  background-color: #BDBDBD;
+  cursor: not-allowed;
+}
+
+.consult-button:disabled:hover {
+  background-color: #BDBDBD;
 }

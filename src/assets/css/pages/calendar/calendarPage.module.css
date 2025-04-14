@@ -235,3 +235,11 @@
   font-weight: bold;
   cursor: pointer;
 }
+.deleteButton {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}

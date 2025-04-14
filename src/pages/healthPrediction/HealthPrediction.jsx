@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'assets/css/pages/healthPrediction/HealthPrediction.css';
 import HealthPredictionForm from 'components/healthPrediction/HealthPredictionForm';
-import HealthPredictionResults from 'components/healthPrediction/HealthPredictionResults';
 
 function HealthPrediction() {
-  const [predictions, setPredictions] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (inputData) => {
     try {
@@ -22,8 +22,16 @@ function HealthPrediction() {
         throw new Error(errorData.detail || '서버 응답 오류');
       }
   
-      const data = await response.json();
-      setPredictions(data);
+      const predictions = await response.json();
+      console.log('Prediction data:', predictions); // 디버깅을 위한 로그
+      
+      // 입력 데이터와 예측 결과를 함께 전달
+      navigate('/healthprediction/result', { 
+        state: { 
+          inputData,
+          predictions 
+        } 
+      });
     } catch (error) {
       console.error('Error:', error);
       alert(`예측 중 오류가 발생했습니다: ${error.message}`);
@@ -36,7 +44,6 @@ function HealthPrediction() {
       <h2>질병 위험군을 예측해보세요!</h2>
 
       <HealthPredictionForm onSubmit={handleSubmit} />
-      {predictions && <HealthPredictionResults predictions={predictions} />}
     </div>
   );
 }
