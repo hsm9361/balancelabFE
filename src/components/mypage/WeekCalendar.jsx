@@ -1,23 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 import AddMealModal from 'components/calendar/AddMealModal';
+import axios from 'axios';
 
-const days = ['월', '화', '수', '목', '금', '토', '일'];
+const days = ['일', '월', '화', '수', '목', '금', '토'];
 
-const initialData = {
-  월: [],
-  화: [],
-  수: [],
-  목: [],
-  금: [],
-  토: [],
-  일: [],
+const getThisWeekDates = () => {
+  const today = new Date();
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - today.getDay());
+
+  const week = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sunday);
+    d.setDate(sunday.getDate() + i);
+    week.push(d);
+  }
+  return week;
 };
 
+const formatDate = (date) => date.toISOString().split('T')[0];
+
 export default function WeekCalendar() {
-  const [selectedDay, setSelectedDay] = useState('금');
-  const [mealData, setMealData] = useState(initialData);
+  const weekDates = getThisWeekDates();
+  const todayIndex = new Date().getDay();
+  const [selectedDay, setSelectedDay] = useState(days[todayIndex]);
+  const [mealData, setMealData] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [weekDateRange, setWeekDateRange] = useState('');
+
+  useEffect(() => {
+    const start = weekDates[0];
+    const end = weekDates[6];
+    setWeekDateRange(`${start.getMonth() + 1}.${start.getDate()} ~ ${end.getMonth() + 1}.${end.getDate()}`);
+
+    const startDate = formatDate(start) + 'T00:00:00';
+    const endDate = formatDate(end) + 'T23:59:59';
+
+    axios.get(`/api/diet/list?userId=1&startDate=${startDate}&endDate=${endDate}`)
+      .then(res => {
+        const result = { '일': [], '월': [], '화': [], '수': [], '목': [], '금': [], '토': [] };
+        res.data.forEach((r) => {
+          const date = new Date(r.eatenDate);
+          const day = days[date.getDay()];
+          result[day].push({
+            type: r.category === 'morning' ? '아침' : r.category === 'lunch' ? '점심' : '저녁',
+            time: r.category === 'morning' ? '08:00 ~ 09:30' : r.category === 'lunch' ? '12:00 ~ 13:30' : '18:00 ~ 19:30',
+            items: [`${r.foodName} (${r.intakeAmount}${r.unit})`],
+            carb: 0,
+            protein: 0,
+            kcal: 0,
+          });
+        });
+        setMealData(result);
+      })
+      .catch(err => console.error('식단 불러오기 실패:', err));
+  }, []);
 
   const handleAddMeal = (mealType, menus) => {
     const newMeal = {
@@ -26,8 +64,8 @@ export default function WeekCalendar() {
         mealType === 'morning'
           ? '08:00 ~ 09:30'
           : mealType === 'lunch'
-          ? '12:00 ~ 13:30'
-          : '18:00 ~ 19:30',
+            ? '12:00 ~ 13:30'
+            : '18:00 ~ 19:30',
       items: menus.map((m) => `${m.name} (${m.servings}인분)`),
       carb: 0,
       protein: 0,
@@ -36,7 +74,7 @@ export default function WeekCalendar() {
 
     setMealData((prev) => ({
       ...prev,
-      [selectedDay]: [...prev[selectedDay], newMeal],
+      [selectedDay]: [...(prev[selectedDay] || []), newMeal],
     }));
     setShowModal(false);
   };
@@ -46,17 +84,22 @@ export default function WeekCalendar() {
   return (
     <div className={`${styles.tabContent} ${styles.fadeSlideIn}`}>
       <h2 className={styles.contentTitle}>주간 식단표</h2>
+      <p style={{ textAlign: 'center', fontSize: '14px', color: '#555' }}>이번 주: {weekDateRange}</p>
 
       <div className={styles.daySelector}>
-        {days.map((day) => (
-          <button
-            key={day}
-            className={`${styles.dayButton} ${selectedDay === day ? styles.activeDay : ''}`}
-            onClick={() => setSelectedDay(day)}
-          >
-            {day}
-          </button>
-        ))}
+        {days.map((day, idx) => {
+          const date = weekDates[idx];
+          const label = `${day} (${date.getMonth() + 1}.${date.getDate()})`;
+          return (
+            <button
+              key={day}
+              className={`${styles.dayButton} ${selectedDay === day ? styles.activeDay : ''}`}
+              onClick={() => setSelectedDay(day)}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
 
       <div className={styles.mealCards}>
