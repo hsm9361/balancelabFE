@@ -2,17 +2,15 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  withCredentials: true // CORS 요청에서 쿠키를 포함하도록 설정
 });
 
 // Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    // FormData 요청의 경우 Content-Type 헤더를 설정하지 않음
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
     }
     return config;
   },
@@ -25,43 +23,12 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-
-    // 401 에러이고 토큰 재발급 시도를 하지 않은 경우
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        // refreshToken으로 새로운 accessToken 발급 시도
-        const refreshToken = localStorage.getItem('refreshToken');
-        if (!refreshToken) {
-          throw new Error('No refresh token available');
-        }
-
-        const response = await axios.post('http://localhost:8080/api/auth/refresh', {
-          refreshToken: refreshToken
-        });
-
-        const { accessToken: newAccessToken } = response.data;
-
-        // 새로운 accessToken 저장
-        localStorage.setItem('accessToken', newAccessToken);
-
-        // 새로운 토큰으로 원래 요청 재시도
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        // 토큰 재발급 실패 시 로그아웃 처리
-        localStorage.removeItem('auth-storage');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        
-        // 로그인 페이지로 리다이렉트
-        window.location.href = '/';
-        return Promise.reject(refreshError);
-      }
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // 토큰이 만료되었거나 유효하지 않은 경우
+      localStorage.removeItem('accessToken');
+      window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+      return Promise.reject(new Error('Authentication required'));
     }
-
     return Promise.reject(error);
   }
 );

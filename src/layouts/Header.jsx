@@ -120,34 +120,30 @@ const Header = memo(() => {
     }
 
     const { type, error, ...authData } = event.data;
-    console.log('Received login message:', { type, authData }); // 디버그 로그 추가
+    
+    // type이 LOGIN_SUCCESS가 아닌 경우 무시
+    if (type !== 'LOGIN_SUCCESS') {
+      return;
+    }
 
-    if (type === 'LOGIN_SUCCESS') {
-      try {
-        // hasRequiredInfo 값이 없는 경우 'N'으로 설정
-        if (!authData.hasRequiredInfo) {
-          authData.hasRequiredInfo = 'N';
-        }
-
-        console.log('Processing login with hasRequiredInfo:', authData.hasRequiredInfo); // 디버그 로그 추가
-
-        // 햄버거 메뉴 닫기
-        setIsOpen(false);
-
-        // 인증 상태 업데이트
-        const authState = await handleAuthData(authData);
-        console.log('Updated auth state:', authState); // 디버그 로그 추가
-
-        // hasRequiredInfo가 'N'인 경우 모달 표시
-        if (authState && (authData.hasRequiredInfo === 'N' || authData.hasRequiredInfo === 'n')) {
-          console.log('Showing required info modal'); // 디버그 로그 추가
-          setShowRequiredInfoModal(true);
-        }
-      } catch (err) {
-        console.error('Failed to process login:', err);
+    try {
+      // hasRequiredInfo 값이 없는 경우 'N'으로 설정
+      if (!authData.hasRequiredInfo) {
+        authData.hasRequiredInfo = 'N';
       }
-    } else if (type === 'LOGIN_ERROR') {
-      console.error('Login error:', error);
+
+      // 햄버거 메뉴 닫기
+      setIsOpen(false);
+
+      // 인증 상태 업데이트
+      const authState = await handleAuthData(authData);
+
+      // hasRequiredInfo가 'N'인 경우 모달 표시
+      if (authState && (authData.hasRequiredInfo === 'N' || authData.hasRequiredInfo === 'n')) {
+        setShowRequiredInfoModal(true);
+      }
+    } catch (err) {
+      console.error('Failed to process login:', err);
     }
   }, [updateAuthState]);
 
