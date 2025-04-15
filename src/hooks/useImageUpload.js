@@ -1,6 +1,7 @@
 // hooks/useImageUpload.js
 import { useCallback, useState } from 'react';
 import axios from 'axios';
+import apiClient from '../services/apiClient';
 
 export const useImageUpload = (userId = 'testUser') => { // userId는 기본값 또는 외부에서 주입
   const [loading, setLoading] = useState(false);
@@ -17,8 +18,8 @@ export const useImageUpload = (userId = 'testUser') => { // userId는 기본값 
       formData.append('file', imageFile);
       formData.append('userId', userId);
 
-      const response = await axios.post(
-        'http://localhost:8080/image-analysis/upload', // Spring Boot 엔드포인트
+      const response = await apiClient.post(
+        'http://localhost:8080/image-analysis/start', // Spring Boot 엔드포인트
         formData,
         {
           headers: {

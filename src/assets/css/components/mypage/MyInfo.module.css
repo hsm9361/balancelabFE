@@ -184,3 +184,14 @@
   border-radius: 4px;
   margin: 20px 0;
 }
+
+.infoSection {
+  display: flex;
+  justify-content: center;
+}
+
+.imageUploadArea {
+  border: 2px dashed #7fb3ff;
+  background: #f9fafb;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}

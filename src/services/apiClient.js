@@ -8,6 +8,10 @@ const apiClient = axios.create({
 // Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     // FormData 요청의 경우 Content-Type 헤더를 설정하지 않음
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];

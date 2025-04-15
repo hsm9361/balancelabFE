@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import styles from 'assets/css/pages/ImageAnalysisPage.module.css';
 
 function ImageUploadSection({
@@ -7,6 +7,8 @@ function ImageUploadSection({
   previewUrl,
   setPreviewUrl,
 }) {
+  const fileInputRef = useRef(null);
+
   const handleImageUpload = useCallback((event) => {
     const file = event.target.files[0];
     if (file) {
@@ -28,6 +30,20 @@ function ImageUploadSection({
     event.preventDefault();
   }, []);
 
+  const handleResetImage = useCallback(() => {
+    setSelectedImage(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [setSelectedImage, setPreviewUrl]);
+
+  const triggerFileInput = useCallback(() => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }, []);
+
   return (
     <div className={styles.uploadSection}>
       <div
@@ -36,7 +52,33 @@ function ImageUploadSection({
         onDragOver={handleDragOver}
       >
         {previewUrl ? (
-          <img src={previewUrl} alt="Preview" className={styles.previewImage} />
+          <div className={styles.previewContainer}>
+            <img src={previewUrl} alt="Preview" className={styles.previewImage} />
+            <div className={styles.previewOverlay}>
+              <button
+                className={styles.overlayButton}
+                onClick={triggerFileInput}
+                title="다른 이미지 선택"
+              >
+                🔄 변경
+              </button>
+              <button
+                className={styles.overlayButton}
+                onClick={handleResetImage}
+                title="이미지 삭제"
+              >
+                🗑️ 삭제
+              </button>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className={styles.fileInput}
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+            />
+          </div>
         ) : (
           <div className={styles.uploadPlaceholder}>
             <input
@@ -45,6 +87,7 @@ function ImageUploadSection({
               onChange={handleImageUpload}
               className={styles.fileInput}
               id="imageUpload"
+              ref={fileInputRef}
             />
             <label htmlFor="imageUpload" className={styles.uploadLabel}>
               이미지 업로드
