@@ -47,19 +47,28 @@ function DietAnalysisPage() {
   };
 
   const handleFoodClick = (food) => {
-    if (selectedFoods.includes(food)) return;
-
     const lines = message ? message.split('\n') : ['', '', ''];
     if (lines.length < 3) {
-      setMessage(`\n${food}\n먹었어`);
-      setSelectedFoods([food]);
+      lines[0] = selectedTime ? `${selectedTime}으로` : '';
+      lines[1] = '';
+      lines[2] = '먹었어';
+    }
+
+    let currentFoods = lines[1].trim().split(',').map(f => f.trim()).filter(f => f);
+    if (currentFoods.includes(food)) {
+      // 이미 선택된 음식 → 제거
+      currentFoods = currentFoods.filter(f => f !== food);
+      setSelectedFoods(selectedFoods.filter(f => f !== food));
     } else {
-      const currentFoods = lines[1].trim();
-      lines[1] = currentFoods ? `${currentFoods}, ${food}` : food;
-      setMessage(lines.join('\n'));
+      // 새 음식 추가
+      currentFoods.push(food);
       setSelectedFoods([...selectedFoods, food]);
     }
+
+    lines[1] = currentFoods.join(', ');
+    setMessage(lines.join('\n'));
     setErrorMessage('');
+
     setTimeout(() => {
       const textarea = textareaRef.current;
       if (textarea) {
