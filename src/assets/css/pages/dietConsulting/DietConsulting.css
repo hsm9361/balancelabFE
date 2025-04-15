@@ -58,7 +58,7 @@
 .speech-bubble {
   position: relative;
   white-space: pre-line;
-  background: #c878e0;
+  background: #002fff;
   border-radius: 15px;
   padding: 1.5rem;
   font-size: 1.1rem;
@@ -66,6 +66,7 @@
   color: #333;
   line-height: 1.5;
   margin-top: 1rem;
+  color:#fff;
 }
 
 .speech-bubble::after {
@@ -79,6 +80,36 @@
   border-top-color: #f0f0f0;
 }
 
+.food-recommend {
+  position: relative;
+  white-space: pre-line;
+  background: #9bb6e7;
+  border-radius: 15px;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  text-align: left;
+  color: #333;
+  line-height: 1.5;
+  margin-top: 1rem;
+}
+
+.food-recommend::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 40px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-top-color: #f0f0f0;
+}
+
+.meal-icon {
+  width: 40px; /* Default size for larger screens */
+  height: 40px;
+  object-fit: cover; /* Ensure image fits nicely */
+  border-radius: 50%; /* Optional: circular images */
+}
 
 @media (max-width: 768px) {
   .nutrition-grid {
@@ -88,4 +119,25 @@
   .diet-consulting {
     padding: 1rem;
   }
+  .meal-icon{
+    width:30px;
+    height:30px;
+  }
 } 
+
+/* 로딩 스피너 스타일 */
+.loading-spinner {
+  border: 4px solid #f3f3f3; /* 배경색 */
+  border-top: 4px solid #3498db; /* 스피너 색 */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+/* 애니메이션 정의 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
