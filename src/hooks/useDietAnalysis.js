@@ -6,7 +6,7 @@ export const useDietAnalysis = (userId = 'testUser') => {
   const [error, setError] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
 
-  const analyzeDiet = useCallback(async (message) => {
+  const analyzeDiet = useCallback(async (message, email, mealTime) => {
     if (!message.trim()) {
       throw new Error('입력된 음식이 없습니다.');
     }
@@ -19,7 +19,7 @@ export const useDietAnalysis = (userId = 'testUser') => {
         'http://localhost:8080/diet-analysis/message',
         null,
         {
-          params: { message },
+          params: { message, email, mealTime }, // mealTime 추가
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         }
       );

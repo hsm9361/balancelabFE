@@ -13,6 +13,7 @@ function DietAnalysisPage() {
   const navigate = useNavigate();
   const { analyzeDiet, loading, error } = useDietAnalysis('testUser');
   const textareaRef = useRef(null);
+  const email = localStorage.getItem('email');
 
   const handleAnalysis = async () => {
     if (!message.trim()) {
@@ -21,7 +22,7 @@ function DietAnalysisPage() {
     }
 
     try {
-      const result = await analyzeDiet(message);
+      const result = await analyzeDiet(message, email, selectedTime); // selectedTime 전달
       navigate('/diet-analysis/result', {
         state: { result },
       });
@@ -56,11 +57,9 @@ function DietAnalysisPage() {
 
     let currentFoods = lines[1].trim().split(',').map(f => f.trim()).filter(f => f);
     if (currentFoods.includes(food)) {
-      // 이미 선택된 음식 → 제거
       currentFoods = currentFoods.filter(f => f !== food);
       setSelectedFoods(selectedFoods.filter(f => f !== food));
     } else {
-      // 새 음식 추가
       currentFoods.push(food);
       setSelectedFoods([...selectedFoods, food]);
     }

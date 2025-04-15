@@ -70,7 +70,7 @@ const useSaveAsPDF = () => {
             el.style.opacity = '1';
             el.style.color = '#1F2937';
           });
-          // th는 하늘색 유지
+          
           clonedElement.querySelectorAll('th[class*="DietAnalysis_nutritionTable__"]').forEach((th) => {
             th.style.background = '#60A5FA';
             th.style.color = '#FFFFFF';
