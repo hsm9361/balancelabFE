@@ -13,6 +13,7 @@ function DietAnalysisPage() {
   const navigate = useNavigate();
   const { analyzeDiet, loading, error } = useDietAnalysis('testUser');
   const textareaRef = useRef(null);
+  const email = localStorage.getItem('email');
 
   const handleAnalysis = async () => {
     if (!message.trim()) {
@@ -21,7 +22,7 @@ function DietAnalysisPage() {
     }
 
     try {
-      const result = await analyzeDiet(message);
+      const result = await analyzeDiet(message, email, selectedTime); // selectedTime 전달
       navigate('/diet-analysis/result', {
         state: { result },
       });
@@ -47,19 +48,26 @@ function DietAnalysisPage() {
   };
 
   const handleFoodClick = (food) => {
-    if (selectedFoods.includes(food)) return;
-
     const lines = message ? message.split('\n') : ['', '', ''];
     if (lines.length < 3) {
-      setMessage(`\n${food}\n먹었어`);
-      setSelectedFoods([food]);
+      lines[0] = selectedTime ? `${selectedTime}으로` : '';
+      lines[1] = '';
+      lines[2] = '먹었어';
+    }
+
+    let currentFoods = lines[1].trim().split(',').map(f => f.trim()).filter(f => f);
+    if (currentFoods.includes(food)) {
+      currentFoods = currentFoods.filter(f => f !== food);
+      setSelectedFoods(selectedFoods.filter(f => f !== food));
     } else {
-      const currentFoods = lines[1].trim();
-      lines[1] = currentFoods ? `${currentFoods}, ${food}` : food;
-      setMessage(lines.join('\n'));
+      currentFoods.push(food);
       setSelectedFoods([...selectedFoods, food]);
     }
+
+    lines[1] = currentFoods.join(', ');
+    setMessage(lines.join('\n'));
     setErrorMessage('');
+
     setTimeout(() => {
       const textarea = textareaRef.current;
       if (textarea) {
