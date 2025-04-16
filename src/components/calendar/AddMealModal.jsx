@@ -38,7 +38,7 @@ function AddMealModal({ onClose, onSubmit,selectedDate }) {
   
     if (cleaned.length === 0) return;
   
-    apiClient.post('/api/diet/save?userId=1', cleaned)
+    apiClient.post('/api/diet/save', cleaned)
       .then(() => {
         alert('저장 성공!');
         setMealType('morning');
