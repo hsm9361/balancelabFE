@@ -4,6 +4,8 @@ import AddMealModal from 'components/calendar/AddMealModal';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiClient from '../../services/apiClient';
+import { memberService } from '../../services/memberService';
+
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -23,6 +25,9 @@ const getThisWeekDates = (baseDate) => {
 const formatDate = (date) => date.toISOString().split('T')[0];
 
 export default function WeekCalendar() {
+  const [userId, setUserId] = useState(null);
+
+  
   const [baseDate, setBaseDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState('');
   const [mealData, setMealData] = useState({});
@@ -30,8 +35,21 @@ export default function WeekCalendar() {
   const [weekDateRange, setWeekDateRange] = useState('');
 
   const weekDates = getThisWeekDates(baseDate);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const data = await memberService.getMemberInfo();
+        setUserId(data.id); // ✅ 여기서 userId 저장
+        localStorage.setItem('userId', data.id); // 필요 시 저장
+      } catch (err) {
+        console.error('유저 정보 불러오기 실패', err);
+      }
+    };fetchUserId();}, []);
+
+    
 
   useEffect(() => {
+    if (!userId) return; // ✅ userId 준비 안 됐으면 리턴
     const start = weekDates[0];
     const end = weekDates[6];
     setWeekDateRange(`${start.getMonth() + 1}.${start.getDate()} ~ ${end.getMonth() + 1}.${end.getDate()}`);
@@ -44,7 +62,7 @@ export default function WeekCalendar() {
     const startDate = formatDate(start);
     const endDate = formatDate(end);
 
-    apiClient.get(`/api/diet/list?userId=1&startDate=${startDate}&endDate=${endDate}`)
+    apiClient.get(`/api/diet/list?userId=${userId}&startDate=${startDate}&endDate=${endDate}`)
       .then(res => {
         console.log('서버 응답 데이터', res.data);
         const result = { '일': [], '월': [], '화': [], '수': [], '목': [], '금': [], '토': [] };
@@ -64,7 +82,7 @@ export default function WeekCalendar() {
         setMealData(result);
       })
       .catch(err => console.error('식단 불러오기 실패:', err));
-  }, [baseDate]);
+  }, [baseDate,userId]);
 
   const handleWeekChange = (daysToAdd) => {
     const newBaseDate = new Date(baseDate);
@@ -98,7 +116,7 @@ export default function WeekCalendar() {
     const confirmDelete = window.confirm('삭제하시겠습니까?');
     if (!confirmDelete) return;
   
-    axios.delete(`/api/diet/delete/${foodId}?userId=1`,{
+    axios.delete(`/api/diet/delete/${foodId}?userId=${userId}`,{
       withCredentials: true
 
     })
