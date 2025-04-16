@@ -3,11 +3,14 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import eventsData from 'data/events.json';
+import AddMealModal from 'components/calendar/AddMealModal';
+import buttonStyles from 'assets/css/pages/calendar/calendarPage.module.css';
 
 function MyCalendar() {
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   // 날짜 포맷팅 함수
   const formatDate = useCallback((date) => {
@@ -62,6 +65,20 @@ function MyCalendar() {
     }
   };
 
+  const handleAddMeal = (mealType, menus) => {
+    const newEvent = {
+      id: Date.now(),
+      date: formatDate(date),
+      type: 'diet',
+      title: `${mealType === 'morning' ? '아침' : mealType === 'lunch' ? '점심' : '저녁'} 식사`,
+      details: menus.map((m) => `${m.foodName} (${m.intakeAmount}${m.unit})`).join(', ')
+    };
+
+    setEvents(prev => [...prev, newEvent]);
+    setSelectedDateEvents(prev => [...prev, newEvent]);
+    setShowModal(false);
+  };
+
   return (
     <div className={styles.tabContent}>
       <h2 className={styles.contentTitle}>캘린더</h2>
@@ -98,8 +115,21 @@ function MyCalendar() {
           ) : (
             <p className={styles.noEvents}>이 날짜에 기록된 데이터가 없습니다.</p>
           )}
+          <button 
+            className={buttonStyles.addButton} 
+            onClick={() => setShowModal(true)}          >
+            + 식단 추가하기
+          </button>
         </div>
       </div>
+
+      {showModal && (
+        <AddMealModal
+          onClose={() => setShowModal(false)}
+          onSubmit={handleAddMeal}
+          selectedDate={date}
+        />
+      )}
     </div>
   );
 }
