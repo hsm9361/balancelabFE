@@ -138,3 +138,112 @@
     padding: 10px;
   }
 }
+
+/* 모달 스타일 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1E3A8A;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modalSection {
+  margin-bottom: 20px;
+}
+
+.modalLabel {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4B5563;
+  margin-bottom: 8px;
+}
+
+.modalSelect {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #1F2937;
+  background-color: white;
+  margin-bottom: 16px;
+}
+
+.modalFoodList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modalFoodItem {
+  padding: 8px 12px;
+  background-color: #F3F4F6;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #1F2937;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modalSubmitButton {
+  padding: 8px 20px;
+  background-color: #2563EB;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modalSubmitButton:hover {
+  background-color: #1D4ED8;
+}
+
+.modalCancelButton {
+  padding: 8px 20px;
+  background-color: #F3F4F6;
+  color: #4B5563;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modalCancelButton:hover {
+  background-color: #E5E7EB;
+  color: #374151;
+}

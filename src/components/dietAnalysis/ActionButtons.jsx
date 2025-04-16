@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useSaveAsPDF from '../../hooks/useSaveAsPDF';
 import styles from '../../assets/css/components/ActionButtons.module.css';
 
-const ActionButtons = () => {
+const ActionButtons = ({ additionalButton }) => {
   const navigate = useNavigate();
   const { saveAsPDF, isSaving } = useSaveAsPDF();
 
@@ -39,6 +39,7 @@ const ActionButtons = () => {
       >
         {isSaving ? '저장 중...' : 'PDF로 저장'}
       </button>
+      {additionalButton}
     </div>
   );
 };

@@ -7,11 +7,13 @@ import TotalNutrition from '../../components/dietAnalysis/TotalNutrition';
 import DeficientNutrients from '../../components/dietAnalysis/DeficientNutrients';
 import NextMealSuggestion from '../../components/dietAnalysis/NextMealSuggestion';
 import ActionButtons from '../../components/dietAnalysis/ActionButtons';
+import AddDietModal from '../../components/dietAnalysis/AddModal';
 
 const DietAnalysisResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     console.log('Location state:', location.state);
@@ -25,6 +27,20 @@ const DietAnalysisResultPage = () => {
     }
   }, [location, navigate]);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSubmitMeal = (mealType, foodList) => {
+    // 여기에서 식단 추가 API 호출 등의 로직을 구현할 수 있습니다.
+    console.log('Meal submitted:', { mealType, foodList });
+    setIsModalOpen(false);
+  };
+
   if (!result) {
     return (
       <div className={styles.resultContainer}>
@@ -32,6 +48,14 @@ const DietAnalysisResultPage = () => {
       </div>
     );
   }
+
+  // 메시지에서 시간대 추출
+  const getSelectedTime = () => {
+    if (location.state && location.state.selectedTime) {
+      return location.state.selectedTime;
+    }
+    return '점심'; // 기본값
+  };
 
   console.log('Props to components:', {
     foodList: result.food_list,
@@ -61,7 +85,24 @@ const DietAnalysisResultPage = () => {
           <NextMealSuggestion nextMealSuggestion={result.next_meal_suggestion || []} />
         </div>
       </div>
-      <ActionButtons />
+      <div className={styles.actionButtons}>
+        <ActionButtons 
+          additionalButton={
+            <button onClick={handleOpenModal} className={styles.addMealButton}>
+              식단 추가하기
+            </button>
+          }
+        />
+      </div>
+      {isModalOpen && (
+        <AddDietModal
+          onClose={handleCloseModal}
+          onSubmit={handleSubmitMeal}
+          selectedDate={new Date()}
+          initialFoodList={result.food_list || []}
+          selectedTime={getSelectedTime()}
+        />
+      )}
     </div>
   );
 };
