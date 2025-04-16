@@ -41,8 +41,8 @@ export default function WeekCalendar() {
     const defaultDay = todayIndex >= 0 ? days[todayIndex] : '월';
     setSelectedDay(defaultDay);
 
-    const startDate = formatDate(start) + 'T00:00:00';
-    const endDate = formatDate(end) + 'T23:59:59';
+    const startDate = formatDate(start);
+    const endDate = formatDate(end);
 
     apiClient.get(`/api/diet/list?userId=1&startDate=${startDate}&endDate=${endDate}`)
       .then(res => {

@@ -2,15 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
-import eventsData from 'data/events.json';
 import AddMealModal from 'components/calendar/AddMealModal';
 import buttonStyles from 'assets/css/pages/calendar/calendarPage.module.css';
+import apiClient from '../../services/apiClient';
 
 function MyCalendar() {
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const userId = 1; // 사용자 ID
 
   // 날짜 포맷팅 함수
   const formatDate = useCallback((date) => {
@@ -20,27 +22,57 @@ function MyCalendar() {
     return `${year}-${month}-${day}`;
   }, []);
 
-  // 선택된 날짜에 해당하는 이벤트 필터링
-  const filterEventsByDate = useCallback(
-    (selectedDate) => {
-      const formattedDate = formatDate(selectedDate);
-      const filteredEvents = events.filter(event => event.date === formattedDate);
-      setSelectedDateEvents(filteredEvents);
-    },
-    [events, formatDate] // events와 formatDate에 의존
-  );
+  const getMonthDateRange = useCallback((date) => {
+    const start = new Date(date.getFullYear(), date.getMonth(), 1);
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return {
+      startDate: formatDate(start),
+      endDate: formatDate(end),
+    };
+  }, [formatDate]);
 
-  // useEffect로 초기 데이터 로드 및 날짜 변경 시 필터링
-  useEffect(() => {
-    setEvents(eventsData.events); // 데이터 로드
-    filterEventsByDate(date); // 선택된 날짜 이벤트 필터링
-  }, [date, events, filterEventsByDate]);
+  const fetchDietEvents = useCallback(async (baseDate) => {
+    const { startDate, endDate } = getMonthDateRange(baseDate);
 
-  // 날짜 변경 핸들러
+    try {
+      const res = await apiClient.get(`/api/diet/list`, {
+        params: {
+          userId,
+          startDate,
+          endDate,
+        }
+      });
+
+      const dietEvents = res.data.map(item => ({
+        id: item.id || item.recordId,
+        date: item.eatenDate?.split('T')[0], // 'YYYY-MM-DD' 포맷으로
+        title: item.mealType || '식단',
+        type: 'diet',
+        details: `${item.foodName || item.description || '음식'} (${item.intakeAmount} ${item.unit})`
+      }));
+
+      setEvents(dietEvents);
+
+      // 현재 날짜 기준으로 필터링해서 보여주기
+      const formattedCurrent = formatDate(baseDate);
+      const todaysEvents = dietEvents.filter(event => event.date === formattedCurrent);
+      setSelectedDateEvents(todaysEvents);
+
+    } catch (error) {
+      console.error('식단 데이터를 불러오는 중 오류 발생:', error);
+      setEvents([]);
+      setSelectedDateEvents([]);
+    }
+  }, [getMonthDateRange, formatDate, userId]);
+
+  // 날짜 클릭 시 필터링만
   const handleDateChange = (newDate) => {
     setDate(newDate);
-    filterEventsByDate(newDate);
+    const formatted = formatDate(newDate);
+    const filtered = events.filter(event => event.date === formatted);
+    setSelectedDateEvents(filtered);
   };
+
 
   // 이벤트가 있는 날짜 클래스 추가
   const tileClassName = ({ date, view }) => {
@@ -78,7 +110,11 @@ function MyCalendar() {
     setSelectedDateEvents(prev => [...prev, newEvent]);
     setShowModal(false);
   };
-
+  
+  // 최초 로드 + 날짜 바뀔 때 월이 바뀌면 다시 로딩
+  useEffect(() => {
+    fetchDietEvents(date);
+  }, [date.getFullYear(), date.getMonth(), fetchDietEvents]);
   return (
     <div className={styles.tabContent}>
       <h2 className={styles.contentTitle}>캘린더</h2>
@@ -115,6 +151,7 @@ function MyCalendar() {
           ) : (
             <p className={styles.noEvents}>이 날짜에 기록된 데이터가 없습니다.</p>
           )}
+          <br/>
           <button 
             className={buttonStyles.addButton} 
             onClick={() => setShowModal(true)}          >
