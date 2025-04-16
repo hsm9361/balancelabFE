@@ -13,7 +13,6 @@ function DietAnalysisPage() {
   const navigate = useNavigate();
   const { analyzeDiet, loading, error } = useDietAnalysis('testUser');
   const textareaRef = useRef(null);
-  const email = localStorage.getItem('email');
 
   const handleAnalysis = async () => {
     if (!message.trim()) {
@@ -22,7 +21,7 @@ function DietAnalysisPage() {
     }
 
     try {
-      const result = await analyzeDiet(message, email, selectedTime); // selectedTime 전달
+      const result = await analyzeDiet(message, selectedTime); // selectedTime 전달
       navigate('/diet-analysis/result', {
         state: { result },
       });
