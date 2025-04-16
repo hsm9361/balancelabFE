@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 import axios from 'axios';
+import apiClient from '../../services/apiClient';
 
 function AddMealModal({ onClose, onSubmit,selectedDate }) {
   const [mealType, setMealType] = useState('morning');
@@ -37,7 +38,7 @@ function AddMealModal({ onClose, onSubmit,selectedDate }) {
   
     if (cleaned.length === 0) return;
   
-    axios.post('/api/diet/save?userId=1', cleaned)
+    apiClient.post('/api/diet/save?userId=1', cleaned)
       .then(() => {
         alert('저장 성공!');
         setMealType('morning');
