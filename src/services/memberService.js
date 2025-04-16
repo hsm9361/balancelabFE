@@ -5,14 +5,25 @@ export const memberService = {
   getMemberInfo: async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        throw new Error('Authentication required');
+      }
       const response = await apiClient.get(`/member/info`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+          'Cache-Control': 'no-cache',
+        },
       });
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch member info:', error);
+      console.error('Failed to fetch member info:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      if (error.response?.status === 401) {
+        throw new Error('Authentication required');
+      }
       throw error;
     }
   },
@@ -21,23 +32,32 @@ export const memberService = {
   updateMemberInfo: async (formData) => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      
-      // Log FormData contents before sending
+      if (!accessToken) {
+        throw new Error('Authentication required');
+      }
+
       console.log('FormData contents in service:');
       for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
+        console.log(`${pair[0]}:`, pair[1]);
       }
 
       const response = await apiClient.post(`/member/info`, formData, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          // Let browser set the Content-Type header with boundary
-        }
+          Authorization: `Bearer ${accessToken}`,
+          // Content-Type은 FormData가 자동 설정
+        },
       });
       return response.data;
     } catch (error) {
-      console.error('Failed to update member info:', error);
+      console.error('Failed to update member info:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      if (error.response?.status === 401) {
+        throw new Error('Authentication required');
+      }
       throw error;
     }
-  }
-}; 
+  },
+};

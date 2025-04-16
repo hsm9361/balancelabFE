@@ -2,6 +2,11 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: 'http://localhost:8080',
+  headers: {
+    'Cache-Control': 'no-cache',
+    Pragma: 'no-cache',
+    Expires: '0',
+  },
   withCredentials: true // CORS 요청에서 쿠키를 포함하도록 설정
 });
 
