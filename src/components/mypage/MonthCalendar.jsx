@@ -12,7 +12,7 @@ function MyCalendar() {
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  const userId = 1; // 사용자 ID
+  const userId = localStorage.getItem('member_Id');  // 사용자 ID
 
   // 날짜 포맷팅 함수
   const formatDate = useCallback((date) => {

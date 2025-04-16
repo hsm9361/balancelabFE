@@ -24,6 +24,7 @@ const MyInfo = () => {
   const fetchMemberInfo = async () => {
     try {
       const data = await memberService.getMemberInfo();
+      console.log(data);
       setMemberInfo({
         height: data.height?.toString() || '',
         weight: data.weight?.toString() || '',
