@@ -17,7 +17,8 @@ import PredictionResult from './pages/healthPrediction/PredictionResult.jsx';
 import DietAnalysisPage from './pages/dietAnalysis/DietAnalysisPage.jsx';
 import DietAnalysisResultPage from './pages/dietAnalysis/DietAnalysisResultPage.jsx';
 import DietLoadingPage from './components/dietAnalysis/DietLoadingPage.jsx';
-import DietConsulting from './pages/dietConsulting/DietConsulting.jsx';
+import DietConsulting from './pages/dietConsulting/DietConsultingResult.jsx';
+import DietConsultIndex from './pages/dietConsulting/DietConsultIndex.jsx';
 
 function App() {
   return (
@@ -30,9 +31,14 @@ function App() {
           
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/healthprediction" element={<HealthPrediction />} />
-            <Route path="/healthprediction/result" element={<PredictionResult />} />
-            <Route path="/diet-consulting" element={<DietConsulting />} />
+            <Route path="/healthprediction">
+              <Route index element={<HealthPrediction />}  />
+              <Route path="result" element={<PredictionResult />}  />
+            </Route>
+            <Route path="/diet-consulting">
+              <Route index element={<DietConsultIndex />}  />
+              <Route path="result" element={<DietConsulting />}  />
+            </Route>
             <Route path="/analysis" element={<ImageAnalysisPage />} />
             <Route path="/analysis/loading" element={<LoadingPage />} />
             <Route path="/analysis/result" element={<ImageAnalysisResultPage />} />

@@ -1,143 +1,443 @@
+/* DietConsulting.css */
+
+/* CSS Variables for Consistency */
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #feca57;
+  --background-color: #f9f9f9;
+  --card-bg: #ffffff;
+  --text-color: #2c3e50;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+}
+
+/* Base Layout */
 .diet-consulting {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem;
+}
+
+.consult-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
 }
 
 .diet-consulting h1 {
   text-align: center;
-  margin-bottom: 2rem;
   color: #2C3E50;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
 }
 
-.analysis-section {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 2rem;
+.consult-content {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+}
+
+.consult-image {
+  flex: 1;
+  text-align: center;
+}
+
+.consult-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+.consult-info {
+  flex: 1;
+}
+
+.consult-info h2 {
+  color: #34495E;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.description {
+  color: #7F8C8D;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.analysis-points {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: #F8F9FA;
+  padding: 1.2rem;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.point-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.point-icon {
+  font-size: 1.8rem;
+  background-color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.point-text h3 {
+  color: #2C3E50;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.point-text p {
+  color: #7F8C8D;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.recommend-button {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1.1rem;
+  background-color: #3498DB;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.recommend-button:hover {
+  background-color: #2980B9;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+  .consult-content {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .consult-image {
+    order: -1;
+  }
+
+  .consult-image img {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 576px) {
+  .consult-container {
+    padding: 2rem;
+  }
+
+  .diet-consulting h1 {
+    font-size: 2rem;
+  }
+
+  .consult-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .point-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .point-icon {
+    margin-bottom: 1rem;
+  }
+}
+
+/* CSS Variables for Consistency */
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #feca57;
+  --background-color: #f9f9f9;
+  --card-bg: #ffffff;
+  --text-color: #2c3e50;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+}
+
+/* Base Layout */
+.diet-consulting {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--background-color);
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+.diet-consulting h1 {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: var(--text-color);
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Analysis Section */
+.analysis-section {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
   margin-bottom: 2rem;
 }
 
 .analysis-section h2 {
   text-align: center;
-  color: #34495E;
-  margin-bottom: 2rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
 }
 
-.nutrition-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.nutrition-item {
-  background-color: #F8F9FA;
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.nutrition-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.nutrition-item h3 {
-  color: #2C3E50;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-}
-
-.nutrition-item p {
-  color: #7F8C8D;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
+/* Speech Bubble */
 .speech-bubble {
   position: relative;
-  white-space: pre-line;
-  background: #002fff;
-  border-radius: 15px;
+  background: linear-gradient(135deg, #cfe5ff, #e3f0ff);
+  border-radius: var(--border-radius);
   padding: 1.5rem;
   font-size: 1.1rem;
-  text-align: left;
-  color: #333;
-  line-height: 1.5;
-  margin-top: 1rem;
-  color:#fff;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 1rem 0;
+  box-shadow: var(--shadow);
+  white-space: pre-line;
 }
 
 .speech-bubble::after {
   content: '';
   position: absolute;
-  bottom: -20px;
-  left: 40px;
-  width: 0;
-  height: 0;
+  bottom: -15px;
+  left: 50px;
   border: 10px solid transparent;
-  border-top-color: #f0f0f0;
+  border-top-color: #e6f0fa;
 }
 
+/* Food Recommend */
 .food-recommend {
-  position: relative;
-  white-space: pre-line;
-  background: #9bb6e7;
-  border-radius: 15px;
+  background: linear-gradient(135deg, #a5c3f1, #dceaff);
+  border-radius: var(--border-radius);
   padding: 1.5rem;
-  font-size: 1.1rem;
-  text-align: left;
-  color: #333;
-  line-height: 1.5;
-  margin-top: 1rem;
+  margin: 1rem 0;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
 }
 
-.food-recommend::after {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  left: 40px;
-  width: 0;
-  height: 0;
-  border: 10px solid transparent;
-  border-top-color: #f0f0f0;
+.food-recommend:hover {
+  transform: translateY(-5px);
 }
 
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.ai-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  transition: transform 0.3s ease;
+}
 .meal-icon {
-  width: 40px; /* Default size for larger screens */
-  height: 40px;
-  object-fit: cover; /* Ensure image fits nicely */
-  border-radius: 50%; /* Optional: circular images */
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  transition: transform 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .nutrition-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+.meal-icon:hover {
+  transform: scale(1.1);
+}
+
+.food-recommend h3 {
+  font-size: 1.6rem;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.food-recommend ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.food-recommend li {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 20px;
+}
+
+.food-recommend li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+/* Button Group */
+.button-group {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.action-button {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.action-button:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+
+/* Loading Spinner */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.loading-spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid var(--primary-color);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-container p {
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+/* Error Container */
+.error-container {
+  text-align: center;
+  padding: 3rem;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
   .diet-consulting {
     padding: 1rem;
   }
-  .meal-icon{
-    width:30px;
-    height:30px;
-  }
-} 
 
-/* 로딩 스피너 스타일 */
-.loading-spinner {
-  border: 4px solid #f3f3f3; /* 배경색 */
-  border-top: 4px solid #3498db; /* 스피너 색 */
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
+  .diet-consulting h1 {
+    font-size: 2rem;
+  }
+
+  .analysis-section {
+    padding: 1.5rem;
+  }
+
+  .food-recommend {
+    padding: 1rem;
+  }
+
+  .meal-icon {
+    width: 30px;
+    height: 30px;
+    border-width: 1px;
+  }
+
+  .food-recommend h3 {
+    font-size: 1.4rem;
+  }
+
+  .action-button {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
 }
 
-/* 애니메이션 정의 */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@media (max-width: 480px) {
+  .diet-consulting h1 {
+    font-size: 1.8rem;
+  }
+
+  .speech-bubble {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .food-recommend li {
+    font-size: 1rem;
+  }
 }
