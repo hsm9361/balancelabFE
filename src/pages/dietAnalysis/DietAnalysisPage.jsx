@@ -22,14 +22,14 @@ function DietAnalysisPage() {
 
     try {
       const result = await analyzeDiet(message, selectedTime);
-      navigate('/diet-analysis/result', {
+      navigate('/analysis/diet-analysis/result', {
         state: { 
           result,
           selectedTime: selectedTime || '점심'
         },
       });
     } catch (err) {
-      navigate('/diet-analysis/error', { state: { error: err.message || '분석에 실패했습니다.' } });
+      navigate('/analysis/diet-analysis/error', { state: { error: err.message || '분석에 실패했습니다.' } });
     }
   };
 
