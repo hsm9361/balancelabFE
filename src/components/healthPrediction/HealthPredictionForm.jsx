@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 function HealthPredictionForm({ onSubmit }) {
   const [formData, setFormData] = useState({
-    age: '55',
+    age: '28',
     height: '',
     weight: '',
     gender: 'male',
@@ -13,9 +13,9 @@ function HealthPredictionForm({ onSubmit }) {
     historyHypertension: '',
     historyCardiovascular: '',
     dailyCarbohydrate: '300',
-    dailySugar: '300',
-    dailyFat: '50',
-    dailySodium: '5000',
+    dailySugar: '100',
+    dailyFat: '30',
+    dailySodium: '3000',
     dailyFibrin: '10',
     dailyWater: '1000'
   });
