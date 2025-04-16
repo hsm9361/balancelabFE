@@ -3,6 +3,7 @@ import styles from 'assets/css/pages/calendar/calendarPage.module.css';
 import AddMealModal from 'components/calendar/AddMealModal';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import apiClient from '../../services/apiClient';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -43,7 +44,7 @@ export default function WeekCalendar() {
     const startDate = formatDate(start) + 'T00:00:00';
     const endDate = formatDate(end) + 'T23:59:59';
 
-    axios.get(`/api/diet/list?userId=1&startDate=${startDate}&endDate=${endDate}`)
+    apiClient.get(`/api/diet/list?userId=1&startDate=${startDate}&endDate=${endDate}`)
       .then(res => {
         console.log('서버 응답 데이터', res.data);
         const result = { '일': [], '월': [], '화': [], '수': [], '목': [], '금': [], '토': [] };

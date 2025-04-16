@@ -11,13 +11,13 @@ function MyBalance() {
   };
 
   const weeklyIntake = [
-    { day: '월', calories: 2000 },
-    { day: '화', calories: 2100 },
-    { day: '수', calories: 1900 },
-    { day: '목', calories: 2200 },
-    { day: '금', calories: 2050 },
-    { day: '토', calories: 2300 },
-    { day: '일', calories: 1800 }
+    { day: '월', calories: 2500 },
+    { day: '화', calories: 2600 },
+    { day: '수', calories: 2700 },
+    { day: '목', calories: 2300 },
+    { day: '금', calories: 2900 },
+    { day: '토', calories: 2000 },
+    { day: '일', calories: 3000 }
   ];
 
   return (
@@ -62,13 +62,17 @@ function MyBalance() {
         <div className={styles.chartSection}>
           <h3 className={styles.sectionTitle}>주간 칼로리 섭취</h3>
           <div className={styles.barChart}>
+            <div className={styles.targetLine} style={{ bottom: `${(2200 / 3000) * 100}%` }}>
+              <span className={styles.targetLabel}>목표: 2200 kcal</span>
+            </div>
             {weeklyIntake.map((item, index) => (
               <div key={index} className={styles.barContainer}>
                 <div 
                   className={styles.bar} 
-                  style={{ height: `${(item.calories / 2500) * 100}%` }}
+                  style={{ height: `${(item.calories / 3000) * 100}%` }}
                 ></div>
                 <div className={styles.barLabel}>{item.day}</div>
+                <div className={styles.barValue}>{item.calories} kcal</div>
               </div>
             ))}
           </div>
