@@ -184,10 +184,7 @@ const Header = memo(() => {
             건강예측
             </Link>
             <Link to="/analysis" className={styles.navLink} onClick={closeMenu}>
-              이미지분석
-            </Link>
-            <Link to="/diet-analysis" className={styles.navLink} onClick={closeMenu}
-            >식단분석
+              식단분석
             </Link>
             <Link to="/calendar" className={styles.navLink} onClick={closeMenu}>
               캘린더

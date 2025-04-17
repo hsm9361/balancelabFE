@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { memberService } from '../../services/memberService';
 import HealthPredictionResults from 'components/healthPrediction/HealthPredictionResults';
 import 'assets/css/pages/healthPrediction/HealthPrediction.css';
 
@@ -8,17 +9,38 @@ function PredictionResult() {
   const navigate = useNavigate();
   const { inputData, predictions } = location.state || {};
   const [isSaving, setIsSaving] = useState(false);
+  const [memberId, setMemberId] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const memberId = localStorage.getItem('memberId');
-  const email = localStorage.getItem('email');
+  const fetchMemberInfo = async () => {
+      try {
+        const data = await memberService.getMemberInfo();
+        setMemberId(data.id);
+      } catch (err) {
+        if (err.message === 'Authentication required') {
+          localStorage.setItem('redirectPath', window.location.pathname);
+          return;
+        }
+        setError('회원 정보를 불러오는데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+    
+
 
   useEffect(() => {
     console.log('Received data:', { inputData, predictions }); // 디버깅을 위한 로그
   }, [inputData, predictions]);
 
+  useEffect(() => {
+    fetchMemberInfo(); // 이 줄이 있어야 memberId를 세팅합니다.
+  }, [inputData, predictions]);
+
+  
+  console.log("아이디"+memberId)
+
   const handleConsultClick = async () => {
-    console.log("아이디"+memberId)
-    console.log("이메일"+email)
     try {
       setIsSaving(true);
       
@@ -28,7 +50,7 @@ function PredictionResult() {
         diabetesProba: predictions.diabetes,
         hypertensionProba: predictions.hypertension,
         cvdProba: predictions.cardiovascular,
-        email:email
+        id:memberId
       };
       console.log(saveData)
       // 저장 요청
