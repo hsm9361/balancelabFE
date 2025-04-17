@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/pages/DietAnalysisPage.module.css';
 import FoodInputSection from '../../components/dietAnalysis/FoodInputSection';
+import ErrorModal from '../../components/dietAnalysis/ErrorModal';
 import dietImage from '../../assets/images/diet-placeholder.jpg';
 import { useDietAnalysis } from '../../hooks/useDietAnalysis';
 
@@ -10,13 +11,23 @@ function DietAnalysisPage() {
   const [selectedFoods, setSelectedFoods] = useState([]);
   const [selectedTime, setSelectedTime] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const navigate = useNavigate();
   const { analyzeDiet, loading, error } = useDietAnalysis('testUser');
   const textareaRef = useRef(null);
 
   const handleAnalysis = async () => {
+    const lines = message.split('\n');
     if (!message.trim()) {
       setErrorMessage('음식을 입력해주세요!');
+      setShowErrorModal(true);
+      return;
+    }
+
+    // 두 번째 줄(음식 입력란)이 비어있는지 확인
+    if (lines.length > 1 && !lines[1].trim()) {
+      setErrorMessage('음식을 입력해주세요!');
+      setShowErrorModal(true);
       return;
     }
 
@@ -169,10 +180,12 @@ function DietAnalysisPage() {
         loading={loading}
         textareaRef={textareaRef}
       />
-      {(error || errorMessage) && (
-        <p className={styles.errorMessage}>
-          {errorMessage || (typeof error === 'string' ? error : '오류가 발생했습니다.')}
-        </p>
+      
+      {showErrorModal && (
+        <ErrorModal
+          message={errorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
       )}
     </div>
   );
