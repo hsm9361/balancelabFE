@@ -186,12 +186,12 @@
 }
 
 .saveButton {
-  background-color: #28a745;
+  background-color: #1E3A8A;
   color: white;
 }
 
 .saveButton:hover {
-  background-color: #218838;
+  background-color: #2447a8ab;
 }
 
 .cancelButton {
