@@ -41,6 +41,7 @@ body {
   margin: 0 auto;
   padding: 20px;
   background-color: var(--background-light);
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .pageTitle {
@@ -854,4 +855,16 @@ body {
 
 .subMenuItem:hover {
   color: var(--accent-color);
+}
+
+/* fadeInUp Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
