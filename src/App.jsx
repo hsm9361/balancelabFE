@@ -19,6 +19,7 @@ import DietAnalysisResultPage from './pages/dietAnalysis/DietAnalysisResultPage.
 import DietLoadingPage from './components/dietAnalysis/DietLoadingPage.jsx';
 import DietConsulting from './pages/dietConsulting/DietConsultingResult.jsx';
 import DietConsultIndex from './pages/dietConsulting/DietConsultIndex.jsx';
+import AnalysisPage from './pages/AnalysisPage.jsx';
 
 function App() {
   return (
@@ -39,13 +40,18 @@ function App() {
               <Route index element={<DietConsultIndex />}  />
               <Route path="result" element={<DietConsulting />}  />
             </Route>
-            <Route path="/analysis" element={<ImageAnalysisPage />} />
-            <Route path="/analysis/loading" element={<LoadingPage />} />
-            <Route path="/analysis/result" element={<ImageAnalysisResultPage />} />
-            <Route path="/diet-analysis">
-              <Route index element={<DietAnalysisPage />} />
-              <Route path="loading" element={<DietLoadingPage />} />
-              <Route path="result" element={<DietAnalysisResultPage />} />
+            <Route path="/analysis">
+              <Route index element={<AnalysisPage />}  />
+              <Route path="/analysis/image-analysis">
+                <Route index element={<ImageAnalysisPage />}  />
+                <Route path="loading" element={<LoadingPage />}  />
+                <Route path="result" element={<ImageAnalysisResultPage />}  />
+              </Route>
+              <Route path="/analysis/diet-analysis">
+                <Route index element={<DietAnalysisPage />} />
+                <Route path="loading" element={<DietLoadingPage />} />
+                <Route path="result" element={<DietAnalysisResultPage />} />
+              </Route>
             </Route>
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/mypage" element={<MyPage />} />

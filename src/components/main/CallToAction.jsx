@@ -1,18 +1,26 @@
 import React from 'react';
 import styles from 'assets/css/pages/Home.module.css';
+import plane from 'assets/images/plane.png';
+import footprint from 'assets/images/compass.png';
 
 const CallToAction = ({ navigate }) => {
     return (
         <div className={styles.textContainer}>
-            <h1 className={styles.title}>나의 식단을 분석해보세요</h1>
+            <h1 className={styles.title}>
+                당신만의 건강 여정을 시작해보세요!
+                <img src={footprint} alt="footprint" className="foot-icon" />
+            </h1>
             <p className={styles.description}>
-                식단을 등록하면 AI가 필요한 영양소를 제안하고, 건강 위험을 알려줍니다.
+                매일 식단을 등록하면, AI가 영양소를 분석하고 건강의 나침반이 되어줄 거예요.  
+                지금, 더 나은 나를 향한 탐험을 시작해볼까요?
             </p>
             <button
                 className={styles.analyzeButton}
                 onClick={() => navigate('/analysis')}
             >
-                지금 식단 등록하기
+            
+                건강 여정 떠나기 
+                <img src={plane} alt="plane" className="plane-icon" />
             </button>
         </div>
     );

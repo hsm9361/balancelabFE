@@ -1,0 +1,87 @@
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* Adjust based on your header/footer height */
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 40px;
+}
+
+.cardContainer {
+    display: flex;
+    gap: 40px; /* Spacing between cards */
+    max-width: 900px; /* Max width of the container */
+    width: 100%;
+}
+
+.analysisCard {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 40px 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1; /* Make cards take equal space */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.analysisCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.cardIcon {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    margin-bottom: 25px;
+}
+
+.cardTitle {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.cardDescription {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.5;
+    min-height: 48px; /* Ensure consistent height */
+}
+
+.cardButton {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 80%;
+    max-width: 250px;
+    margin-top: auto; /* Push button to the bottom */
+}
+
+.imageButton {
+    background-color: #6d5acd; /* Purple */
+    color: white;
+}
+
+.imageButton:hover {
+    background-color: #5a4ab9;
+    transform: scale(1.03);
+}
+
+.dietButton {
+    background-color: #2b5f9a; /* Dark Blue */
+    color: white;
+}
+
+.dietButton:hover {
+    background-color: #224c7a;
+    transform: scale(1.03);
+} 
