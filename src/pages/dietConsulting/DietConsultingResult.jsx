@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { memberService } from '../../services/memberService';
 import 'assets/css/pages/dietConsulting/DietConsulting.css';
 import breakfastImg from 'assets/images/breakfast.png';
 import lunchImg from 'assets/images/lunch.png';
@@ -18,11 +19,33 @@ function DietConsulting() {
   const navigate = useNavigate();
   const [dietData, setDietData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const email = localStorage.getItem('email');
+  const [email, setEmail] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMemberInfo = async () => {
+    try {
+      const data = await memberService.getMemberInfo();
+      setEmail(data.email);
+    } catch (err) {
+      if (err.message === 'Authentication required') {
+        localStorage.setItem('redirectPath', window.location.pathname);
+        return;
+      }
+      setError('회원 정보를 불러오는데 실패했습니다.');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMemberInfo(); // 이 줄이 있어야 memberId를 세팅합니다.
+  });
 
   useEffect(() => {
     const fetchDietRecommendation = async () => {
       try {
+        setDietData(null);
+        setIsLoading(true);
         const response = await fetch('http://localhost:8000/diet/recommendation', {
           method: 'POST',
           headers: {
@@ -93,7 +116,7 @@ function DietConsulting() {
           <h3>🥚아침</h3>
         </div>
         <ul>
-          {meals['아침']?.map((item, index) => (
+          {meals?.['아침']?.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
         </ul>
