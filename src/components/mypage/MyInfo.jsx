@@ -1,153 +1,123 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { FaUser } from 'react-icons/fa';
-import { memberService } from '../../services/memberService';
+import Select from 'react-select';
+import { useForm, Controller } from 'react-hook-form';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useMemberInfo } from '../../hooks/useMemberInfo';
 import styles from './MyInfo.module.css';
+import { genderOptions, activityLevelOptions } from '../../constants/member';
+import { getImageUrl } from '../../utils/imageUtils';
 
 const MyInfo = () => {
-  const [memberInfo, setMemberInfo] = useState({
-    height: '',
-    weight: '',
-    age: '',
-    gender: '',
-    activityLevel: '',
-    goalWeight: '',
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting, isDirty, errors },
+  } = useForm({
+    defaultValues: {
+      height: '',
+      weight: '',
+      age: '',
+      gender: null,
+      activityLevel: null,
+      goalWeight: '',
+    },
   });
-  const [initialMemberInfo, setInitialMemberInfo] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [profileImage, setProfileImage] = useState(null);
-  const [profileImageUrl, setProfileImageUrl] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    error,
+    loading,
+    profileImage,
+    setProfileImage,
+    profileImageUrl,
+    setProfileImageUrl,
+    fetchMemberInfo,
+    updateMemberInfo,
+    clearProfileImage,
+    setError,
+  } = useMemberInfo(reset);
+
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
   useEffect(() => {
-    fetchMemberInfo();
-  }, []);
+    let isMounted = true;
+    if (isMounted) {
+      fetchMemberInfo();
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchMemberInfo]);
 
-  const fetchMemberInfo = async () => {
-    try {
-      const data = await memberService.getMemberInfo();
-      const info = {
-        height: data.height?.toString() || '',
-        weight: data.weight?.toString() || '',
-        age: data.age?.toString() || '',
-        gender: data.gender || '',
-        activityLevel: data.activityLevel || '',
-        goalWeight: data.goalWeight?.toString() || '',
-      };
-      setMemberInfo(info);
-      setInitialMemberInfo(info);
-      setProfileImageUrl(data.profileImageUrl || null);
-      setLoading(false);
-    } catch (err) {
-      if (err.message === 'Authentication required') {
-        localStorage.setItem('redirectPath', window.location.pathname);
-        window.location.href = '/login';
-        return;
+  const handleImageChange = useCallback(
+    (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        console.log('Selected file:', file.name);
+        setProfileImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          console.log('FileReader result:', reader.result);
+          setProfileImageUrl(reader.result);
+        };
+        reader.readAsDataURL(file);
       }
-      setError('회원 정보를 불러오는데 실패했습니다.');
-      setLoading(false);
-    }
-  };
+    },
+    [setProfileImage, setProfileImageUrl]
+  );
 
-  const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setMemberInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }, []);
-
-  const handleImageChange = useCallback((e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfileImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImageUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  }, []);
-
-  const hasChanges = () => {
-    if (!initialMemberInfo) return false;
-    return (
-      JSON.stringify(memberInfo) !== JSON.stringify(initialMemberInfo) ||
-      profileImage !== null
-    );
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isSubmitting || !hasChanges()) return;
-    setIsSubmitting(true);
-    try {
-      const formData = new FormData();
-      const dto = {
-        height: parseFloat(memberInfo.height),
-        weight: parseFloat(memberInfo.weight),
-        age: parseInt(memberInfo.age),
-        gender: memberInfo.gender,
-        activityLevel: memberInfo.activityLevel,
-        goalWeight: parseFloat(memberInfo.goalWeight),
-      };
-      const dtoBlob = new Blob([JSON.stringify(dto)], { type: 'application/json' });
-      formData.append('dto', dtoBlob);
-      if (profileImage) formData.append('profileImage', profileImage);
-
-      await memberService.updateMemberInfo(formData);
-      await fetchMemberInfo();
-      setProfileImage(null);
-      setError(null);
-    } catch (err) {
-      if (err.message === 'Authentication required') {
-        localStorage.setItem('redirectPath', window.location.pathname);
-        setError('로그인이 필요합니다.');
-        window.location.href = '/login';
-        return;
-      }
-      setError('회원 정보 수정에 실패했습니다.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const onSubmit = (data) => updateMemberInfo(data, profileImage);
 
   const handleCancel = () => {
-    setMemberInfo(initialMemberInfo);
-    setProfileImage(null);
-    setProfileImageUrl(null); // Reset to default icon
+    reset();
+    clearProfileImage();
   };
+
 
   if (loading) {
     return <div className={styles.loading}>로딩 중...</div>;
   }
 
   if (error) {
-    return <div className={styles.error}>{error}</div>;
+    return (
+      <div className={styles.error}>
+        {error}
+        <button
+          onClick={() => {
+            setError(null);
+            fetchMemberInfo();
+          }}
+          className={styles.retryButton}
+        >
+          재시도
+        </button>
+      </div>
+    );
   }
-
-  const activityLevelLabels = {
-    SEDENTARY: '거의 운동하지 않음',
-    LIGHTLY_ACTIVE: '가벼운 운동 (주 1-3회)',
-    MODERATELY_ACTIVE: '중간 강도 운동 (주 3-5회)',
-    VERY_ACTIVE: '강한 운동 (주 6-7회)',
-    EXTRA_ACTIVE: '매우 강한 운동 (매일 2회 이상)',
-  };
 
   return (
     <div className={styles.container}>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.profileSection}>
           <div className={styles.imageContainer}>
             {profileImageUrl ? (
               <img
-                src={profileImageUrl}
+                src={getImageUrl(profileImageUrl)}
                 alt="프로필"
                 className={styles.profileImage}
+                onError={(e) => {
+                  console.error('Image load failed:', getImageUrl(profileImageUrl));
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'block';
+                }}
+                onLoad={() => console.log('Image loaded successfully:', getImageUrl(profileImageUrl))}
               />
             ) : (
               <FaUser className={styles.defaultIcon} />
             )}
+            <FaUser className={styles.defaultIcon} style={{ display: 'none' }} />
             <label htmlFor="profileImage" className={styles.imageInput}>
               프로필 변경
             </label>
@@ -164,97 +134,128 @@ const MyInfo = () => {
         <div className={styles.infoSection}>
           <div className={styles.formGroup}>
             <label htmlFor="height">키 (cm)</label>
-            <input
-              type="number"
-              id="height"
+            <Controller
               name="height"
-              value={memberInfo.height}
-              onChange={handleInputChange}
-              required
-              min="0"
-              step="0.1"
+              control={control}
+              rules={{ required: '키는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              render={({ field }) => (
+                <input
+                  type="number"
+                  id="height"
+                  className={styles.input}
+                  step="0.1"
+                  {...field}
+                />
+              )}
             />
+            {errors.height && <span className={styles.fieldError}>{errors.height.message}</span>}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="weight">몸무게 (kg)</label>
-            <input
-              type="number"
-              id="weight"
+            <Controller
               name="weight"
-              value={memberInfo.weight}
-              onChange={handleInputChange}
-              required
-              min="0"
-              step="0.1"
+              control={control}
+              rules={{ required: '몸무게는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              render={({ field }) => (
+                <input
+                  type="number"
+                  id="weight"
+                  className={styles.input}
+                  step="0.1"
+                  {...field}
+                />
+              )}
             />
+            {errors.weight && <span className={styles.fieldError}>{errors.weight.message}</span>}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="age">나이</label>
-            <input
-              type="number"
-              id="age"
+            <Controller
               name="age"
-              value={memberInfo.age}
-              onChange={handleInputChange}
-              required
-              min="0"
+              control={control}
+              rules={{ required: '나이는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              render={({ field }) => (
+                <input
+                  type="number"
+                  id="age"
+                  className={styles.input}
+                  {...field}
+                />
+              )}
             />
+            {errors.age && <span className={styles.fieldError}>{errors.age.message}</span>}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="gender">성별</label>
-            <select
-              id="gender"
+            <Controller
               name="gender"
-              value={memberInfo.gender}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">선택하세요</option>
-              <option value="MALE">남성</option>
-              <option value="FEMALE">여성</option>
-            </select>
+              control={control}
+              rules={{ required: '성별은 필수 선택입니다.' }}
+              render={({ field }) => (
+                <Select
+                  id="gender"
+                  options={genderOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="선택하세요"
+                  className={styles.select}
+                  isClearable
+                />
+              )}
+            />
+            {errors.gender && <span className={styles.fieldError}>{errors.gender.message}</span>}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="activityLevel">활동 수준</label>
-            <select
-              id="activityLevel"
+            <Controller
               name="activityLevel"
-              value={memberInfo.activityLevel}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">선택하세요</option>
-              <option value="SEDENTARY">거의 운동하지 않음</option>
-              <option value="LIGHTLY_ACTIVE">가벼운 운동 (주 1-3회)</option>
-              <option value="MODERATELY_ACTIVE">중간 강도 운동 (주 3-5회)</option>
-              <option value="VERY_ACTIVE">강한 운동 (주 6-7회)</option>
-              <option value="EXTRA_ACTIVE">매우 강한 운동 (매일 2회 이상)</option>
-            </select>
+              control={control}
+              rules={{ required: '활동 수준은 필수 선택입니다.' }}
+              render={({ field }) => (
+                <Select
+                  id="activityLevel"
+                  options={activityLevelOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="선택하세요"
+                  className={styles.select}
+                  isClearable
+                />
+              )}
+            />
+            {errors.activityLevel && (
+              <span className={styles.fieldError}>{errors.activityLevel.message}</span>
+            )}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="goalWeight">목표 체중 (kg)</label>
-            <input
-              type="number"
-              id="goalWeight"
+            <Controller
               name="goalWeight"
-              value={memberInfo.goalWeight}
-              onChange={handleInputChange}
-              required
-              min="0"
-              step="0.1"
+              control={control}
+              rules={{ required: '목표 체중은 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              render={({ field }) => (
+                <input
+                  type="number"
+                  id="goalWeight"
+                  className={styles.input}
+                  step="0.1"
+                  {...field}
+                />
+              )}
             />
+            {errors.goalWeight && <span className={styles.fieldError}>{errors.goalWeight.message}</span>}
           </div>
 
           <div className={styles.buttonGroup}>
             <button
               type="submit"
               className={styles.saveButton}
-              disabled={isSubmitting || !hasChanges()}
+              disabled={isSubmitting || (!isDirty && !profileImage)}
             >
               {isSubmitting ? '저장 중...' : '저장'}
             </button>
@@ -269,6 +270,7 @@ const MyInfo = () => {
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
