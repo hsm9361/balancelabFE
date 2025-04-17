@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './layouts/Header.jsx';
@@ -33,21 +32,21 @@ function App() {
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/healthprediction">
-              <Route index element={<HealthPrediction />}  />
-              <Route path="result" element={<PredictionResult />}  />
+              <Route index element={<HealthPrediction />} />
+              <Route path="result" element={<PredictionResult />} />
             </Route>
             <Route path="/diet-consulting">
-              <Route index element={<DietConsultIndex />}  />
-              <Route path="result" element={<DietConsulting />}  />
+              <Route index element={<DietConsultIndex />} />
+              <Route path="result" element={<DietConsulting />} />
             </Route>
             <Route path="/analysis">
-              <Route index element={<AnalysisPage />}  />
-              <Route path="/analysis/image-analysis">
-                <Route index element={<ImageAnalysisPage />}  />
-                <Route path="loading" element={<LoadingPage />}  />
-                <Route path="result" element={<ImageAnalysisResultPage />}  />
+              <Route index element={<AnalysisPage />} />
+              <Route path="image-analysis">
+                <Route index element={<ImageAnalysisPage />} />
+                <Route path="loading" element={<LoadingPage />} />
+                <Route path="result" element={<ImageAnalysisResultPage />} />
               </Route>
-              <Route path="/analysis/diet-analysis">
+              <Route path="diet-analysis">
                 <Route index element={<DietAnalysisPage />} />
                 <Route path="loading" element={<DietLoadingPage />} />
                 <Route path="result" element={<DietAnalysisResultPage />} />

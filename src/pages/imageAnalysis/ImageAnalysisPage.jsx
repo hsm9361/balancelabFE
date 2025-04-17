@@ -4,7 +4,7 @@ import styles from 'assets/css/pages/ImageAnalysisPage.module.css';
 import ImageUploadSection from 'components/imageAnalysis/ImageUploadSection';
 import AnalysisInfoSection from 'components/imageAnalysis/AnalysisInfoSection';
 import GuideCard from 'components/imageAnalysis/GuideCard';
-import FooterSection from 'components/imageAnalysis/FooterSection'; // 새 컴포넌트
+import FooterSection from 'components/imageAnalysis/FooterSection';
 import { useImageUpload } from 'hooks/useImageUpload';
 
 function ImageAnalysisPage() {
@@ -17,7 +17,7 @@ function ImageAnalysisPage() {
     if (!selectedImage) return;
     try {
       const result = await uploadImage(selectedImage);
-      navigate('/analysis/result', {
+      navigate('/analysis/image-analysis/result', {
         state: {
           imageUrl: previewUrl,
           imageFile: selectedImage,
@@ -54,7 +54,7 @@ function ImageAnalysisPage() {
         selectedImage={selectedImage}
         handleAnalysis={handleAnalysis}
       />
-      <FooterSection /> {/* 하단 영역 추가 */}
+      <FooterSection />
       {loading && <div className={styles.loading}>분석 중...</div>}
       {error && <div className={styles.error}>에러: {error}</div>}
     </div>
