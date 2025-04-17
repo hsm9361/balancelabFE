@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from 'assets/css/pages/calendar/calendarPage.module.css';
-import AddMealModal from 'components/calendar/AddMealModal';
-import axios from 'axios';
+import AddDietModal from '../../components/calendar/AddMealModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiClient from '../../services/apiClient';
 
@@ -20,51 +19,106 @@ const getThisWeekDates = (baseDate) => {
   return week;
 };
 
-const formatDate = (date) => date.toISOString().split('T')[0];
+const formatDate = (date) => {
+  if (!(date instanceof Date) || isNaN(date)) {
+    console.error('Invalid date:', date);
+    return '';
+  }
+  return date.toISOString().split('T')[0];
+};
+
+const getMealTypeAndTime = (mealTime) => {
+  if (!mealTime) {
+    return { type: '기타', time: '알 수 없음' };
+  }
+  const [start] = mealTime.split(' ~ ');
+  const hour = parseInt(start.split(':')[0], 10);
+  if (hour < 10) {
+    return { type: '아침', time: '08:00 ~ 09:30' };
+  } else if (hour < 15) {
+    return { type: '점심', time: '12:00 ~ 13:30' };
+  } else {
+    return { type: '저녁', time: '18:00 ~ 19:30' };
+  }
+};
+
+const formatUnit = (unit) => {
+  if (unit === 'serving') return '인분';
+  return unit || 'g';
+};
 
 export default function WeekCalendar() {
   const [baseDate, setBaseDate] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedDay, setSelectedDay] = useState(null);
   const [mealData, setMealData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [weekDateRange, setWeekDateRange] = useState('');
 
-  const weekDates = getThisWeekDates(baseDate);
+  const weekDates = useMemo(() => getThisWeekDates(baseDate), [baseDate]);
+
+  useEffect(() => {
+    const todayStr = formatDate(new Date());
+    const todayIndex = weekDates.findIndex((d) => formatDate(d) === todayStr);
+    const initialDay = todayIndex >= 0 ? days[todayIndex] : '월';
+    setSelectedDay(initialDay);
+  }, [weekDates]);
 
   useEffect(() => {
     const start = weekDates[0];
     const end = weekDates[6];
     setWeekDateRange(`${start.getMonth() + 1}.${start.getDate()} ~ ${end.getMonth() + 1}.${end.getDate()}`);
+  }, [weekDates]);
 
-    const todayStr = formatDate(new Date());
-    const todayIndex = weekDates.findIndex((d) => formatDate(d) === todayStr);
-    const defaultDay = todayIndex >= 0 ? days[todayIndex] : '월';
-    setSelectedDay(defaultDay);
+  useEffect(() => {
+    if (!selectedDay || !days.includes(selectedDay)) {
+      console.log('유효하지 않은 selectedDay:', selectedDay);
+      return;
+    }
 
-    const startDate = formatDate(start);
-    const endDate = formatDate(end);
+    const selectedDate = formatDate(weekDates[days.indexOf(selectedDay)]);
+    if (!selectedDate) {
+      console.error('유효하지 않은 selectedDate:', selectedDate);
+      return;
+    }
 
-    apiClient.get(`/api/diet/list?userId=1&startDate=${startDate}&endDate=${endDate}`)
-      .then(res => {
+    apiClient
+      .get(`/food-record/member/date`, {
+        params: {
+          date: selectedDate,
+        },
+      })
+      .then((res) => {
         console.log('서버 응답 데이터', res.data);
-        const result = { '일': [], '월': [], '화': [], '수': [], '목': [], '금': [], '토': [] };
+        const result = { ...mealData, [selectedDay]: [] }; // 기존 mealData 유지
         res.data.forEach((r) => {
-          const date = new Date(r.eatenDate);
-          const day = days[date.getDay()];
-          result[day].push({
-            foodId: r.foodId || r.food_id,
-            type: r.category === 'morning' ? '아침' : r.category === 'lunch' ? '점심' : '저녁',
-            time: r.category === 'morning' ? '08:00 ~ 09:30' : r.category === 'lunch' ? '12:00 ~ 13:30' : '18:00 ~ 19:30',
-            items: [`${r.foodName} (${r.intakeAmount}${r.unit})`],
-            carb: 0,
-            protein: 0,
-            kcal: 0,
+          // consumedDate가 null이면 selectedDate 사용
+          const date = r.consumedDate ? new Date(r.consumedDate) : new Date(selectedDate);
+          // selectedDay에 직접 매핑
+          const { type, time } = getMealTypeAndTime(r.mealTime);
+          result[selectedDay].push({
+            foodId: r.id,
+            type,
+            time,
+            items: [`${r.foodName} (${r.amount}${formatUnit(r.unit)})`],
+            carb: r.carbohydrates || 0,
+            protein: r.protein || 0,
+            kcal: r.carbohydrates && r.protein && r.fat
+              ? Math.round((r.carbohydrates * 4) + (r.protein * 4) + (r.fat * 9))
+              : 0,
           });
         });
+        console.log('업데이트된 mealData', result);
         setMealData(result);
       })
-      .catch(err => console.error('식단 불러오기 실패:', err));
-  }, [baseDate]);
+      .catch((err) => {
+        console.error('식단 불러오기 실패:', err);
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          console.warn('인증 실패: 로그인 필요');
+        } else if (err.response?.status === 400) {
+          console.error('잘못된 날짜 형식:', selectedDate);
+        }
+      });
+  }, [baseDate, selectedDay]);
 
   const handleWeekChange = (daysToAdd) => {
     const newBaseDate = new Date(baseDate);
@@ -73,37 +127,55 @@ export default function WeekCalendar() {
   };
 
   const handleAddMeal = (mealType, menus) => {
+    const selectedDate = formatDate(weekDates[days.indexOf(selectedDay)]);
     const newMeal = {
       type: mealType === 'morning' ? '아침' : mealType === 'lunch' ? '점심' : '저녁',
       time:
         mealType === 'morning'
           ? '08:00 ~ 09:30'
           : mealType === 'lunch'
-            ? '12:00 ~ 13:30'
-            : '18:00 ~ 19:30',
-      items: menus.map((m) => `${m.foodName} (${m.intakeAmount}${m.unit})`),
+          ? '12:00 ~ 13:30'
+          : '18:00 ~ 19:30',
+      items: menus.map((m) => `${m.foodName} (${m.amount}${formatUnit(m.unit)})`),
+      mealTime: mealType === 'morning' ? '08:00' : mealType === 'lunch' ? '12:00' : '18:00',
       carb: 0,
       protein: 0,
       kcal: 0,
     };
 
-    setMealData((prev) => ({
-      ...prev,
-      [selectedDay]: [...(prev[selectedDay] || []), newMeal],
-    }));
-    setShowModal(false);
+    apiClient
+      .post('/food-record', {
+        foodName: menus[0].foodName,
+        amount: menus[0].amount,
+        unit: menus[0].unit,
+        mealTime: newMeal.mealTime,
+        consumedDate: selectedDate,
+        memberId: 1, // 실제 사용자 ID로 대체
+      })
+      .then((res) => {
+        setMealData((prev) => ({
+          ...prev,
+          [selectedDay]: [
+            ...(prev[selectedDay] || []),
+            { ...newMeal, foodId: res.data.id },
+          ],
+        }));
+        setShowModal(false);
+        window.alert('식단이 추가되었습니다.');
+      })
+      .catch((err) => {
+        console.error('식단 추가 실패:', err);
+        window.alert('식단 추가에 실패했습니다.');
+      });
   };
 
   const handleDeleteMeal = (indexToDelete, foodId) => {
     const confirmDelete = window.confirm('삭제하시겠습니까?');
     if (!confirmDelete) return;
-  
-    axios.delete(`/api/diet/delete/${foodId}?userId=1`,{
-      withCredentials: true
 
-    })
+    apiClient
+      .delete(`/api/diet/delete/${foodId}?userId=1`)
       .then(() => {
-        // 프론트 상태에서도 제거
         setMealData((prev) => {
           const updatedMeals = [...(prev[selectedDay] || [])];
           updatedMeals.splice(indexToDelete, 1);
@@ -112,7 +184,7 @@ export default function WeekCalendar() {
             [selectedDay]: updatedMeals,
           };
         });
-  
+
         setTimeout(() => {
           window.alert('삭제되었습니다.');
         }, 100);
@@ -122,8 +194,6 @@ export default function WeekCalendar() {
         window.alert('삭제에 실패했습니다.');
       });
   };
-  
-  
 
   const meals = mealData[selectedDay] || [];
 
@@ -140,10 +210,10 @@ export default function WeekCalendar() {
             border: '1px solid #b8daff',
             borderRadius: '5px',
             padding: '0.4rem 0.8rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
-          onMouseOver={e => e.currentTarget.style.backgroundColor = '#007bff'}
-          onMouseOut={e => e.currentTarget.style.backgroundColor = '#cce5ff'}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#cce5ff')}
         >
           ◀ 이전 주
         </button>
@@ -156,10 +226,10 @@ export default function WeekCalendar() {
             border: '1px solid #b8daff',
             borderRadius: '5px',
             padding: '0.4rem 0.8rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
-          onMouseOver={e => e.currentTarget.style.backgroundColor = '#007bff'}
-          onMouseOut={e => e.currentTarget.style.backgroundColor = '#cce5ff'}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#cce5ff')}
         >
           다음 주 ▶
         </button>
@@ -181,7 +251,7 @@ export default function WeekCalendar() {
                 padding: '0.4rem 0.8rem',
                 border: 'none',
                 margin: '0 0.3rem',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
               onClick={() => setSelectedDay(day)}
             >
@@ -211,15 +281,15 @@ export default function WeekCalendar() {
                   <button
                     onClick={() => {
                       console.log('삭제요청', meal.foodId, meal);
-                      handleDeleteMeal(idx, meal.foodId)}
-                    }
+                      handleDeleteMeal(idx, meal.foodId);
+                    }}
                     style={{
                       background: 'none',
                       border: 'none',
                       color: 'red',
                       fontSize: '16px',
                       fontWeight: 'bold',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
                     }}
                     title="삭제"
                   >
@@ -240,10 +310,10 @@ export default function WeekCalendar() {
       </button>
 
       {showModal && (
-        <AddMealModal
+        <AddDietModal
           onClose={() => setShowModal(false)}
           onSubmit={handleAddMeal}
-          selectedDate={weekDates[days.indexOf(selectedDay)]}
+          selectedDate={formatDate(weekDates[days.indexOf(selectedDay)])}
         />
       )}
     </div>

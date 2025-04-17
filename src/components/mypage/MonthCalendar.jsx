@@ -35,11 +35,10 @@ function MyCalendar() {
     const { startDate, endDate } = getMonthDateRange(baseDate);
 
     try {
-      const res = await apiClient.get(`/api/diet/list`, {
+      const res = await apiClient.get(`/food-record/member/date`, {
         params: {
           userId,
-          startDate,
-          endDate,
+          baseDate
         }
       });
 

@@ -2,20 +2,30 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
-export const apiClient = axios.create({
+const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+    Pragma: 'no-cache',
+    Expires: '0',
   },
+  withCredentials: true
 });
+
+// 리다이렉트 플래그
+let isRedirecting = false;
 
 // Request Interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
     }
     return config;
   },
@@ -27,28 +37,32 @@ apiClient.interceptors.request.use(
 // Response Interceptor
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    // Handle different error cases
+  async (error) => {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      if (error.response.status === 401) {
-        // Clear auth data and redirect to login
-        localStorage.removeItem('token');
+      if ((error.response.status === 401 || error.response.status === 403) && !isRedirecting) {
+        isRedirecting = true; // 리다이렉트 중복 방지
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
-        
-        // Only redirect if not already on the login page to prevent loops
+
+        // refresh token을 사용한 토큰 갱신 로직이 있다면 여기서 구현
+        // 예: const newToken = await refreshToken();
+        // if (newToken) { ... }
+
+        const redirectUrl = process.env.REACT_APP_OAUTH_REDIRECT
+          ? `${BASE_URL}/oauth2/authorization/google`
+          : '/';
+
         if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/oauth')) {
-          window.location.href = '/';
+          window.location.href = redirectUrl;
         }
+        return Promise.reject(new Error('Authentication required'));
       }
     } else if (error.request) {
-      // The request was made but no response was received
       console.error('Network error, no response received:', error.request);
     } else {
-      // Something happened in setting up the request that triggered an Error
       console.error('Error setting up request:', error.message);
     }
+    isRedirecting = false; // 에러 처리 후 리다이렉트 플래그 초기화
     return Promise.reject(error);
   }
 );
