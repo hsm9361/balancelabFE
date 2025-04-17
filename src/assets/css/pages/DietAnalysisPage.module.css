@@ -21,7 +21,7 @@
   background: #FFFFFF;
   position: relative;
   z-index: 1;
-  padding: 40px 20px 20px;
+  padding: 15px 20px 20px;
   animation: fadeIn 0.8s ease-out;
 }
 
@@ -40,16 +40,28 @@
   font-size: 1.3rem;
   color: #4B5563;
   font-family: 'Inter', sans-serif;
-  max-width: 600px;
+  max-width: 700px;
   text-align: center;
   margin-bottom: 32px;
 }
 
-/* 이미지 플레이스홀더 */
-.imagePlaceholder {
+/* 이미지 컨테이너 */
+.imageContainer {
   width: 100%;
   max-width: 800px;
-  height: 300px;
+  display: flex;
+  gap: 20px;
+  margin: 0 auto;
+  position: relative;
+  height: 270px;
+  overflow: hidden;
+}
+
+/* 이미지 플레이스홀더 */
+.imagePlaceholder {
+  flex: 1;
+  min-width: calc(33.333% - 14px);
+  height: 270px;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -58,6 +70,21 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   overflow: hidden;
+  position: absolute;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, filter, left;
+}
+
+.imagePlaceholder:nth-child(1) {
+  animation: slideLeft 12s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.imagePlaceholder:nth-child(2) {
+  animation: slideCenter 12s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.imagePlaceholder:nth-child(3) {
+  animation: slideRight 12s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 실제 이미지 */
@@ -69,28 +96,168 @@
   display: block;
 }
 
+@keyframes slideLeft {
+  0% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  28% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  33% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+  61% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+  66% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  94% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  100% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+}
+
+@keyframes slideCenter {
+  0% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  28% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  33% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  61% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  66% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+  94% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+  100% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+  28% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+  33% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  61% {
+    left: 100%;
+    transform: translateX(-100%) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  66% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  94% {
+    left: 0;
+    transform: translateX(0) scale(0.85);
+    filter: blur(3px) brightness(0.7);
+    z-index: 1;
+  }
+  100% {
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(0) brightness(1);
+    z-index: 2;
+  }
+}
+
 /* 시간대 버튼 */
 .timeButtons {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  justify-content: center;
+  max-width: 800px;
+  width: 100%;
   margin: 20px 0;
 }
 
 .timeButton {
-  padding: 10px 20px;
-  font-size: 1rem;
-  color: #FFFFFF;
-  background: #60A5FA;
-  border: none;
+  padding: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1F2937;
+  background: #E5E7EB;
+  border: 1px solid #D1D5DB;
   border-radius: 8px;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
 }
 
 .timeButton:hover:not(:disabled) {
-  background: #3B82F6;
+  background: #D1D5DB;
+  border-color: #60A5FA;
   transform: translateY(-2px);
 }
 
@@ -101,8 +268,10 @@
 }
 
 .timeButton.selected {
-  background: #1E40AF; /* 더 진한 파란색 */
-  transform: scale(1.05); /* 살짝 커지는 효과 */
+  background: #E5E7EB;
+  border-color: #3B82F6;
+  color: #1E3A8A;
+  transform: scale(1.02);
 }
 
 /* 음식 버튼 그리드 */
@@ -116,8 +285,9 @@
 }
 
 .foodButton {
-  padding: 12px;
-  font-size: 1rem;
+  padding: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #1F2937;
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
@@ -155,11 +325,12 @@
 }
 
 .exampleButton {
-  padding: 10px 20px;
+  padding: 8px 16px;
   font-size: 0.95rem;
+  font-weight: 700;
   color: #1F2937;
-  background: #F3F4F6;
-  border: 1px solid #E5E7EB;
+  background: #E5E7EB;
+  border: 1px solid #D1D5DB;
   border-radius: 8px;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
@@ -167,7 +338,7 @@
 }
 
 .exampleButton:hover:not(:disabled) {
-  background: #E5E7EB;
+  background: #D1D5DB;
   border-color: #60A5FA;
   transform: translateY(-2px);
 }
@@ -176,6 +347,13 @@
   background: #E5E7EB;
   color: #9CA3AF;
   cursor: not-allowed;
+}
+
+.exampleButton.selected {
+  background: #E5E7EB;
+  border-color: #3B82F6;
+  color: #1E3A8A;
+  transform: scale(1.02);
 }
 
 /* 에러 메시지 */
@@ -202,7 +380,7 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .heroSection {
-    padding: 20px 15px 10px;
+    padding: 15px 15px 10px;
   }
 
   .heroTitle {
@@ -214,9 +392,13 @@
     max-width: 100%;
   }
 
+  .imageContainer {
+    height: 200px;
+  }
+
   .imagePlaceholder {
     height: 200px;
-    max-width: 100%;
+    min-width: calc(100% - 40px);
   }
 
   .timeButtons {
@@ -225,7 +407,7 @@
   }
 
   .timeButton {
-    padding: 8px 16px;
+    padding: 6px;
     font-size: 0.9rem;
   }
 
@@ -235,7 +417,7 @@
   }
 
   .foodButton {
-    padding: 10px;
+    padding: 6px;
     font-size: 0.9rem;
   }
 
@@ -244,7 +426,7 @@
   }
 
   .exampleButton {
-    padding: 8px 16px;
-    font-size: 0.85rem;
+    padding: 6px 12px;
+    font-size: 0.9rem;
   }
 }

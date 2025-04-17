@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/pages/DietAnalysisPage.module.css';
 import FoodInputSection from '../../components/dietAnalysis/FoodInputSection';
 import ErrorModal from '../../components/dietAnalysis/ErrorModal';
-import dietImage from '../../assets/images/diet-placeholder.jpg';
+import dietImage1 from '../../assets/images/diet-placeholder2.jpg';
+import dietImage2 from '../../assets/images/diet-placeholder3.jpg';
+import dietImage3 from '../../assets/images/diet-placeholder4.jpg';
 import { useDietAnalysis } from '../../hooks/useDietAnalysis';
 
 function DietAnalysisPage() {
@@ -12,6 +14,7 @@ function DietAnalysisPage() {
   const [selectedTime, setSelectedTime] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [selectedExample, setSelectedExample] = useState('');
   const navigate = useNavigate();
   const { analyzeDiet, loading, error } = useDietAnalysis('testUser');
   const textareaRef = useRef(null);
@@ -50,6 +53,7 @@ function DietAnalysisPage() {
     setSelectedFoods([]);
     setSelectedTime(time);
     setErrorMessage('');
+    setSelectedExample('');
     setTimeout(() => {
       const textarea = textareaRef.current;
       if (textarea) {
@@ -80,6 +84,7 @@ function DietAnalysisPage() {
     lines[1] = currentFoods.join(', ');
     setMessage(lines.join('\n'));
     setErrorMessage('');
+    setSelectedExample('');
 
     setTimeout(() => {
       const textarea = textareaRef.current;
@@ -97,6 +102,7 @@ function DietAnalysisPage() {
     setSelectedFoods(foods.split(', '));
     setSelectedTime(time);
     setErrorMessage('');
+    setSelectedExample(`${time}으로 ${foods} 먹었어`);
     setTimeout(() => {
       const textarea = textareaRef.current;
       if (textarea) {
@@ -125,12 +131,28 @@ function DietAnalysisPage() {
         <p className={styles.heroDescription}>
           먹은 음식을 선택하거나 입력하면 AI가 영양 정보를 분석해드립니다.
         </p>
-        <div className={styles.imagePlaceholder}>
-          <img
-            src={dietImage}
-            alt="식단 예시 이미지"
-            className={styles.placeholderImage}
-          />
+        <div className={styles.imageContainer}>
+          <div className={styles.imagePlaceholder}>
+            <img
+              src={dietImage1}
+              alt="식단 예시 이미지 1"
+              className={styles.placeholderImage}
+            />
+          </div>
+          <div className={styles.imagePlaceholder}>
+            <img
+              src={dietImage2}
+              alt="식단 예시 이미지 2"
+              className={styles.placeholderImage}
+            />
+          </div>
+          <div className={styles.imagePlaceholder}>
+            <img
+              src={dietImage3}
+              alt="식단 예시 이미지 3"
+              className={styles.placeholderImage}
+            />
+          </div>
         </div>
       </div>
 
@@ -164,7 +186,9 @@ function DietAnalysisPage() {
         {examples.map((example, index) => (
           <button
             key={index}
-            className={styles.exampleButton}
+            className={`${styles.exampleButton} ${
+              selectedExample === `${example.time}으로 ${example.foods} 먹었어` ? styles.selected : ''
+            }`}
             onClick={() => handleExampleClick(example.time, example.foods)}
             disabled={loading}
           >
