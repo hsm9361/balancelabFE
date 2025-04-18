@@ -80,7 +80,9 @@ function DietConsulting() {
     return (
       <div className="diet-consulting">
         <h1>데이터를 불러오는 중...</h1>
-        <div className="loading-spinner"></div>
+        <div className='loading-container'>
+          <div className="loading-spinner"></div>
+        </div>
       </div>
     );
   }

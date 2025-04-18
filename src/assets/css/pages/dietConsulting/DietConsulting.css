@@ -208,13 +208,13 @@
   border-radius: var(--border-radius);
   padding: 2rem;
   box-shadow: var(--shadow);
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .analysis-section h2 {
   text-align: center;
   color: var(--text-color);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   font-size: 1.8rem;
 }
 
@@ -227,7 +227,7 @@
   font-size: 1.1rem;
   color: var(--text-color);
   line-height: 1.6;
-  margin: 1rem 0;
+  margin: 0.3rem 0;
   box-shadow: var(--shadow);
   white-space: pre-line;
 }
@@ -245,8 +245,7 @@
 .food-recommend {
   background: linear-gradient(135deg, #a5c3f1, #dceaff);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
-  margin: 1rem 0;
+  padding: 0.7rem;
   box-shadow: var(--shadow);
   transition: transform 0.3s ease;
 }
@@ -313,7 +312,7 @@
 .food-recommend li {
   font-size: 1.1rem;
   color: var(--text-color);
-  padding: 0.5rem 0;
+  padding: 0.1rem 0;
   position: relative;
   padding-left: 20px;
 }
