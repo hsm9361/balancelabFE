@@ -108,6 +108,7 @@ const ImageAnalysisResultPage = () => {
           selectedDate={new Date()}
           initialFoodList={result.food_list}
           selectedTime={getSelectedTime()}
+          type='image'
         />
       )}
     </div>
