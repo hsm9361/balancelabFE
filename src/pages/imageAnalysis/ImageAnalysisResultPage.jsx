@@ -9,7 +9,7 @@ import TotalNutrition from '../../components/dietAnalysis/TotalNutrition';
 import DeficientNutrients from '../../components/dietAnalysis/DeficientNutrients';
 import NextMealSuggestion from '../../components/dietAnalysis/NextMealSuggestion';
 import ResultImage from '../../components/imageAnalysis/ResultImage';
-import AddDietModal from '../../components/dietAnalysis/AddModal';
+import AddDietModal from '../../components/calendar/AddMealModal';
 import { FaRedoAlt, FaFilePdf, FaUtensils } from 'react-icons/fa';
 
 // Custom hook for PDF export

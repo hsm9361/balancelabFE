@@ -7,7 +7,7 @@ import TotalNutrition from '../../components/dietAnalysis/TotalNutrition';
 import DeficientNutrients from '../../components/dietAnalysis/DeficientNutrients';
 import NextMealSuggestion from '../../components/dietAnalysis/NextMealSuggestion';
 import ActionButtons from '../../components/dietAnalysis/ActionButtons';
-import AddDietModal from '../../components/dietAnalysis/AddModal';
+import AddDietModal from '../../components/calendar/AddMealModal';
 
 const DietAnalysisResultPage = () => {
   const location = useLocation();
