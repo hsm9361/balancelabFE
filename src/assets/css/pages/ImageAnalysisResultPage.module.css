@@ -40,7 +40,7 @@
 /* 결과 이미지 */
 .resultImage {
   max-width: 60%; /* 이미지 크기 축소 */
-  height: auto;
+  max-height: 300px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   display: block;
