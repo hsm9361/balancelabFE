@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/pages/calendar/calendarPage.module.css';
 import apiClient from '../../services/apiClient';
 import dietIcon from 'assets/images/diary.png';
@@ -21,6 +22,8 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], s
     const today = new Date();
     return selectedDate ? formatDate(new Date(selectedDate)) : formatDate(today);
   });
+
+  const navigate = useNavigate();
 
   // initialFoodList로 menus 초기화
   useEffect(() => {
@@ -113,6 +116,7 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], s
         setUnitTypes(['인분']);
         setTime('12:00 ~ 13:00');
         setDate(formatDate(new Date(selectedDate || new Date())));
+        navigate('/calendar');
         onSubmit('meal', cleaned);
       })
       .catch(err => {
