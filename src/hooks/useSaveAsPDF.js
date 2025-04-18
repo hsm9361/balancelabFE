@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const useSaveAsPDF = (targetId) => {
+const useSaveAsPDF = (targetId, pdfFileName) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const saveAsPDF = useCallback(async () => {
@@ -116,7 +116,7 @@ const useSaveAsPDF = (targetId) => {
         heightLeft -= pageHeight;
       }
 
-      pdf.save('diet-analysis.pdf');
+      pdf.save(pdfFileName+'.pdf');
       console.log('PDF saved successfully');
     } catch (error) {
       console.error('Error generating PDF:', error);
