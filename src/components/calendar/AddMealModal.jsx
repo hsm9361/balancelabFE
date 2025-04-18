@@ -116,7 +116,7 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], s
         setUnitTypes(['인분']);
         setTime('12:00 ~ 13:00');
         setDate(formatDate(new Date(selectedDate || new Date())));
-        navigate('/calendar');
+        navigate('/calendar', { state: { viewMode: 'month' }, replace: true });
         onSubmit('meal', cleaned);
       })
       .catch(err => {

@@ -53,6 +53,7 @@ export default function WeekCalendar() {
   const [mealData, setMealData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [weekDateRange, setWeekDateRange] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const weekDates = useMemo(() => getThisWeekDates(baseDate), [baseDate]);
 
@@ -126,47 +127,9 @@ export default function WeekCalendar() {
     setBaseDate(newBaseDate);
   };
 
-  const handleAddMeal = (mealType, menus) => {
-    const selectedDate = formatDate(weekDates[days.indexOf(selectedDay)]);
-    const newMeal = {
-      type: mealType === 'morning' ? '아침' : mealType === 'lunch' ? '점심' : '저녁',
-      time:
-        mealType === 'morning'
-          ? '08:00 ~ 09:30'
-          : mealType === 'lunch'
-          ? '12:00 ~ 13:30'
-          : '18:00 ~ 19:30',
-      items: menus.map((m) => `${m.foodName} (${m.amount}${formatUnit(m.unit)})`),
-      mealTime: mealType === 'morning' ? '08:00' : mealType === 'lunch' ? '12:00' : '18:00',
-      carb: 0,
-      protein: 0,
-      kcal: 0,
-    };
-
-    apiClient
-      .post('/food-record', {
-        foodName: menus[0].foodName,
-        amount: menus[0].amount,
-        unit: menus[0].unit,
-        mealTime: newMeal.mealTime,
-        consumedDate: selectedDate,
-        memberId: 1, // 실제 사용자 ID로 대체
-      })
-      .then((res) => {
-        setMealData((prev) => ({
-          ...prev,
-          [selectedDay]: [
-            ...(prev[selectedDay] || []),
-            { ...newMeal, foodId: res.data.id },
-          ],
-        }));
-        setShowModal(false);
-        window.alert('식단이 추가되었습니다.');
-      })
-      .catch((err) => {
-        console.error('식단 추가 실패:', err);
-        window.alert('식단 추가에 실패했습니다.');
-      });
+  const handleSubmitMeal = (mealType, foodList) => {
+    console.log('Meal submitted:', { mealType, foodList });
+    setIsModalOpen(false);
   };
 
   const handleDeleteMeal = (indexToDelete, foodId) => {
@@ -312,7 +275,7 @@ export default function WeekCalendar() {
       {showModal && (
         <AddDietModal
           onClose={() => setShowModal(false)}
-          onSubmit={handleAddMeal}
+          onSubmit={handleSubmitMeal}
           selectedDate={formatDate(weekDates[days.indexOf(selectedDay)])}
         />
       )}
