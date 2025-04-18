@@ -100,6 +100,7 @@ const DietAnalysisResultPage = () => {
           selectedDate={new Date()}
           initialFoodList={result.food_list || []}
           selectedTime={getSelectedTime()}
+          type='text'
         />
       )}
     </div>

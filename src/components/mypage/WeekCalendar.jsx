@@ -277,6 +277,7 @@ export default function WeekCalendar() {
           onClose={() => setShowModal(false)}
           onSubmit={handleSubmitMeal}
           selectedDate={formatDate(weekDates[days.indexOf(selectedDay)])}
+          type='custom'
         />
       )}
     </div>

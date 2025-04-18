@@ -4,7 +4,8 @@ import styles from '../../assets/css/pages/calendar/calendarPage.module.css';
 import apiClient from '../../services/apiClient';
 import dietIcon from 'assets/images/diary.png';
 
-function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], selectedTime = '점심' }) {
+function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], 
+  selectedTime = '점심', type='text' }) {
   // 날짜 포맷팅 함수 (useState 이전에 정의)
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -103,7 +104,7 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], s
       amount: parseFloat(m.grams),
       unit: unitTypes[i] === '인분' ? 'serving' : 'g',
       mealTime: time,
-      type: 'text',
+      type: type,
       consumedDate: new Date(date).toISOString() // consumedDate로 변경
     })).filter(m => m.foodName && m.amount);
 
