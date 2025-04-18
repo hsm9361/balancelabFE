@@ -32,7 +32,7 @@ function ImageAnalysisPage() {
   return (
     <div className={styles.analysisPage}>
       <header className={styles.header}>
-        <h2 className={styles.title}>오늘의 한 끼 분석</h2>
+        <h2 className={styles.title}>이미지 분석</h2>
         <p className={styles.description}>
           음식 사진을 업로드하면 AI가 영양 정보를 분석해드립니다!
         </p>
