@@ -1,0 +1,80 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c5282;
+  margin-bottom: 15px;
+}
+
+.modalMessage {
+  font-size: 1.1rem;
+  color: #4a5568;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.confirmButton {
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #2c5282 0%, #7fb3ff 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 100px;
+  display: inline-block;
+}
+
+.confirmButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.confirmButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(127, 179, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .modalContent {
+    padding: 20px;
+    width: 95%;
+  }
+
+  .modalTitle {
+    font-size: 1.5rem;
+  }
+
+  .modalMessage {
+    font-size: 1rem;
+  }
+
+  .confirmButton {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
+}
