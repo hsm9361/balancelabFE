@@ -15,6 +15,83 @@ function MyCalendar() {
 
   const userId = 1; // 사용자 ID
 
+  // 날짜 포맷팅 함수
+  const formatDate = useCallback((date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }, []);
+
+  const getMonthDateRange = useCallback((date) => {
+    const start = new Date(date.getFullYear(), date.getMonth(), 1);
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return {
+      startDate: formatDate(start),
+      endDate: formatDate(end),
+    };
+  }, [formatDate]);
+
+  const fetchDietEvents = useCallback(async (baseDate) => {
+    const { startDate, endDate } = getMonthDateRange(baseDate);
+
+    try {
+      const res = await apiClient.get(`/food-record/member/range`, {
+        params: {
+          userId,
+          startDate,
+          endDate,
+        },
+      });
+
+      // FoodRecordCountDto의 count와 consumedDate를 기반으로 이벤트 생성
+      const dietEvents = res.data
+        .filter(item => item.count > 0) // count가 0보다 큰 날짜만 포함
+        .map(item => ({
+          date: item.consumedDate.split('T')[0], // consumedDate를 YYYY-MM-DD 형식으로 변환
+          title: '식단 기록',
+          type: 'diet',
+          count: item.count,
+        }));
+
+      setEvents(dietEvents);
+      console.log('Fetched events:', dietEvents); // 디버깅용 로그
+    } catch (error) {
+      console.error('식단 데이터를 불러오는 중 오류 발생:', error);
+      setEvents([]);
+    }
+  }, [getMonthDateRange, userId]);
+
+  const handleDateChange = async (newDate) => {
+    setDate(newDate);
+    const formatted = formatDate(newDate);
+
+    try {
+      const res = await apiClient.get(`/food-record/member/date`, {
+        params: { date: formatted, userId },
+      });
+
+      const dayEvents = res.data.map(item => {
+        const { type, time } = getMealTypeAndTime(item.mealTime);
+        return {
+          id: item.id || item.recordId,
+          date: formatted,
+          title: item.mealType || '식단',
+          type: 'diet',
+          items: [`${item.foodName || item.description || '음식'} (${item.intakeAmount || item.amount || 1}${formatUnit(item.unit)})`],
+          type,
+          time,
+        };
+      });
+
+      setSelectedDateEvents(dayEvents);
+      console.log('Selected date events:', dayEvents); // 디버깅용 로그
+    } catch (error) {
+      console.error('선택한 날짜 식단 조회 오류:', error);
+      setSelectedDateEvents([]);
+    }
+  };
+
   // WeekCalendar의 getMealTypeAndTime 재사용
   const getMealTypeAndTime = (mealTime) => {
     if (!mealTime) {
@@ -37,78 +114,29 @@ function MyCalendar() {
     return unit || 'g';
   };
 
-  // 날짜 포맷팅 함수
-  const formatDate = useCallback((date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }, []);
+  // 타일 콘텐츠 (점 표시)
+  const tileContent = ({ date, view }) => {
+    if (view === 'month') {
+      const formattedDate = formatDate(date);
+      const hasEvent = events.some(event => event.date === formattedDate);
+      return hasEvent ? <div className={calendarStyles.eventDot} /> : null;
+    }
+    return null;
+  };
 
-  const getMonthDateRange = useCallback((date) => {
-    const start = new Date(date.getFullYear(), date.getMonth(), 1);
-    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    return {
-      startDate: formatDate(start),
-      endDate: formatDate(end),
+  const handleAddMeal = (mealType, menus) => {
+    const newEvent = {
+      id: Date.now(),
+      date: formatDate(date),
+      type: 'diet',
+      title: `${mealType === 'morning' ? '아침' : mealType === 'lunch' ? '점심' : '저녁'} 식사`,
+      items: menus.map((m) => `${m.foodName} (${m.intakeAmount || 1}${formatUnit(m.unit)})`),
+      ...getMealTypeAndTime(null),
     };
-  }, [formatDate]);
 
-  const fetchDietEvents = useCallback(async (baseDate) => {
-    const { startDate, endDate } = getMonthDateRange(baseDate);
-
-    try {
-      const formattedDate = formatDate(baseDate);
-      const res = await apiClient.get(`/food-record/member/date`, {
-        params: {
-          userId,
-          date: formattedDate
-        }
-      });
-
-      const dietEvents = res.data.map(item => ({
-        id: item.id || item.recordId,
-        date: item.eatenDate?.split('T')[0],
-        title: item.mealType || '식단',
-        type: 'diet',
-        mealTime: item.mealTime,
-        items: [`${item.foodName || item.description || '음식'} (${item.intakeAmount || item.amount || 1}${formatUnit(item.unit)})`]
-      }));
-
-      setEvents(dietEvents);
-    } catch (error) {
-      console.error('식단 데이터를 불러오는 중 오류 발생:', error);
-      setEvents([]);
-    }
-  }, [getMonthDateRange, formatDate, userId]);
-
-  const handleDateChange = async (newDate) => {
-    setDate(newDate);
-    const formatted = formatDate(newDate);
-  
-    try {
-      const res = await apiClient.get(`/food-record/member/date`, {
-        params: { date: formatted, userId },
-      });
-  
-      const dayEvents = res.data.map(item => {
-        const { type, time } = getMealTypeAndTime(item.mealTime);
-        return {
-          id: item.id || item.recordId,
-          date: formatted,
-          title: item.mealType || '식단',
-          type: 'diet',
-          items: [`${item.foodName || item.description || '음식'} (${item.intakeAmount || item.amount || 1}${formatUnit(item.unit)})`],
-          type,
-          time
-        };
-      });
-  
-      setSelectedDateEvents(dayEvents);
-    } catch (error) {
-      console.error('선택한 날짜 식단 조회 오류:', error);
-      setSelectedDateEvents([]);
-    }
+    setEvents(prev => [...prev, newEvent]);
+    setSelectedDateEvents(prev => [...prev, newEvent]);
+    setShowModal(false);
   };
 
   // 삭제 기능
@@ -121,7 +149,6 @@ function MyCalendar() {
       .then(() => {
         setSelectedDateEvents(prev => prev.filter((_, idx) => idx !== indexToDelete));
         setEvents(prev => prev.filter(event => event.id !== foodId));
-
         setTimeout(() => {
           window.alert('삭제되었습니다.');
         }, 100);
@@ -132,33 +159,10 @@ function MyCalendar() {
       });
   };
 
-  // 이벤트가 있는 날짜 클래스 추가
-  const tileClassName = ({ date, view }) => {
-    if (view === 'month') {
-      const formattedDate = formatDate(date);
-      const hasEvent = events.some(event => event.date === formattedDate);
-      return hasEvent ? styles.hasEvent : null;
-    }
-  };
-
-  const handleAddMeal = (mealType, menus) => {
-    const newEvent = {
-      id: Date.now(),
-      date: formatDate(date),
-      type: 'diet',
-      title: `${mealType === 'morning' ? '아침' : mealType === 'lunch' ? '점심' : '저녁'} 식사`,
-      items: menus.map((m) => `${m.foodName} (${m.intakeAmount || 1}${formatUnit(m.unit)})`),
-      ...getMealTypeAndTime(null)
-    };
-
-    setEvents(prev => [...prev, newEvent]);
-    setSelectedDateEvents(prev => [...prev, newEvent]);
-    setShowModal(false);
-  };
-
   // 초기 로드 시 오늘 날짜 데이터 조회
   useEffect(() => {
     handleDateChange(date);
+    fetchDietEvents(date); // 초기 데이터 fetching
   }, []); // 빈 의존성 배열로 초기 로드 시 1회만 실행
 
   // 월 변경 시 캘린더 타일 데이터 조회
@@ -176,7 +180,7 @@ function MyCalendar() {
             onChange={handleDateChange}
             value={date}
             locale="ko-KR"
-            tileClassName={tileClassName}
+            tileContent={tileContent} // 점 표시
             nextLabel="▶"
             prevLabel="◀"
             next2Label={null}
@@ -227,9 +231,9 @@ function MyCalendar() {
               )}
             </motion.div>
           </AnimatePresence>
-          <br/>
-          <button 
-            className={calendarStyles.addButton} 
+          <br />
+          <button
+            className={calendarStyles.addButton}
             onClick={() => setShowModal(true)}
           >
             + 식단 추가하기
@@ -242,7 +246,7 @@ function MyCalendar() {
           onClose={() => setShowModal(false)}
           onSubmit={handleAddMeal}
           selectedDate={date}
-          type='custom'
+          type="custom"
         />
       )}
     </div>

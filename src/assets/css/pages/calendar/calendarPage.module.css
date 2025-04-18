@@ -985,6 +985,23 @@
   transform: translateY(-2px);
 }
 
+/* 기존 스타일 유지, 점 스타일 추가 */
+.eventDot {
+  width: 8px;
+  height: 8px;
+  background-color: #ff6b6b;
+  border-radius: 50%;
+  margin: 0 auto;
+  margin-top: 4px; /* 숫자와 점 사이 간격 조정 */
+  position: relative;
+  z-index: 1; /* 다른 요소에 가려지지 않도록 */
+}
+
+/* 달력 타일의 기본 스타일 충돌 방지 */
+.react-calendar__tile {
+  position: relative;
+}
+
 @media (max-width: 768px) {
   .timeDateSelector {
     flex-direction: column;
