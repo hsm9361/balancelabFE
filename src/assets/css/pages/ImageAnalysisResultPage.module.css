@@ -208,3 +208,11 @@
   .actionButton:hover {
     background: #0056b3;
   }
+
+  .pdf-capture {
+    color: #000 !important; /* 검정색 글씨 */
+    background: #fff !important; /* 흰 배경 */
+    font-weight: 600;
+    font-family: 'Arial', sans-serif;
+  }
+  

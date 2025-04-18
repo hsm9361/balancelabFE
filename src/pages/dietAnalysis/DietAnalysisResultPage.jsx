@@ -87,6 +87,8 @@ const DietAnalysisResultPage = () => {
       </div>
       <div className={styles.actionButtons}>
         <ActionButtons 
+          targetId="diet-analysis-content"
+          pdfFileName="diet-analysis-result.pdf"
           additionalButton={
             <button onClick={handleOpenModal} className={styles.addMealButton}>
               식단 추가하기

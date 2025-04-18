@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-const useSaveAsPDF = () => {
+const useSaveAsPDF = (targetId) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const saveAsPDF = useCallback(async () => {
@@ -11,7 +11,8 @@ const useSaveAsPDF = () => {
 
     let element;
     try {
-      element = document.getElementById('diet-analysis-content');
+      // element = document.getElementById('diet-analysis-content');
+      element = document.getElementById(targetId);
       if (!element) {
         console.error('Element #diet-analysis-content not found');
         setIsSaving(false);

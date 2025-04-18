@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import useSaveAsPDF from '../../hooks/useSaveAsPDF';
 import styles from '../../assets/css/components/ActionButtons.module.css';
 
-const ActionButtons = ({ additionalButton }) => {
+const ActionButtons = ({ additionalButton, targetId }) => {
   const navigate = useNavigate();
-  const { saveAsPDF, isSaving } = useSaveAsPDF();
+  const { saveAsPDF, isSaving } = useSaveAsPDF(targetId);
 
   const handleBack = () => {
     console.log('Back button clicked'); // 디버깅
