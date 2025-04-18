@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { toast } from 'react-toastify'; // 추가
+import { toast } from 'react-toastify';
 import { memberService } from '../services/memberService';
 import { genderOptions, activityLevelOptions } from '../constants/member';
 
@@ -33,6 +33,7 @@ export const useMemberInfo = (reset) => {
       }
 
       const info = {
+        membername: data.membername || '', // 문자열로 처리
         height: data.height != null ? data.height.toString() : '',
         weight: data.weight != null ? data.weight.toString() : '',
         age: data.age != null ? data.age.toString() : '',
@@ -67,6 +68,7 @@ export const useMemberInfo = (reset) => {
       try {
         const formData = new FormData();
         const dto = {
+          membername: data.membername || '', // 문자열로 처리
           height: parseFloat(data.height),
           weight: parseFloat(data.weight),
           age: parseInt(data.age),
@@ -82,7 +84,7 @@ export const useMemberInfo = (reset) => {
         await fetchMemberInfo();
         setProfileImage(null);
         setError(null);
-        toast.success('저장되었습니다!', { // 성공 토스트 추가
+        toast.success('저장되었습니다!', {
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -99,7 +101,7 @@ export const useMemberInfo = (reset) => {
           return;
         }
         setError(`회원 정보 수정에 실패했습니다: ${err.message}`);
-        toast.error(`저장 실패: ${err.message}`, { // 실패 토스트 추가
+        toast.error(`저장 실패: ${err.message}`, {
           position: 'top-right',
           autoClose: 3000,
         });
