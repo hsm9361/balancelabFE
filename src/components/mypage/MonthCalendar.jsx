@@ -164,6 +164,7 @@ function MyCalendar() {
           onClose={() => setShowModal(false)}
           onSubmit={handleAddMeal}
           selectedDate={date}
+          type='custom'
         />
       )}
     </div>

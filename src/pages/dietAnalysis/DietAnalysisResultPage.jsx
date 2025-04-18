@@ -36,7 +36,6 @@ const DietAnalysisResultPage = () => {
   };
 
   const handleSubmitMeal = (mealType, foodList) => {
-    // 여기에서 식단 추가 API 호출 등의 로직을 구현할 수 있습니다.
     console.log('Meal submitted:', { mealType, foodList });
     setIsModalOpen(false);
   };
@@ -103,6 +102,7 @@ const DietAnalysisResultPage = () => {
           selectedDate={new Date()}
           initialFoodList={result.food_list || []}
           selectedTime={getSelectedTime()}
+          type='text'
         />
       )}
     </div>
