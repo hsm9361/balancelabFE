@@ -43,6 +43,7 @@ function ImageAnalysisPage() {
       console.error('Analysis error:', err.message); // Debugging log
       setModalState({
         isOpen: true,
+        onConfirm: false,
         title: '분석 오류',
         message: err.message || '분석 중 오류가 발생했습니다.',
       });

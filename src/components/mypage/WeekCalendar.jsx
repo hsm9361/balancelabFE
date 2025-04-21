@@ -3,6 +3,7 @@ import styles from 'assets/css/pages/calendar/weekCalendar.module.css';
 import AddDietModal from '../../components/calendar/AddMealModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiClient from '../../services/apiClient';
+import CustomModal from '../../components/common/CustomModal';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -53,7 +54,12 @@ export default function WeekCalendar() {
   const [mealData, setMealData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [weekDateRange, setWeekDateRange] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
 
   const weekDates = useMemo(() => getThisWeekDates(baseDate), [baseDate]);
 
@@ -90,7 +96,7 @@ export default function WeekCalendar() {
       })
       .then((res) => {
         console.log('서버 응답 데이터', res.data);
-        const result = { ...mealData, [selectedDay]: [] }; // 기존 mealData 유지
+        const result = { ...mealData, [selectedDay]: [] };
         res.data.forEach((r) => {
           const date = r.consumedDate ? new Date(r.consumedDate) : new Date(selectedDate);
           const { type, time } = getMealTypeAndTime(r.mealTime);
@@ -112,9 +118,19 @@ export default function WeekCalendar() {
       .catch((err) => {
         console.error('식단 불러오기 실패:', err);
         if (err.response?.status === 401 || err.response?.status === 403) {
-          console.warn('인증 실패: 로그인 필요');
+          setModalState({
+            isOpen: true,
+            title: '인증 오류',
+            message: '로그인이 필요합니다.',
+            onConfirm: null,
+          });
         } else if (err.response?.status === 400) {
-          console.error('잘못된 날짜 형식:', selectedDate);
+          setModalState({
+            isOpen: true,
+            title: '잘못된 요청',
+            message: '잘못된 날짜 형식입니다.',
+            onConfirm: null,
+          });
         }
       });
   }, [baseDate, selectedDay]);
@@ -127,33 +143,48 @@ export default function WeekCalendar() {
 
   const handleSubmitMeal = (mealType, foodList) => {
     console.log('Meal submitted:', { mealType, foodList });
-    setIsModalOpen(false);
+    setShowModal(false);
   };
 
   const handleDeleteMeal = (indexToDelete, foodId) => {
-    const confirmDelete = window.confirm('삭제하시겠습니까?');
-    if (!confirmDelete) return;
+    setModalState({
+      isOpen: true,
+      title: '식단 삭제',
+      message: '이 식단을 삭제하시겠습니까?',
+      onConfirm: () => {
+        apiClient
+          .delete(`/food-record/${foodId}`)
+          .then(() => {
+            setMealData((prev) => {
+              const updatedMeals = [...(prev[selectedDay] || [])];
+              updatedMeals.splice(indexToDelete, 1);
+              return {
+                ...prev,
+                [selectedDay]: updatedMeals,
+              };
+            });
+            setModalState({
+              isOpen: true,
+              title: '삭제 완료',
+              message: '식단이 성공적으로 삭제되었습니다.',
+              onConfirm: null,
+            });
+          })
+          .catch((err) => {
+            console.error('삭제 실패:', err);
+            setModalState({
+              isOpen: true,
+              title: '삭제 실패',
+              message: '식단 삭제에 실패했습니다.',
+              onConfirm: null,
+            });
+          });
+      },
+    });
+  };
 
-    apiClient
-      .delete(`/food-record/${foodId}`)
-      .then(() => {
-        setMealData((prev) => {
-          const updatedMeals = [...(prev[selectedDay] || [])];
-          updatedMeals.splice(indexToDelete, 1);
-          return {
-            ...prev,
-            [selectedDay]: updatedMeals,
-          };
-        });
-
-        setTimeout(() => {
-          window.alert('삭제되었습니다.');
-        }, 100);
-      })
-      .catch((err) => {
-        console.error('삭제 실패:', err);
-        window.alert('삭제에 실패했습니다.');
-      });
+  const closeModal = () => {
+    setModalState({ isOpen: false, title: '', message: '', onConfirm: null });
   };
 
   const meals = mealData[selectedDay] || [];
@@ -244,6 +275,14 @@ export default function WeekCalendar() {
           type='custom'
         />
       )}
+
+      <CustomModal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   );
 }
