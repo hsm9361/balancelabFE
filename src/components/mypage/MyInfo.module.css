@@ -110,8 +110,8 @@
 
 .input:focus {
   outline: none;
-  border-color: #28a745;
-  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+  border-color: #4b90e2;
+  box-shadow: 0 0 0 2px #3e84d7ab;
 }
 
 .select {
