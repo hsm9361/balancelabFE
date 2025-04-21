@@ -145,7 +145,7 @@ function MyCalendar() {
     if (!confirmDelete) return;
 
     apiClient
-      .delete(`/api/diet/delete/${foodId}?userId=${userId}`)
+      .delete(`food-record/${foodId}`)
       .then(() => {
         setSelectedDateEvents(prev => prev.filter((_, idx) => idx !== indexToDelete));
         setEvents(prev => prev.filter(event => event.id !== foodId));
