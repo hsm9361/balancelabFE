@@ -87,13 +87,13 @@ function MyCalendar() {
           params: { date: formatted, userId },
         });
         const dayEvents = res.data.map((item) => {
-          const { type, time } = getMealTypeAndTime(item.mealTime);
+          const type = getMealType(item.mealTime);
           return {
             id: item.id || item.recordId,
             date: formatted,
             title: item.mealType || '식단',
             type,
-            time,
+            time: item.mealTime || '알 수 없음',
             items: [
               `${item.foodName || item.description || '음식'} (${
                 item.intakeAmount || item.amount || 1
@@ -121,13 +121,13 @@ function MyCalendar() {
   );
 
   // 식사 시간대 분류
-  const getMealTypeAndTime = (mealTime) => {
-    if (!mealTime) return { type: '기타', time: '알 수 없음' };
+  const getMealType = (mealTime) => {
+    if (!mealTime) return '기타';
     const [start] = mealTime.split(' ~ ');
     const hour = parseInt(start.split(':')[0], 10);
-    if (hour < 10) return { type: '아침', time: '08:00 ~ 09:30' };
-    if (hour < 15) return { type: '점심', time: '12:00 ~ 13:30' };
-    return { type: '저녁', time: '18:00 ~ 19:30' };
+    if (hour < 10) return '아침';
+    if (hour < 15) return '점심';
+    return '저녁';
   };
 
   // 단위 포맷팅
@@ -151,30 +151,21 @@ function MyCalendar() {
 
   // 식단 추가 처리
   const handleAddMeal = useCallback(
-    (mealType, menus) => {
+    async (mealType, menus) => {
       console.log('handleAddMeal 호출:', { mealType, menus });
       try {
-        const { type, time } = getMealTypeAndTime(menus[0]?.mealTime || '12:00 ~ 13:00');
-        const newEvent = {
-          id: Date.now(),
-          date: formatDate(new Date(menus[0]?.consumedDate || date)),
-          type: 'diet',
-          title: `${type} 식사`,
-          items: menus.map(
-            (m) => `${m.foodName || '음식'} (${m.amount || 1}${formatUnit(m.unit || 'g')})`
-          ),
-          type,
-          time,
-        };
-
-        setEvents((prev) => [...prev, newEvent]);
-        setSelectedDateEvents((prev) => [...prev, newEvent]);
+        // 식단 저장 요청은 이미 AddMealModal 내부에서 처리됨 가정
+  
         setModalState({
           isOpen: true,
           title: '추가 완료',
           message: '식단이 성공적으로 추가되었습니다.',
           onConfirm: null,
         });
+  
+        // 최신 데이터 다시 불러오기 (실제 ID 반영)
+        await handleDateChange(new Date(menus[0]?.consumedDate || date));
+        await fetchDietEvents(date);
       } catch (error) {
         console.error('식단 추가 처리 오류:', error);
         setModalState({
@@ -187,8 +178,10 @@ function MyCalendar() {
         setShowModal(false);
       }
     },
-    [date, formatDate]
+    [date, formatDate, handleDateChange, fetchDietEvents]
   );
+  
+  
 
   // 식단 삭제
   const handleDeleteMeal = (indexToDelete, foodId) => {
@@ -208,6 +201,7 @@ function MyCalendar() {
               message: '식단이 성공적으로 삭제되었습니다.',
               onConfirm: null,
             });
+            fetchDietEvents(date);
           })
           .catch((err) => {
             console.error('삭제 실패:', err);
