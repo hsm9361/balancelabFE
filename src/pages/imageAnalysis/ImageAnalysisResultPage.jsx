@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from '../../assets/css/pages/ImageAnalysisResultPage.module.css';
 import ActionButtons from '../../components/dietAnalysis/ActionButtons';
-
 import ResultImage from '../../components/imageAnalysis/ResultImage';
 import FoodList from '../../components/dietAnalysis/FoodList';
 import NutritionPerFood from '../../components/dietAnalysis/NutritionPerFood';
@@ -22,9 +21,24 @@ const ImageAnalysisResultPage = () => {
   const processAnalysisResult = useCallback((state) => {
     if (!state?.analysisResult) throw new Error('No analysis result provided');
     const analysisData = state.analysisResult;
+
+    // nutrition_data를 NutritionPerFood 컴포넌트가 기대하는 형태로 변환
+    const nutritionPerFood = analysisData.nutrition_data?.map(item => ({
+      food: item.food,
+      nutrition: {
+        protein: item.nutrients.protein || 0,
+        carbohydrate: item.nutrients.carbohydrates || 0,
+        water: item.nutrients.water || 0,
+        sugar: item.nutrients.sugar || 0,
+        fat: item.nutrients.fat || 0,
+        fiber: item.nutrients.fiber || 0,
+        sodium: item.nutrients.sodium || 0,
+      },
+    })) || [];
+
     return {
       food_list: analysisData.nutrition_data?.map(item => item.food) || [],
-      nutrition_per_food: analysisData.nutrition_data || [],
+      nutrition_per_food: nutritionPerFood,
       total_nutrition: analysisData.total_nutrition || {},
       deficient_nutrients: analysisData.deficient_nutrients || [],
       next_meal_suggestion: analysisData.next_meal_suggestion || [],
