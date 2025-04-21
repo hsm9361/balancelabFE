@@ -112,7 +112,6 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
 
     apiClient.post('/food-record/create', cleaned)
       .then(() => {
-        alert('저장 성공!');
         setMenus([{ name: '', grams: '1' }]);
         setUnitTypes(['인분']);
         setTime('12:00 ~ 13:00');
