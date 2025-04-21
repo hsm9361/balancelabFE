@@ -50,7 +50,6 @@ function PredictionResult() {
         diabetesProba: predictions.diabetes,
         hypertensionProba: predictions.hypertension,
         cvdProba: predictions.cardiovascular,
-        id:memberId
       };
       console.log(saveData)
       // 저장 요청

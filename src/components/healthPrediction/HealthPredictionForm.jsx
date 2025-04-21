@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 
 function HealthPredictionForm({ onSubmit }) {
   const [formData, setFormData] = useState({
-    age: '28',
+    id:'',
+    age: '',
     height: '',
     weight: '',
-    gender: 'male',
+    gender: '',
     smokeDaily: '',
     drinkWeekly: '',
     exerciseWeekly: '',
     historyDiabetes: '',
     historyHypertension: '',
     historyCardiovascular: '',
-    dailyCarbohydrate: '300',
-    dailySugar: '100',
-    dailyFat: '30',
-    dailySodium: '3000',
-    dailyFibrin: '10',
-    dailyWater: '1000'
+    dailyCarbohydrate: '',
+    dailySugar: '',
+    dailyFat: '',
+    dailySodium: '',
+    dailyFibrin: '',
+    dailyWater: ''
   });
   
 
@@ -55,35 +56,6 @@ function HealthPredictionForm({ onSubmit }) {
   return (
     <form onSubmit={handleSubmit} className="prediction-form">
       
-
-      <div className="form-group">
-        <label>키를 입력해주세요 (cm)</label>
-        <input
-          type="number"
-          name="height"
-          value={formData.height}
-          onChange={handleChange}
-          step="0.1"
-          min="100"
-          max="250"
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label>몸무게를 입력해주세요 (kg)</label>
-        <input
-          type="number"
-          name="weight"
-          value={formData.weight}
-          onChange={handleChange}
-          step="0.1"
-          min="20"
-          max="250"
-          required
-        />
-      </div>
-
       <div className="form-group">
         <label>흡연하시나요?</label>
         <div className="radio-group">

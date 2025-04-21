@@ -19,6 +19,7 @@ import DietLoadingPage from './components/dietAnalysis/DietLoadingPage.jsx';
 import DietConsulting from './pages/dietConsulting/DietConsultingResult.jsx';
 import DietConsultIndex from './pages/dietConsulting/DietConsultIndex.jsx';
 import AnalysisPage from './pages/AnalysisPage.jsx';
+import HealthPredictionIndex from './pages/healthPrediction/HealthPredictionIndex.jsx';
 
 function App() {
   return (
@@ -32,7 +33,8 @@ function App() {
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/healthprediction">
-              <Route index element={<HealthPrediction />} />
+              <Route index element={<HealthPredictionIndex />} />
+              <Route path="form" element={<HealthPrediction />} />
               <Route path="result" element={<PredictionResult />} />
             </Route>
             <Route path="/diet-consulting">

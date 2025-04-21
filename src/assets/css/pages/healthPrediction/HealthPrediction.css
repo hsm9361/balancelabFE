@@ -65,7 +65,7 @@
   font-weight: 600;
   color: #2D3748;
   font-size: 0.96rem;
-  min-width: 160px;
+  min-width: 250px;
   white-space: nowrap;
 }
 
@@ -131,6 +131,21 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   width: 80%;
   margin: 0.8rem auto 0;
+}
+
+.save-button {
+  grid-column: 1 / -1;
+  padding: 0.8rem;
+  background-color: #6d95c5;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  width: 30%;
 }
 
 .predict-button:hover {
@@ -297,6 +312,14 @@
   width: 100%;
   max-width: 800px;
   justify-content: space-between;
+}
+
+.form-group span {
+  font-size: 0.96rem;
+  color: #2D3748;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .radio-group2 label {
