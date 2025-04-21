@@ -2,135 +2,138 @@
 
 /* 주간 네비게이션 컨테이너 (이전/다음 주 버튼 및 날짜 범위) */
 .weekNavContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  /* 이전/다음 주 버튼 */
-  .weekNavButton {
-    background-color: #cce5ff;
-    color: #004085;
-    border: 1px solid #b8daff;
-    border-radius: 5px;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .weekNavButton:hover {
-    background-color: #007bff;
-  }
-  
-  /* 주간 날짜 범위 텍스트 */
-  .weekRangeText {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  /* 요일 선택 버튼 */
-  .weekDayButton {
-    background-color: #cce5ff;
-    color: #004085;
-    border-radius: 8px;
-    padding: 0.4rem 0.8rem;
-    border: none;
-    margin: 0 0.3rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .weekDayButton.weekDayButtonActive {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  /* 식단 시간 컨테이너 */
-  .weekMealTime {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  /* 식단 시간 범위 */
-  .weekMealTimeRange {
-    margin-left: 0.5rem;
-  }
-  
-  /* 삭제 버튼 */
-  .weekDeleteButton {
-    background: none;
-    border: none;
-    color: red;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  /* 기존 calendarPage.module.css에서 필요한 스타일 복사 및 조정 */
-  .tabContent {
-    padding: 2rem;
-  }
-  
-  .contentTitle {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-  
-  .daySelector {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin: 1rem 0;
-  }
-  
-  .mealCards {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 1.5rem 0;
-  }
-  
-  .mealCard {
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mealLabel {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .mealContents {
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  
-  .noEvents {
-    color: #888;
-    font-size: 0.9rem;
-    text-align: center;
-  }
-  
-  .addButton {
-    margin: 0 auto;
-    padding: 0.8rem 1.5rem;
-    background: #007bff;
-    color: white;
-    border-radius: 8px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-  
-  .addButton:hover {
-    background: #0056b3;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* 이전/다음 주 버튼 */
+.weekNavButton {
+  background-color: #4a78b2;
+  color: #f8f9fa;
+  border: 1px solid #2b5f9a;
+  border-radius: 5px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.weekNavButton:hover {
+  background-color: #204a7b;
+}
+
+/* 주간 날짜 범위 텍스트 */
+.weekRangeText {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* 요일 선택 버튼 */
+.weekDayButton {
+  background-color: #4a78b2;
+  color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  margin: 0 0.3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.weekDayButton.weekDayButtonActive {
+  background-color: #2b5f9a;
+  color: #ffffff;
+}
+
+/* 식단 시간 컨테이너 */
+.weekMealTime {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2b5f9a;
+}
+
+/* 식단 시간 범위 */
+.weekMealTimeRange {
+  margin-left: 0.5rem;
+  color: #6c757d;
+}
+
+.weekDeleteButton {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tabContent {
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.contentTitle {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #2b5f9a;
+}
+
+.daySelector {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.mealCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.mealCard {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.mealLabel {
+  font-weight: bold;
+  color: #2b5f9a;
+}
+
+.mealContents {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.noEvents {
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.addButton {
+  margin: 0 auto;
+  padding: 0.8rem 1.5rem;
+  background: #2b5f9a;
+  color: #ffffff;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.addButton:hover {
+  background: #204a7b;
+}

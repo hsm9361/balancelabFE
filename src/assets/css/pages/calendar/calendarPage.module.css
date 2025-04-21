@@ -8,6 +8,7 @@
   font-size: 1.8rem;
   margin-bottom: 1rem;
   text-align: center;
+  color: #1a3c6d;
 }
 
 /* 콘텐츠 래퍼 */
@@ -32,7 +33,7 @@
   background: #2196f3;
   border-radius: 8px;
   font-weight: bold;
-  color: white Hannah;
+  color: white;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -487,7 +488,7 @@
 
 .toggleWrapper button {
   padding: 0.6rem 1.2rem;
-  background: #2196f3;
+  background: #2b5f9a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -568,9 +569,9 @@
 .addButton {
   margin: 0 auto;
   padding: 0.8rem 1.5rem;
-  background: var(--primary-color);
+  background: #2b5f9a;
   color: white;
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   border: none;
   font-weight: bold;
   cursor: pointer;
@@ -597,8 +598,6 @@
   }
 }
 
-
-/* Existing styles remain unchanged, adding new styles for date input */
 .timeDateSelector {
   display: flex;
   gap: 1rem;
@@ -631,7 +630,6 @@
   outline: none;
 }
 
-/* Adjust time selector to fit beside date input */
 .timeSelector {
   flex: 1;
   display: flex;
@@ -666,414 +664,23 @@
   }
 }
 
-/* 기존 스타일 유지, 변경 및 추가된 부분만 강조 */
-.calendarPageContainer {
-  padding: 2rem;
-}
-
-.pageTitle {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.contentWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-.daySelector {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 1rem 0;
-}
-
-.daySelector button {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  background: #2196f3;
-  border-radius: 8px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.daySelector .activeDay {
-  background: #1976d2;
-  color: white;
-}
-
-.contentArea {
-  width: 100%;
-  max-width: 600px;
-}
-
-.dailyMealInfo {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-.dailyMealInfo h3 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.mealBlock {
-  margin-bottom: 1.5rem;
-}
-
-.mealBlock strong {
-  display: inline-block;
-  margin-bottom: 0.3rem;
-  font-size: 1rem;
-}
-
-.mealBlock ul {
-  padding-left: 1rem;
-}
-
-.noEvent {
-  color: #888;
-  font-size: 0.9rem;
-}
-
-.buttonSection {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.actionBtn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  background: #2196f3;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.actionBtn:hover {
-  background: #1976d2;
-}
-
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-}
-
-.modalContent {
-  background: white;
-  padding: 2rem;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.modalHeader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.modalIcon {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.modalContent h3 {
-  margin: 0;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.timeDateSelector {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin: 1rem 0;
-  justify-content: center;
-}
-
-.dateDisplay {
-  padding: 0.8rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
-  flex: 1;
-}
-
-.dateDisplay:hover {
-  border-color: #007bff;
-  background-color: #fff;
-}
-
-.dateDisplay:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-  outline: none;
-}
-
-.timeSelector {
-  position: relative;
-  flex: 1;
-}
-
-.timeDisplay {
-  padding: 0.8rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.timeDisplay:hover {
-  border-color: #007bff;
-  background-color: #fff;
-}
-
-.timeDropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  z-index: 10;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-}
-
-.timeButton {
-  display: block;
-  width: 100%;
-  padding: 0.8rem;
-  border: none;
-  background: #f8f9fa;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-align: left;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.timeButton:hover {
-  background: #e3f2fd;
-  color: #007bff;
-}
-
-.menuGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.menuItem {
-  background: #f8f9fa;
-  padding: 1.2rem;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  transition: all 0.3s ease;
-}
-
-.menuItem:hover {
-  border-color: #007bff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.menuInputs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.foodNameInput {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  margin-bottom: 0.8rem;
-  transition: all 0.3s ease;
-}
-
-.foodNameInput:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-  outline: none;
-}
-
-.amountInput {
-  display: flex;
-  gap: 0.8rem;
-  align-items: center;
-}
-
-.amountNumberInput {
-  flex: 1;
-  padding: 0.8rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-}
-
-.amountNumberInput:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-  outline: none;
-}
-
-.unitToggleButton {
-  padding: 0.8rem 1.2rem;
-  background: #e3f2fd;
-  border: 1px solid #007bff;
-  border-radius: 8px;
-  color: #007bff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.unitToggleButton:hover {
-  background: #007bff;
-  color: white;
-}
-
-.addMenuButton {
-  width: 100%;
-  padding: 1rem;
-  background: #e3f2fd;
-  border: 2px dashed #007bff;
-  border-radius: 12px;
-  color: #007bff;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin: 1rem 0;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.addMenuButton:hover {
-  background: #007bff;
-  color: white;
-  border-style: solid;
-}
-
-.plusIcon {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.modalButtons {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-}
-
-.submitButton {
-  padding: 1rem 2rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.submitButton:hover {
-  background: #0056b3;
-  transform: translateY(-2px);
-}
-
-.cancelButton {
-  padding: 1rem 2rem;
-  background: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.cancelButton:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
-}
-
-/* 기존 스타일 유지, 점 스타일 추가 */
+/* 날짜 위에 표시되는 점 (식단 기록 있음) */
 .eventDot {
   width: 8px;
   height: 8px;
-  background-color: #ff6b6b;
+  background-color: #a8e6a1;
   border-radius: 50%;
-  margin: 0 auto;
-  margin-top: 4px; /* 숫자와 점 사이 간격 조정 */
-  position: relative;
-  z-index: 1; /* 다른 요소에 가려지지 않도록 */
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
 }
 
 /* 달력 타일의 기본 스타일 충돌 방지 */
 .react-calendar__tile {
   position: relative;
+  padding-top: 14px; /* 위에 점이 들어갈 공간 확보 */
 }
 
 @media (max-width: 768px) {
