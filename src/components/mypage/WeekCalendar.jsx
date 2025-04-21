@@ -137,7 +137,7 @@ export default function WeekCalendar() {
     if (!confirmDelete) return;
 
     apiClient
-      .delete(`/api/diet/delete/${foodId}?userId=1`)
+      .delete(`/food-record/${foodId}`)
       .then(() => {
         setMealData((prev) => {
           const updatedMeals = [...(prev[selectedDay] || [])];
