@@ -226,7 +226,7 @@
   transition: opacity 0.3s ease;
 }
 
-.previewContainer:hover .previewOverlay {
+.previewContainer:hover .previewOverlay:not(.disabledOverlay) {
   opacity: 1; /* 호버 시 나타남 */
 }
 
@@ -522,93 +522,41 @@
   }
 }
 
-
-
-.resultContainer {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+/* 비활성화 스타일 */
+.disabled {
+  border-color: #d1d5db !important;
+  background-color: #f3f4f6 !important;
+  cursor: not-allowed !important;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #000000;
+.disabledOverlay {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-.content {
-  background-color: #ffffff;
-  padding: 20px;
-  box-sizing: border-box;
+.disabledButton {
+  background-color: #d1d5db !important;
+  color: #6b7280 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
-.pdf-capture {
-  background-color: #ffffff;
-  color: #000000;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-smooth: always;
-  text-shadow: none;
-  font-family: 'Noto Sans KR', sans-serif;
-  width: 100%;
-  min-height: 100%; /* 전체 콘텐츠 포함 */
+.disabledLabel {
+  background-color: #d1d5db !important;
+  color: #6b7280 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
 }
 
-.pdf-capture img {
-  width: 100%;
-  max-width: 600px;
-  height: auto;
-  display: block;
-  margin: 0 auto 20px;
-}
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .imageUploadArea {
+    height: 300px;
+  }
 
-.section {
-  margin-bottom: 20px;
-}
-
-.section h2,
-.section h3,
-.section p,
-.section li {
-  color: #000000 !important;
-  opacity: 1 !important;
-  text-shadow: none !important;
-}
-
-.actionButtons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.actionButton {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.actionButton:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-.loading {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 1000;
+  .overlayButton {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
 }

@@ -6,6 +6,7 @@ import AnalysisInfoSection from 'components/imageAnalysis/AnalysisInfoSection';
 import GuideCard from 'components/imageAnalysis/GuideCard';
 import FooterSection from 'components/imageAnalysis/FooterSection';
 import CustomModal from '../../components/common/CustomModal';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 import { useImageUpload } from 'hooks/useImageUpload';
 
 function ImageAnalysisPage() {
@@ -31,7 +32,7 @@ function ImageAnalysisPage() {
 
     try {
       const result = await uploadImage(selectedImage);
-      console.log('Analysis result:', result); // Debugging log
+      console.log('Analysis result:', result);
       navigate('/analysis/image-analysis/result', {
         state: {
           imageUrl: previewUrl,
@@ -40,7 +41,7 @@ function ImageAnalysisPage() {
         },
       });
     } catch (err) {
-      console.error('Analysis error:', err.message); // Debugging log
+      console.error('Analysis error:', err.message);
       setModalState({
         isOpen: true,
         onConfirm: false,
@@ -69,6 +70,7 @@ function ImageAnalysisPage() {
             setSelectedImage={setSelectedImage}
             previewUrl={previewUrl}
             setPreviewUrl={setPreviewUrl}
+            disabled={loading} // 로딩 중 파일 업로드 비활성화
           />
         </section>
         <section className={styles.infoColumn}>
@@ -78,9 +80,10 @@ function ImageAnalysisPage() {
       <AnalysisInfoSection
         selectedImage={selectedImage}
         handleAnalysis={handleAnalysis}
+        disabled={loading} // 로딩 중 분석 버튼 비활성화
       />
       <FooterSection />
-      {loading && <div className={styles.loading}>분석 중...</div>}
+      {loading && <LoadingSpinner />}
       <CustomModal
         isOpen={modalState.isOpen}
         onClose={closeModal}
