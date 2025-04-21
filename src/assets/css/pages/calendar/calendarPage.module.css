@@ -371,7 +371,7 @@
 
 .amountInput {
   display: flex;
-  gap: 0.8rem;
+  gap: 0.5rem;
   align-items: center;
 }
 
@@ -382,7 +382,7 @@
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  width: 70%;
+  width: 50%; /* 입력 필드 길이 줄임 */
 }
 
 .amountNumberInput:focus {
@@ -391,8 +391,13 @@
   outline: none;
 }
 
-.unitToggleButton {
-  padding: 0.8rem 1.2rem;
+.unitButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.unitButton {
+  padding: 0.6rem 1rem;
   background: #e3f2fd;
   border: 1px solid #007bff;
   border-radius: 8px;
@@ -402,9 +407,15 @@
   transition: all 0.3s ease;
 }
 
-.unitToggleButton:hover {
+.unitButton:hover {
   background: #007bff;
   color: white;
+}
+
+.unitButton.active {
+  background: #007bff;
+  color: white;
+  border-color: #0056b3;
 }
 
 .addMenuButton {
@@ -586,84 +597,6 @@
   cursor: pointer;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .menuGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .modalContent {
-    width: 95%;
-    padding: 1rem;
-  }
-}
-
-.timeDateSelector {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin: 1rem 0;
-  justify-content: center;
-}
-
-.dateDisplay {
-  width: 40%;
-  padding: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 20px;
-  font-size: 1.2rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.dateDisplay:hover {
-  border-color: #007bff;
-  background-color: #fff;
-}
-
-.dateDisplay:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-  outline: none;
-}
-
-.timeSelector {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.timeDisplay {
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 20px;
-  font-size: 1.2rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-  .timeDateSelector {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .dateDisplay {
-    width: 80%;
-  }
-
-  .timeDisplay {
-    width: 80%;
-  }
-}
-
 /* 날짜 위에 표시되는 점 (식단 기록 있음) */
 .eventDot {
   width: 8px;
@@ -683,17 +616,8 @@
   padding-top: 14px; /* 위에 점이 들어갈 공간 확보 */
 }
 
+/* 반응형 디자인 */
 @media (max-width: 768px) {
-  .timeDateSelector {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .dateDisplay,
-  .timeDisplay {
-    width: 100%;
-  }
-
   .menuGrid {
     grid-template-columns: 1fr;
   }
@@ -701,5 +625,18 @@
   .modalContent {
     width: 95%;
     padding: 1rem;
+  }
+
+  .timeDateSelector {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dateDisplay {
+    width: 100%;
+  }
+
+  .timeDisplay {
+    width: 100%;
   }
 }

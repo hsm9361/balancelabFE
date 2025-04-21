@@ -6,7 +6,7 @@ import dietIcon from 'assets/images/diary.png';
 
 function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [], 
   selectedTime = '점심', type='text' }) {
-  // 날짜 포맷팅 함수 (useState 이전에 정의)
+  // 날짜 포맷팅 함수
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -15,11 +15,10 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
   };
 
   const [menus, setMenus] = useState([{ name: '', grams: '1' }]);
-  const [unitTypes, setUnitTypes] = useState(['인분']);
+  const [unitTypes, setUnitTypes] = useState([{ unit: 'serving' }]); // 'serving' or 'g'
   const [time, setTime] = useState('12:00 ~ 13:00');
   const [showTimeDropdown, setShowTimeDropdown] = useState(false);
   const [date, setDate] = useState(() => {
-    // selectedDate가 있으면 사용, 없으면 오늘 날짜
     const today = new Date();
     return selectedDate ? formatDate(new Date(selectedDate)) : formatDate(today);
   });
@@ -34,7 +33,7 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
         grams: '1'
       }));
       setMenus(initialMenus);
-      setUnitTypes(new Array(initialMenus.length).fill('인분'));
+      setUnitTypes(new Array(initialMenus.length).fill({ unit: 'serving' }));
     }
   }, [initialFoodList]);
 
@@ -67,7 +66,7 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
   const handleAddMenu = () => {
     if (menus.length < 8) {
       setMenus([...menus, { name: '', grams: '1' }]);
-      setUnitTypes([...unitTypes, '인분']);
+      setUnitTypes([...unitTypes, { unit: 'serving' }]);
     }
   };
 
@@ -80,9 +79,9 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
     }
   };
 
-  const toggleUnitType = (index) => {
+  const handleUnitSelect = (index, unit) => {
     const updatedUnits = [...unitTypes];
-    updatedUnits[index] = updatedUnits[index] === 'g' ? '인분' : 'g';
+    updatedUnits[index] = { unit };
     setUnitTypes(updatedUnits);
   };
 
@@ -102,10 +101,10 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
     const cleaned = menus.map((m, i) => ({
       foodName: m.name.trim(),
       amount: parseFloat(m.grams),
-      unit: unitTypes[i] === '인분' ? 'serving' : 'g',
+      unit: unitTypes[i].unit, // 'serving' or 'g'
       mealTime: time,
       type: type,
-      consumedDate: new Date(date).toISOString() // consumedDate로 변경
+      consumedDate: new Date(date).toISOString()
     })).filter(m => m.foodName && m.amount);
 
     if (cleaned.length === 0) return;
@@ -113,7 +112,7 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
     apiClient.post('/food-record/create', cleaned)
       .then(() => {
         setMenus([{ name: '', grams: '1' }]);
-        setUnitTypes(['인분']);
+        setUnitTypes([{ unit: 'serving' }]);
         setTime('12:00 ~ 13:00');
         setDate(formatDate(new Date(selectedDate || new Date())));
         navigate('/calendar', { state: { viewMode: 'month' }, replace: true });
@@ -187,13 +186,22 @@ function AddDietModal({ onClose, onSubmit, selectedDate, initialFoodList = [],
                     placeholder="수량"
                     className={styles.amountNumberInput}
                   />
-                  <button
-                    type="button"
-                    onClick={() => toggleUnitType(index)}
-                    className={styles.unitToggleButton}
-                  >
-                    {unitTypes[index]}
-                  </button>
+                  <div className={styles.unitButtons}>
+                    <button
+                      type="button"
+                      onClick={() => handleUnitSelect(index, 'serving')}
+                      className={`${styles.unitButton} ${unitTypes[index].unit === 'serving' ? styles.active : ''}`}
+                    >
+                      인분
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleUnitSelect(index, 'g')}
+                      className={`${styles.unitButton} ${unitTypes[index].unit === 'g' ? styles.active : ''}`}
+                    >
+                      g
+                    </button>
+                  </div>
                   {menus.length > 1 && (
                     <button
                       onClick={() => handleRemoveMenu(index)}
