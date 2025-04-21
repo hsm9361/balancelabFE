@@ -17,6 +17,7 @@ const MyInfo = () => {
     formState: { isSubmitting, isDirty, errors },
   } = useForm({
     defaultValues: {
+      membername: '',
       height: '',
       weight: '',
       age: '',
@@ -75,7 +76,6 @@ const MyInfo = () => {
     clearProfileImage();
   };
 
-
   if (loading) {
     return <div className={styles.loading}>로딩 중...</div>;
   }
@@ -132,6 +132,27 @@ const MyInfo = () => {
         </div>
 
         <div className={styles.infoSection}>
+          <div className={styles.formGroup}>
+            <label htmlFor="membername">이름</label>
+            <Controller
+              name="membername"
+              control={control}
+              rules={{
+                required: '이름은 필수 입력입니다.',
+                maxLength: { value: 50, message: '이름은 50자 이내로 입력하세요.' },
+              }}
+              render={({ field }) => (
+                <input
+                  type="text"
+                  id="membername"
+                  className={styles.input}
+                  {...field}
+                />
+              )}
+            />
+            {errors.membername && <span className={styles.fieldError}>{errors.membername.message}</span>}
+          </div>
+
           <div className={styles.formGroup}>
             <label htmlFor="height">키 (cm)</label>
             <Controller

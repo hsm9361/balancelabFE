@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import styles from 'assets/css/pages/calendar/calendarPage.module.css';
+import styles from 'assets/css/pages/calendar/weekCalendar.module.css';
 import AddDietModal from '../../components/calendar/AddMealModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiClient from '../../services/apiClient';
+import CustomModal from '../../components/common/CustomModal';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -53,6 +54,12 @@ export default function WeekCalendar() {
   const [mealData, setMealData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [weekDateRange, setWeekDateRange] = useState('');
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
 
   const weekDates = useMemo(() => getThisWeekDates(baseDate), [baseDate]);
 
@@ -89,11 +96,9 @@ export default function WeekCalendar() {
       })
       .then((res) => {
         console.log('서버 응답 데이터', res.data);
-        const result = { ...mealData, [selectedDay]: [] }; // 기존 mealData 유지
+        const result = { ...mealData, [selectedDay]: [] };
         res.data.forEach((r) => {
-          // consumedDate가 null이면 selectedDate 사용
           const date = r.consumedDate ? new Date(r.consumedDate) : new Date(selectedDate);
-          // selectedDay에 직접 매핑
           const { type, time } = getMealTypeAndTime(r.mealTime);
           result[selectedDay].push({
             foodId: r.id,
@@ -113,9 +118,19 @@ export default function WeekCalendar() {
       .catch((err) => {
         console.error('식단 불러오기 실패:', err);
         if (err.response?.status === 401 || err.response?.status === 403) {
-          console.warn('인증 실패: 로그인 필요');
+          setModalState({
+            isOpen: true,
+            title: '인증 오류',
+            message: '로그인이 필요합니다.',
+            onConfirm: null,
+          });
         } else if (err.response?.status === 400) {
-          console.error('잘못된 날짜 형식:', selectedDate);
+          setModalState({
+            isOpen: true,
+            title: '잘못된 요청',
+            message: '잘못된 날짜 형식입니다.',
+            onConfirm: null,
+          });
         }
       });
   }, [baseDate, selectedDay]);
@@ -126,110 +141,69 @@ export default function WeekCalendar() {
     setBaseDate(newBaseDate);
   };
 
-  const handleAddMeal = (mealType, menus) => {
-    const selectedDate = formatDate(weekDates[days.indexOf(selectedDay)]);
-    const newMeal = {
-      type: mealType === 'morning' ? '아침' : mealType === 'lunch' ? '점심' : '저녁',
-      time:
-        mealType === 'morning'
-          ? '08:00 ~ 09:30'
-          : mealType === 'lunch'
-          ? '12:00 ~ 13:30'
-          : '18:00 ~ 19:30',
-      items: menus.map((m) => `${m.foodName} (${m.amount}${formatUnit(m.unit)})`),
-      mealTime: mealType === 'morning' ? '08:00' : mealType === 'lunch' ? '12:00' : '18:00',
-      carb: 0,
-      protein: 0,
-      kcal: 0,
-    };
-
-    apiClient
-      .post('/food-record', {
-        foodName: menus[0].foodName,
-        amount: menus[0].amount,
-        unit: menus[0].unit,
-        mealTime: newMeal.mealTime,
-        consumedDate: selectedDate,
-        memberId: 1, // 실제 사용자 ID로 대체
-      })
-      .then((res) => {
-        setMealData((prev) => ({
-          ...prev,
-          [selectedDay]: [
-            ...(prev[selectedDay] || []),
-            { ...newMeal, foodId: res.data.id },
-          ],
-        }));
-        setShowModal(false);
-        window.alert('식단이 추가되었습니다.');
-      })
-      .catch((err) => {
-        console.error('식단 추가 실패:', err);
-        window.alert('식단 추가에 실패했습니다.');
-      });
+  const handleSubmitMeal = (mealType, foodList) => {
+    console.log('Meal submitted:', { mealType, foodList });
+    setShowModal(false);
   };
 
   const handleDeleteMeal = (indexToDelete, foodId) => {
-    const confirmDelete = window.confirm('삭제하시겠습니까?');
-    if (!confirmDelete) return;
+    setModalState({
+      isOpen: true,
+      title: '식단 삭제',
+      message: '이 식단을 삭제하시겠습니까?',
+      onConfirm: () => {
+        apiClient
+          .delete(`/food-record/${foodId}`)
+          .then(() => {
+            setMealData((prev) => {
+              const updatedMeals = [...(prev[selectedDay] || [])];
+              updatedMeals.splice(indexToDelete, 1);
+              return {
+                ...prev,
+                [selectedDay]: updatedMeals,
+              };
+            });
+            setModalState({
+              isOpen: true,
+              title: '삭제 완료',
+              message: '식단이 성공적으로 삭제되었습니다.',
+              onConfirm: null,
+            });
+          })
+          .catch((err) => {
+            console.error('삭제 실패:', err);
+            setModalState({
+              isOpen: true,
+              title: '삭제 실패',
+              message: '식단 삭제에 실패했습니다.',
+              onConfirm: null,
+            });
+          });
+      },
+    });
+  };
 
-    apiClient
-      .delete(`/api/diet/delete/${foodId}?userId=1`)
-      .then(() => {
-        setMealData((prev) => {
-          const updatedMeals = [...(prev[selectedDay] || [])];
-          updatedMeals.splice(indexToDelete, 1);
-          return {
-            ...prev,
-            [selectedDay]: updatedMeals,
-          };
-        });
-
-        setTimeout(() => {
-          window.alert('삭제되었습니다.');
-        }, 100);
-      })
-      .catch((err) => {
-        console.error('삭제 실패:', err);
-        window.alert('삭제에 실패했습니다.');
-      });
+  const closeModal = () => {
+    setModalState({ isOpen: false, title: '', message: '', onConfirm: null });
   };
 
   const meals = mealData[selectedDay] || [];
 
   return (
-    <div className={`${styles.tabContent}`}>
+    <div className={styles.tabContent}>
       <h2 className={styles.contentTitle}>주간 식단표</h2>
 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+      <div className={styles.weekNavContainer}>
         <button
           onClick={() => handleWeekChange(-7)}
-          style={{
-            backgroundColor: '#cce5ff',
-            color: '#004085',
-            border: '1px solid #b8daff',
-            borderRadius: '5px',
-            padding: '0.4rem 0.8rem',
-            cursor: 'pointer',
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#cce5ff')}
+          className={styles.weekNavButton}
         >
           ◀ 이전 주
         </button>
-        <span style={{ fontSize: '14px', color: '#555' }}>이번 주: {weekDateRange}</span>
+        <span className={styles.weekRangeText}>이번 주: {weekDateRange}</span>
         <button
           onClick={() => handleWeekChange(7)}
-          style={{
-            backgroundColor: '#cce5ff',
-            color: '#004085',
-            border: '1px solid #b8daff',
-            borderRadius: '5px',
-            padding: '0.4rem 0.8rem',
-            cursor: 'pointer',
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#cce5ff')}
+          className={styles.weekNavButton}
         >
           다음 주 ▶
         </button>
@@ -243,16 +217,7 @@ export default function WeekCalendar() {
           return (
             <button
               key={day}
-              className={`${styles.dayButton}`}
-              style={{
-                backgroundColor: isActive ? '#007bff' : '#cce5ff',
-                color: isActive ? 'white' : '#004085',
-                borderRadius: '8px',
-                padding: '0.4rem 0.8rem',
-                border: 'none',
-                margin: '0 0.3rem',
-                cursor: 'pointer',
-              }}
+              className={`${styles.weekDayButton} ${isActive ? styles.weekDayButtonActive : ''}`}
               onClick={() => setSelectedDay(day)}
             >
               {label}
@@ -273,24 +238,17 @@ export default function WeekCalendar() {
           {meals.length > 0 ? (
             meals.map((meal, idx) => (
               <div key={idx} className={styles.mealCard}>
-                <div className={styles.mealTime} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className={styles.weekMealTime}>
                   <div>
                     <span className={styles.mealLabel}>{meal.type}</span>
-                    <span className={styles.mealTimeRange} style={{ marginLeft: '0.5rem' }}>{meal.time}</span>
+                    <span className={styles.weekMealTimeRange}>{meal.time}</span>
                   </div>
                   <button
                     onClick={() => {
                       console.log('삭제요청', meal.foodId, meal);
                       handleDeleteMeal(idx, meal.foodId);
                     }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'red',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                    }}
+                    className={styles.weekDeleteButton}
                     title="삭제"
                   >
                     ✕
@@ -312,10 +270,19 @@ export default function WeekCalendar() {
       {showModal && (
         <AddDietModal
           onClose={() => setShowModal(false)}
-          onSubmit={handleAddMeal}
+          onSubmit={handleSubmitMeal}
           selectedDate={formatDate(weekDates[days.indexOf(selectedDay)])}
+          type='custom'
         />
       )}
+
+      <CustomModal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   );
 }

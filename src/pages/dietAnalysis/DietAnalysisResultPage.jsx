@@ -7,7 +7,7 @@ import TotalNutrition from '../../components/dietAnalysis/TotalNutrition';
 import DeficientNutrients from '../../components/dietAnalysis/DeficientNutrients';
 import NextMealSuggestion from '../../components/dietAnalysis/NextMealSuggestion';
 import ActionButtons from '../../components/dietAnalysis/ActionButtons';
-import AddDietModal from '../../components/dietAnalysis/AddModal';
+import AddDietModal from '../../components/calendar/AddMealModal';
 
 const DietAnalysisResultPage = () => {
   const location = useLocation();
@@ -36,7 +36,6 @@ const DietAnalysisResultPage = () => {
   };
 
   const handleSubmitMeal = (mealType, foodList) => {
-    // 여기에서 식단 추가 API 호출 등의 로직을 구현할 수 있습니다.
     console.log('Meal submitted:', { mealType, foodList });
     setIsModalOpen(false);
   };
@@ -87,6 +86,8 @@ const DietAnalysisResultPage = () => {
       </div>
       <div className={styles.actionButtons}>
         <ActionButtons 
+          targetId="diet-analysis-content"
+          pdfFileName="diet-analysis-result.pdf"
           additionalButton={
             <button onClick={handleOpenModal} className={styles.addMealButton}>
               식단 추가하기
@@ -101,6 +102,7 @@ const DietAnalysisResultPage = () => {
           selectedDate={new Date()}
           initialFoodList={result.food_list || []}
           selectedTime={getSelectedTime()}
+          type='text'
         />
       )}
     </div>
