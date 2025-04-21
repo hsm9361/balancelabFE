@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import styles from 'assets/css/pages/calendar/calendarPage.module.css';
+import styles from 'assets/css/pages/calendar/weekCalendar.module.css';
 import AddDietModal from '../../components/calendar/AddMealModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import apiClient from '../../services/apiClient';
@@ -92,9 +92,7 @@ export default function WeekCalendar() {
         console.log('서버 응답 데이터', res.data);
         const result = { ...mealData, [selectedDay]: [] }; // 기존 mealData 유지
         res.data.forEach((r) => {
-          // consumedDate가 null이면 selectedDate 사용
           const date = r.consumedDate ? new Date(r.consumedDate) : new Date(selectedDate);
-          // selectedDay에 직접 매핑
           const { type, time } = getMealTypeAndTime(r.mealTime);
           result[selectedDay].push({
             foodId: r.id,
@@ -161,38 +159,20 @@ export default function WeekCalendar() {
   const meals = mealData[selectedDay] || [];
 
   return (
-    <div className={`${styles.tabContent}`}>
+    <div className={styles.tabContent}>
       <h2 className={styles.contentTitle}>주간 식단표</h2>
 
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+      <div className={styles.weekNavContainer}>
         <button
           onClick={() => handleWeekChange(-7)}
-          style={{
-            backgroundColor: '#cce5ff',
-            color: '#004085',
-            border: '1px solid #b8daff',
-            borderRadius: '5px',
-            padding: '0.4rem 0.8rem',
-            cursor: 'pointer',
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#cce5ff')}
+          className={styles.weekNavButton}
         >
           ◀ 이전 주
         </button>
-        <span style={{ fontSize: '14px', color: '#555' }}>이번 주: {weekDateRange}</span>
+        <span className={styles.weekRangeText}>이번 주: {weekDateRange}</span>
         <button
           onClick={() => handleWeekChange(7)}
-          style={{
-            backgroundColor: '#cce5ff',
-            color: '#004085',
-            border: '1px solid #b8daff',
-            borderRadius: '5px',
-            padding: '0.4rem 0.8rem',
-            cursor: 'pointer',
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#cce5ff')}
+          className={styles.weekNavButton}
         >
           다음 주 ▶
         </button>
@@ -206,16 +186,7 @@ export default function WeekCalendar() {
           return (
             <button
               key={day}
-              className={`${styles.dayButton}`}
-              style={{
-                backgroundColor: isActive ? '#007bff' : '#cce5ff',
-                color: isActive ? 'white' : '#004085',
-                borderRadius: '8px',
-                padding: '0.4rem 0.8rem',
-                border: 'none',
-                margin: '0 0.3rem',
-                cursor: 'pointer',
-              }}
+              className={`${styles.weekDayButton} ${isActive ? styles.weekDayButtonActive : ''}`}
               onClick={() => setSelectedDay(day)}
             >
               {label}
@@ -236,24 +207,17 @@ export default function WeekCalendar() {
           {meals.length > 0 ? (
             meals.map((meal, idx) => (
               <div key={idx} className={styles.mealCard}>
-                <div className={styles.mealTime} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className={styles.weekMealTime}>
                   <div>
                     <span className={styles.mealLabel}>{meal.type}</span>
-                    <span className={styles.mealTimeRange} style={{ marginLeft: '0.5rem' }}>{meal.time}</span>
+                    <span className={styles.weekMealTimeRange}>{meal.time}</span>
                   </div>
                   <button
                     onClick={() => {
                       console.log('삭제요청', meal.foodId, meal);
                       handleDeleteMeal(idx, meal.foodId);
                     }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'red',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                    }}
+                    className={styles.weekDeleteButton}
                     title="삭제"
                   >
                     ✕
