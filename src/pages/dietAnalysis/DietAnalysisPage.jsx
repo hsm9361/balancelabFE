@@ -20,22 +20,9 @@ function DietAnalysisPage() {
   const textareaRef = useRef(null);
 
   const handleAnalysis = async () => {
-    const lines = message.split('\n');
-    if (!message.trim()) {
-      setErrorMessage('음식을 입력해주세요!');
-      setShowErrorModal(true);
-      return;
-    }
-
-    // 두 번째 줄(음식 입력란)이 비어있는지 확인
-    if (lines.length > 1 && !lines[1].trim()) {
-      setErrorMessage('음식을 입력해주세요!');
-      setShowErrorModal(true);
-      return;
-    }
-
     try {
       const result = await analyzeDiet(message, selectedTime);
+      console.log('분석 결과:', result);
       navigate('/analysis/diet-analysis/result', {
         state: { 
           result,
@@ -43,7 +30,20 @@ function DietAnalysisPage() {
         },
       });
     } catch (err) {
-      navigate('/analysis/diet-analysis/error', { state: { error: err.message || '분석에 실패했습니다.' } });
+      console.log('에러 발생:', err.message, err);
+      // 두 가지 에러 모두 모달로 표시
+      if (
+        err.message === '분석할 음식이 없습니다. 음식을 추가해 주세요!' ||
+        err.message === '입력된 음식이 없습니다.'
+      ) {
+        setErrorMessage(err.message);
+        setShowErrorModal(true);
+      } else {
+        // 기타 에러는 alert로 유지 (또는 다른 방식으로 처리)
+        console.error('기타 분석 에러:', err.message);
+        setErrorMessage(err.message);
+        alert(`분석 중 오류 발생: ${err.message}`);
+      }
     }
   };
 
@@ -186,9 +186,7 @@ function DietAnalysisPage() {
         {examples.map((example, index) => (
           <button
             key={index}
-            className={`${styles.exampleButton} ${
-              selectedExample === `${example.time}으로 ${example.foods} 먹었어` ? styles.selected : ''
-            }`}
+            className={`${styles.exampleButton} ${selectedExample === `${example.time}으로 ${example.foods} 먹었어` ? styles.selected : ''}`}
             onClick={() => handleExampleClick(example.time, example.foods)}
             disabled={loading}
           >
