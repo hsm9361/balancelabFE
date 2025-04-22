@@ -191,7 +191,7 @@ const AuthModal = ({ isOpen, onClose, type = 'required', onLoginSuccess }) => {
       buttons: (
         <>
           <button className={styles.primaryButton} onClick={handleGoogleLogin}>
-            구글로 로그인
+            로그인
           </button>
           <button className={styles.secondaryButton} onClick={handleCancel}>
             취소
