@@ -126,6 +126,7 @@ function Challenge() {
       endDate,
       allChallenges,
     });
+    console.log('Filtered past challenges:', allChallenges.filter((challenge) => challenge.status !== 'ONGOING'));
   }, [ongoingChallenge, isChallengeRegistered, challengeStatus, endDate, allChallenges]);
 
   // 체중 비교 함수
@@ -228,7 +229,7 @@ function Challenge() {
       {/* 챌린지 등록 섹션 */}
       {showRegisterSection && (
         <div className={styles.card}>
-          <h1 className={styles.title}>나만의 체중조절 시작하기</h1>
+          <h1 className={styles.title}>나만의 챌린지 시작하기</h1>
 
           <div className={styles.section}>
             <label className={styles.label}>기간</label>
@@ -361,7 +362,7 @@ function Challenge() {
         <h2 className={styles.subtitle}>과거 챌린지</h2>
         {allChallenges.length > 0 ? (
           allChallenges
-            .filter((challenge) => challenge.status !== 'ONGOING') // 진행 중 제외
+            .filter((challenge) => challenge.status !== 'ONGOING')
             .map((challenge) => (
               <div key={challenge.id} className={styles.challengeCard}>
                 <div className={styles.challengeInfo}>

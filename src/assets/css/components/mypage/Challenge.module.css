@@ -391,6 +391,101 @@
   border-radius: 8px;
 }
 
+/* 모달 오버레이 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 모달 컨텐츠 */
+.modalContent {
+  background: linear-gradient(145deg, #f8fafc, #e6ecef);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.modal.open .modalContent {
+  transform: scale(1);
+}
+
+/* 모달 제목 */
+.modalTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #3b5a7a;
+  margin-bottom: 16px;
+}
+
+/* 모달 메시지 */
+.modalMessage {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-bottom: 24px;
+}
+
+/* 모달 버튼 컨테이너 */
+.modalButtonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* 모달 버튼 */
+.modalButton {
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modalButton.confirm {
+  background: linear-gradient(90deg, #4a90e2, #6baaf1);
+}
+
+.modalButton.confirm:hover {
+  background: linear-gradient(90deg, #4a90e2, #5a7896);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 90, 122, 0.3);
+}
+
+.modalButton.close {
+  background: linear-gradient(90deg, #d9534f, #c9302c);
+}
+
+.modalButton.close:hover {
+  background: linear-gradient(90deg, #c9302c, #b22222);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.4);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .card {
@@ -433,5 +528,24 @@
 
   .challengeDetails {
     gap: 12px;
+  }
+
+  .modalContent {
+    width: 95%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modalTitle {
+    font-size: 1.2rem;
+  }
+
+  .modalMessage {
+    font-size: 0.9rem;
+  }
+
+  .modalButton {
+    padding: 8px 20px;
+    font-size: 0.9rem;
   }
 }
