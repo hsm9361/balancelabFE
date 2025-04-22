@@ -20,7 +20,7 @@ function DietConsulting() {
   const navigate = useNavigate();
   const [dietData, setDietData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [email, setEmail] = useState(null);
+  const [memberId, setMemberId] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState(null);
@@ -28,7 +28,7 @@ function DietConsulting() {
   const fetchMemberInfo = async () => {
     try {
       const data = await memberService.getMemberInfo();
-      setEmail(data.email);
+      setMemberId(data.memberId);
       setName(data.membername);
     } catch (err) {
       if (err.message === 'Authentication required') {
@@ -54,7 +54,7 @@ function DietConsulting() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ email: email }),
+          body: JSON.stringify({ id: memberId }),
           credentials: 'include',
         });
 
@@ -74,10 +74,10 @@ function DietConsulting() {
       }
     };
 
-    if (email) {
+    if (memberId) {
       fetchDietRecommendation();
     }
-  }, [email]);
+  }, [memberId]);
 
   if (isLoading) {
     return (
