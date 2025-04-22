@@ -7,6 +7,7 @@ import MyBalance from 'components/mypage/MyBalance';
 import CalendarActionButtons from 'components/calendar/CalendarActionButtons';
 import AddMealModal from 'components/calendar/AddMealModal'; // ✅ 모달 컴포넌트 import
 import MonthCalendar from 'components/mypage/MonthCalendar';
+import Challenge from 'components/mypage/Challenge';
 
 function MyPage() {
   const [activeTab, setActiveTab] = useState('myInfo');
@@ -22,6 +23,8 @@ function MyPage() {
         return <MonthCalendar />;
       case 'myBalance':
         return <MyBalance />;
+      case 'challenge':
+        return <Challenge />;
       default:
         return <MyInfo />;
     }
