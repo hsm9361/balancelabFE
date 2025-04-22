@@ -173,7 +173,7 @@ body {
 /* 콘텐츠 영역 */
 .contentArea {
   flex: 1;
-  padding: 30px;
+  padding: 0px;
   background-color: var(--background-light);
   overflow-y: auto;
 }

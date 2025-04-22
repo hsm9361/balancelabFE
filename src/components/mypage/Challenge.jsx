@@ -4,6 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../components/common/CustomModal';
 import { useChallenge } from '../../hooks/useChallenge';
 import { useMemberInfo } from '../../hooks/useMemberInfo';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function Challenge() {
   const navigate = useNavigate();
@@ -29,22 +50,184 @@ function Challenge() {
     setModalMessage,
     setModalOpen,
     ongoingChallenge,
-    fetchOngoingChallenge,
+    allChallenges,
+    weightHistory,
   } = useChallenge();
 
   const { fetchMemberInfo, error: memberError, loading: memberLoading } = useMemberInfo(() => {});
   const [userWeight, setUserWeight] = useState(null);
-  const [selectedGoal, setSelectedGoal] = useState('');
-  const [customGoalInput, setCustomGoalInput] = useState('');
 
-  // 목표 옵션 배열 (아이콘 포함)
+  // 목표 옵션 배열
   const goalOptions = [
-    { value: '체중조절', label: '⚖️ 체중조절' },
-    { value: '건강관리', label: '🩺 건강관리' },
-    { value: '근성장', label: '💪 근성장' },
-    { value: '지구력증가', label: '🏃‍♂️ 지구력증가' },
-    { value: '기타', label: '✍️ 기타' },
+    { value: '체중조절', label: '⚖️ 체중조절', icon: '⚖️' },
   ];
+
+  // 진행률 계산
+  const calculateProgress = () => {
+    if (!ongoingChallenge?.startWeight || !ongoingChallenge?.targetWeight || !userWeight) {
+      console.warn('Progress calculation: Missing weights', {
+        startWeight: ongoingChallenge?.startWeight,
+        targetWeight: ongoingChallenge?.targetWeight,
+        userWeight,
+      });
+      return 0;
+    }
+
+    const startWeight = parseFloat(ongoingChallenge.startWeight);
+    const targetWeight = parseFloat(ongoingChallenge.targetWeight);
+    const currentWeight = parseFloat(userWeight);
+
+    if (isNaN(startWeight) || isNaN(targetWeight) || isNaN(currentWeight)) {
+      console.error('Progress calculation: Invalid weight values', {
+        startWeight,
+        targetWeight,
+        currentWeight,
+      });
+      return 0;
+    }
+
+    const targetChange = targetWeight - startWeight;
+    if (targetChange === 0) {
+      console.warn('Progress calculation: No weight change required');
+      return 100;
+    }
+
+    const currentChange = currentWeight - startWeight;
+    let progress = (currentChange / targetChange) * 100;
+
+    if (targetChange > 0) {
+      progress = Math.min(Math.max(progress, 0), 100);
+    } else {
+      progress = Math.min(Math.max(progress, 0), 100);
+    }
+
+    const finalProgress = progress.toFixed(0);
+    console.log('Progress calculation:', {
+      startWeight,
+      targetWeight,
+      currentWeight,
+      targetChange,
+      currentChange,
+      progress: finalProgress,
+    });
+
+    return finalProgress;
+  };
+
+  // 몸무게 히스토리 디버깅
+  useEffect(() => {
+    console.log('Weight history for chart:', weightHistory);
+    weightHistory.forEach((entry) => {
+      console.log('Parsing insDate:', entry.insDate, new Date(entry.insDate));
+    });
+  }, [weightHistory]);
+
+  // 몸무게 히스토리 차트 데이터
+  const chartData = {
+    labels: weightHistory.map((entry) =>
+      new Date(entry.insDate).toLocaleDateString('ko-KR', {
+        month: 'short',
+        day: 'numeric',
+      })
+    ),
+    datasets: [
+      {
+        label: '몸무게 (kg)',
+        data: weightHistory.map((entry) => entry.weight),
+        borderColor: '#4a90e2',
+        backgroundColor: 'rgba(74, 144, 226, 0.2)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      ...(ongoingChallenge?.targetWeight
+        ? [
+            {
+              label: '목표 체중 (kg)',
+              data: Array(weightHistory.length).fill(parseFloat(ongoingChallenge.targetWeight)),
+              borderColor: '#d9534f',
+              borderDash: [5, 5],
+              pointRadius: 0,
+              fill: false,
+              tension: 0,
+            },
+          ]
+        : []),
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+          },
+          color: '#3b5a7a',
+        },
+      },
+      tooltip: {
+        backgroundColor: '#f8fafc',
+        titleColor: '#3b5a7a',
+        bodyColor: '#6c757d',
+        borderColor: '#6c8caf',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: '날짜',
+          color: '#3b5a7a',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+            weight: '500',
+          },
+        },
+        ticks: {
+          color: '#6c757d',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 12,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: '몸무게 (kg)',
+          color: '#3b5a7a',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+            weight: '500',
+          },
+        },
+        ticks: {
+          color: '#6c757d',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 12,
+          },
+        },
+        suggestedMin: Math.min(
+          ...weightHistory.map((entry) => entry.weight),
+          ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : Infinity
+        ) - 5,
+        suggestedMax: Math.max(
+          ...weightHistory.map((entry) => entry.weight),
+          ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : -Infinity
+        ) + 5,
+      },
+    },
+  };
 
   // 유저 정보 로드
   useEffect(() => {
@@ -67,23 +250,25 @@ function Challenge() {
       }
     };
     loadData();
-  }, [fetchMemberInfo]);
+  }, [fetchMemberInfo, setModalTitle, setModalMessage, setModalOpen]);
 
-  // 태그 선택 핸들러
-  const handleGoalSelect = (value) => {
-    setSelectedGoal(value);
-    if (value !== '기타') {
-      setCustomGoalInput('');
-    }
-  };
-
-  // 기타 입력창 변경 핸들러
-  const handleCustomGoalChange = (e) => setCustomGoalInput(e.target.value);
+  // 챌린지 상태 디버깅
+  useEffect(() => {
+    console.log('Challenge state:', {
+      ongoingChallenge,
+      isChallengeRegistered,
+      challengeStatus,
+      endDate,
+      allChallenges,
+      weightHistory,
+    });
+    console.log('Filtered past challenges:', allChallenges.filter((challenge) => challenge.status !== 'ONGOING'));
+  }, [ongoingChallenge, isChallengeRegistered, challengeStatus, endDate, allChallenges, weightHistory]);
 
   // 체중 비교 함수
   const getWeightChangeLabel = () => {
     if (!targetWeight || !userWeight) return { label: '', className: '' };
-    const target = parseInt(targetWeight);
+    const target = parseFloat(targetWeight);
     if (isNaN(target)) return { label: '', className: '' };
     let label, className;
     if (target > userWeight) {
@@ -102,11 +287,11 @@ function Challenge() {
 
   // 챌린지 등록 래퍼 함수
   const handleRegisterChallenge = () => {
-    const finalGoal = selectedGoal === '기타' ? customGoalInput : selectedGoal;
+    const finalGoal = '체중조절';
 
-    if (!finalGoal || !period) {
+    if (!period || !targetWeight) {
       setModalTitle('오류');
-      setModalMessage('모든 필드를 입력해주세요.');
+      setModalMessage('기간과 목표 체중을 입력해주세요.');
       setModalOpen(true);
       return;
     }
@@ -116,33 +301,44 @@ function Challenge() {
       setModalOpen(true);
       return;
     }
-    if (selectedGoal === '체중조절' && (!targetWeight || !Number(targetWeight) || Number(targetWeight) <= 0)) {
+    if (!Number(targetWeight) || Number(targetWeight) <= 0) {
       setModalTitle('오류');
       setModalMessage('목표 체중은 1 이상의 숫자를 입력해주세요.');
       setModalOpen(true);
       return;
     }
-    if (selectedGoal === '기타' && !customGoalInput.trim()) {
+    if (!userWeight) {
       setModalTitle('오류');
-      setModalMessage('기타 목표를 입력해주세요.');
-      setModalOpen(true);
-      return;
-    }
-    if (challengeStatus === '진행중' && isChallengeRegistered && endDate && new Date() <= endDate) {
-      setModalTitle('오류');
-      setModalMessage('진행중인 챌린지가 존재합니다. 실패 버튼을 눌러 새로 등록해주세요.');
+      setModalMessage('현재 몸무게 정보를 불러올 수 없습니다.');
       setModalOpen(true);
       return;
     }
 
-    registerChallenge(finalGoal);
+    registerChallenge(finalGoal, userWeight);
   };
 
   // 실패 버튼 핸들러
   const handleFailChallenge = () => {
     setModalTitle('확인');
-    setModalMessage('이 챌린지를 실패 처리하시겠습니까?');
+    setModalMessage('이 챌린지를 중단하시겠습니까?');
     setModalOpen(true);
+  };
+
+  // 등록 섹션 표시 조건
+  const showRegisterSection = !ongoingChallenge || (endDate && new Date() > new Date(endDate)) || !isChallengeRegistered;
+
+  // 상태 한글 변환
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'ONGOING':
+        return '진행 중';
+      case 'COMPLETED':
+        return '완료';
+      case 'FAILED':
+        return '중단';
+      default:
+        return status;
+    }
   };
 
   if (memberLoading) {
@@ -166,61 +362,34 @@ function Challenge() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>나만의 챌린지 시작하기</h1>
+      {/* 챌린지 등록 섹션 */}
+      {showRegisterSection && (
+        <div className={styles.card}>
+          <h1 className={styles.title}>나만의 챌린지 시작하기</h1>
 
-        {/* 목표 선택 */}
-        <div className={styles.section}>
-          <label className={styles.label}>목표 선택</label>
-          <div className={styles.tagContainer}>
-            {goalOptions.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={`${styles.tag} ${selectedGoal === option.value ? styles.tagSelected : ''}`}
-                onClick={() => handleGoalSelect(option.value)}
+          <div className={styles.section}>
+            <label className={styles.label}>기간</label>
+            <div className={styles.inputGroup}>
+              <input
+                type="number"
+                placeholder="기간 입력"
+                value={period}
+                onChange={(e) => setPeriod(e.target.value)}
+                min="1"
+                step="1"
+                className={styles.input}
+              />
+              <select
+                value={periodUnit}
+                onChange={(e) => setPeriodUnit(e.target.value)}
+                className={styles.select}
               >
-                {option.label}
-              </button>
-            ))}
+                <option value="개월">개월</option>
+                <option value="년">년</option>
+              </select>
+            </div>
           </div>
-          {selectedGoal === '기타' && (
-            <input
-              type="text"
-              placeholder="기타 목표를 입력해주세요"
-              value={customGoalInput}
-              onChange={handleCustomGoalChange}
-              className={styles.input}
-            />
-          )}
-        </div>
 
-        {/* 기간 선택 */}
-        <div className={styles.section}>
-          <label className={styles.label}>기간</label>
-          <div className={styles.inputGroup}>
-            <input
-              type="number"
-              placeholder="기간 입력"
-              value={period}
-              onChange={(e) => setPeriod(e.target.value)}
-              min="1"
-              step="1"
-              className={styles.input}
-            />
-            <select
-              value={periodUnit}
-              onChange={(e) => setPeriodUnit(e.target.value)}
-              className={styles.select}
-            >
-              <option value="개월">개월</option>
-              <option value="년">년</option>
-            </select>
-          </div>
-        </div>
-
-        {/* 목표 체중 */}
-        {selectedGoal === '체중조절' && (
           <div className={styles.section}>
             <label className={styles.label}>목표 체중 (kg)</label>
             <div className={styles.inputGroup}>
@@ -238,26 +407,24 @@ function Challenge() {
               </span>
             </div>
           </div>
-        )}
 
-        {/* 버튼 */}
-        <div className={styles.buttonContainer}>
-          <button
-            className={styles.registerButton}
-            onClick={handleRegisterChallenge}
-            disabled={loading}
-          >
-            챌린지 시작
-          </button>
-        </div>
-
-        {/* 기간 종료 알림 */}
-        {endDate && new Date() > endDate && isChallengeRegistered && (
-          <div className={styles.alert}>
-            챌린지 기간이 종료되었습니다. 새로 등록할 수 있습니다.
+          <div className={styles.buttonContainer}>
+            <button
+              className={styles.registerButton}
+              onClick={handleRegisterChallenge}
+              disabled={loading}
+            >
+              챌린지 시작
+            </button>
           </div>
-        )}
-      </div>
+
+          {endDate && new Date() > new Date(endDate) && isChallengeRegistered && (
+            <div className={styles.alert}>
+              챌린지 기간이 종료되었습니다. 새로 등록할 수 있습니다.
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 진행 중인 챌린지 */}
       {ongoingChallenge && (
@@ -265,34 +432,132 @@ function Challenge() {
           <h2 className={styles.subtitle}>진행 중인 챌린지</h2>
           <div className={styles.challengeCard}>
             <div className={styles.challengeInfo}>
-              <h3 className={styles.challengeTitle}>{ongoingChallenge.goal}</h3>
-              <p className={styles.challengeDetail}>
-                기간: {ongoingChallenge.period}
-              </p>
-              <p className={styles.challengeDetail}>
-                시작 날짜: {new Date(ongoingChallenge.startDate + 'T00:00:00').toLocaleDateString()}
-              </p>
-              <p className={styles.challengeDetail}>
-                종료 날짜: {new Date(ongoingChallenge.endDate + 'T00:00:00').toLocaleDateString()}
-              </p>
-              {ongoingChallenge.targetWeight && (
+              <div className={styles.challengeHeader}>
+                <span className={styles.goalIcon}>
+                  {goalOptions[0].icon}
+                </span>
+                <h3 className={styles.challengeTitle}>{ongoingChallenge.goal}</h3>
+              </div>
+              <div className={styles.progressContainer}>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: `${calculateProgress()}%` }}
+                  ></div>
+                </div>
+                <span className={styles.progressText}>{calculateProgress()}% 달성</span>
+              </div>
+              <div className={styles.challengeDetails}>
                 <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>📅</span>
+                  기간: {ongoingChallenge.period}{ongoingChallenge.periodUnit}
+                </p>
+                <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>🚀</span>
+                  시작 날짜: {new Date(ongoingChallenge.startDate + 'T00:00:00').toLocaleDateString()}
+                </p>
+                <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>🏁</span>
+                  종료 날짜: {new Date(ongoingChallenge.endDate + 'T00:00:00').toLocaleDateString()}
+                </p>
+                <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>⚖️</span>
+                  시작 몸무게: {ongoingChallenge.startWeight}kg
+                </p>
+                <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>🎯</span>
                   목표 체중: {ongoingChallenge.targetWeight}kg
                 </p>
-              )}
+                <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>🏋️</span>
+                  현재 몸무게: {userWeight ? `${userWeight}kg` : '로딩 중...'}
+                </p>
+                <p className={styles.challengeDetail}>
+                  <span className={styles.detailIcon}>📊</span>
+                  상태: <span className={`${styles.statusLabel} ${styles[ongoingChallenge.status.toLowerCase()]}`}>
+                    {ongoingChallenge.status ? getStatusLabel(ongoingChallenge.status) : '로딩 중...'}
+                  </span>
+                </p>
+              </div>
             </div>
-            <button
-              className={styles.failButton}
-              onClick={handleFailChallenge}
-              disabled={loading}
-            >
-              실패
-            </button>
+            {ongoingChallenge.status === 'ONGOING' && (
+              <button
+                className={styles.failButton}
+                onClick={handleFailChallenge}
+                disabled={loading}
+              >
+                중단
+              </button>
+            )}
+          </div>
+
+          {/* 몸무게 히스토리 그래프 */}
+          <div className={styles.weightHistorySection}>
+            <h3 className={styles.chartTitle}>몸무게 변화</h3>
+            {weightHistory.length > 0 ? (
+              <div className={styles.chartContainer}>
+                <Line data={chartData} options={chartOptions} />
+              </div>
+            ) : (
+              <p className={styles.noData}>몸무게 히스토리가 없습니다.</p>
+            )}
           </div>
         </div>
       )}
 
-      {/* CustomModal */}
+      {/* 과거 챌린지 */}
+      <div className={styles.pastChallengesSection}>
+        <h2 className={styles.subtitle}>과거 챌린지</h2>
+        {allChallenges.length > 0 ? (
+          allChallenges
+            .filter((challenge) => challenge.status !== 'ONGOING')
+            .map((challenge) => (
+              <div key={challenge.id} className={styles.challengeCard}>
+                <div className={styles.challengeInfo}>
+                  <div className={styles.challengeHeader}>
+                    <span className={styles.goalIcon}>
+                      {goalOptions[0].icon}
+                    </span>
+                    <h3 className={styles.challengeTitle}>{challenge.goal}</h3>
+                  </div>
+                  <div className={styles.challengeDetails}>
+                    <p className={styles.challengeDetail}>
+                      <span className={styles.detailIcon}>📅</span>
+                      기간: {challenge.period}{challenge.periodUnit}
+                    </p>
+                    <p className={styles.challengeDetail}>
+                      <span className={styles.detailIcon}>🚀</span>
+                      시작 날짜: {new Date(challenge.startDate + 'T00:00:00').toLocaleDateString()}
+                    </p>
+                    <p className={styles.challengeDetail}>
+                      <span className={styles.detailIcon}>🏁</span>
+                      종료 날짜: {new Date(challenge.endDate + 'T00:00:00').toLocaleDateString()}
+                    </p>
+                    <p className={styles.challengeDetail}>
+                      <span className={styles.detailIcon}>⚖️</span>
+                      시작 몸무게: {challenge.startWeight}kg
+                    </p>
+                    <p className={styles.challengeDetail}>
+                      <span className={styles.detailIcon}>🎯</span>
+                      목표 체중: {challenge.targetWeight}kg
+                    </p>
+                    <p className={styles.challengeDetail}>
+                      <span className={styles.detailIcon}>📊</span>
+                      상태: <span className={`${styles.statusLabel} ${styles[challenge.status.toLowerCase()]}`}>
+                        {getStatusLabel(challenge.status)}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))
+        ) : (
+          <div className={styles.noChallenges}>
+            과거 챌린지가 없습니다.
+          </div>
+        )}
+      </div>
+
       <CustomModal
         isOpen={modalOpen}
         onClose={handleCloseModal}
