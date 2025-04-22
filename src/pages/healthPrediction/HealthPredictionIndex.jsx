@@ -124,7 +124,7 @@ function HealthPrediction() {
   return (
     <div className="health-prediction">
       <h1>현재 등록된 신체 정보</h1>
-      <h2>아래에서 정보를 확인하고 수정할 수 있습니다</h2>
+      <h2>{memberInfo.membername}님의 정보를 확인하고 수정할 수 있습니다</h2>
       <form className="prediction-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
           <label>회원 email</label>

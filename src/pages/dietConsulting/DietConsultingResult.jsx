@@ -6,6 +6,7 @@ import breakfastImg from 'assets/images/breakfast.png';
 import lunchImg from 'assets/images/lunch.png';
 import dinnerImg from 'assets/images/dinner.png';
 import snackImg from 'assets/images/snack.png';
+import dietAi from 'assets/images/diet-ai.png';
 
 const mealImages = {
   아침: breakfastImg,
@@ -22,11 +23,13 @@ function DietConsulting() {
   const [email, setEmail] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState(null);
 
   const fetchMemberInfo = async () => {
     try {
       const data = await memberService.getMemberInfo();
       setEmail(data.email);
+      setName(data.membername);
     } catch (err) {
       if (err.message === 'Authentication required') {
         localStorage.setItem('redirectPath', window.location.pathname);
@@ -102,7 +105,7 @@ function DietConsulting() {
 
   return (
     <div className="diet-consulting">
-      <h1>🍽️ {email}님의 식단 추천</h1>
+      <h1>{name}님의 식단 추천</h1><img src={dietAi} alt="AI" className="ai-icon" />
 
       <div className="analysis-section">
         <h2>건강 위험도 분석</h2>
