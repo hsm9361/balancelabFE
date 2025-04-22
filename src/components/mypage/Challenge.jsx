@@ -4,6 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../components/common/CustomModal';
 import { useChallenge } from '../../hooks/useChallenge';
 import { useMemberInfo } from '../../hooks/useMemberInfo';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function Challenge() {
   const navigate = useNavigate();
@@ -30,19 +51,18 @@ function Challenge() {
     setModalOpen,
     ongoingChallenge,
     allChallenges,
-    fetchOngoingChallenge,
-    fetchAllChallenges,
+    weightHistory,
   } = useChallenge();
 
   const { fetchMemberInfo, error: memberError, loading: memberLoading } = useMemberInfo(() => {});
   const [userWeight, setUserWeight] = useState(null);
 
-  // 목표 옵션 배열 (체중조절만)
+  // 목표 옵션 배열
   const goalOptions = [
     { value: '체중조절', label: '⚖️ 체중조절', icon: '⚖️' },
   ];
 
-  // 진행률 계산 (몸무게 기반)
+  // 진행률 계산
   const calculateProgress = () => {
     if (!ongoingChallenge?.startWeight || !ongoingChallenge?.targetWeight || !userWeight) {
       console.warn('Progress calculation: Missing weights', {
@@ -94,6 +114,121 @@ function Challenge() {
     return finalProgress;
   };
 
+  // 몸무게 히스토리 디버깅
+  useEffect(() => {
+    console.log('Weight history for chart:', weightHistory);
+    weightHistory.forEach((entry) => {
+      console.log('Parsing insDate:', entry.insDate, new Date(entry.insDate));
+    });
+  }, [weightHistory]);
+
+  // 몸무게 히스토리 차트 데이터
+  const chartData = {
+    labels: weightHistory.map((entry) =>
+      new Date(entry.insDate).toLocaleDateString('ko-KR', {
+        month: 'short',
+        day: 'numeric',
+      })
+    ),
+    datasets: [
+      {
+        label: '몸무게 (kg)',
+        data: weightHistory.map((entry) => entry.weight),
+        borderColor: '#4a90e2',
+        backgroundColor: 'rgba(74, 144, 226, 0.2)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      ...(ongoingChallenge?.targetWeight
+        ? [
+            {
+              label: '목표 체중 (kg)',
+              data: Array(weightHistory.length).fill(parseFloat(ongoingChallenge.targetWeight)),
+              borderColor: '#d9534f',
+              borderDash: [5, 5],
+              pointRadius: 0,
+              fill: false,
+              tension: 0,
+            },
+          ]
+        : []),
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+          },
+          color: '#3b5a7a',
+        },
+      },
+      tooltip: {
+        backgroundColor: '#f8fafc',
+        titleColor: '#3b5a7a',
+        bodyColor: '#6c757d',
+        borderColor: '#6c8caf',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: '날짜',
+          color: '#3b5a7a',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+            weight: '500',
+          },
+        },
+        ticks: {
+          color: '#6c757d',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 12,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: '몸무게 (kg)',
+          color: '#3b5a7a',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+            weight: '500',
+          },
+        },
+        ticks: {
+          color: '#6c757d',
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 12,
+          },
+        },
+        suggestedMin: Math.min(
+          ...weightHistory.map((entry) => entry.weight),
+          ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : Infinity
+        ) - 5,
+        suggestedMax: Math.max(
+          ...weightHistory.map((entry) => entry.weight),
+          ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : -Infinity
+        ) + 5,
+      },
+    },
+  };
+
   // 유저 정보 로드
   useEffect(() => {
     const loadData = async () => {
@@ -125,9 +260,10 @@ function Challenge() {
       challengeStatus,
       endDate,
       allChallenges,
+      weightHistory,
     });
     console.log('Filtered past challenges:', allChallenges.filter((challenge) => challenge.status !== 'ONGOING'));
-  }, [ongoingChallenge, isChallengeRegistered, challengeStatus, endDate, allChallenges]);
+  }, [ongoingChallenge, isChallengeRegistered, challengeStatus, endDate, allChallenges, weightHistory]);
 
   // 체중 비교 함수
   const getWeightChangeLabel = () => {
@@ -352,6 +488,18 @@ function Challenge() {
               >
                 중단
               </button>
+            )}
+          </div>
+
+          {/* 몸무게 히스토리 그래프 */}
+          <div className={styles.weightHistorySection}>
+            <h3 className={styles.chartTitle}>몸무게 변화</h3>
+            {weightHistory.length > 0 ? (
+              <div className={styles.chartContainer}>
+                <Line data={chartData} options={chartOptions} />
+              </div>
+            ) : (
+              <p className={styles.noData}>몸무게 히스토리가 없습니다.</p>
             )}
           </div>
         </div>

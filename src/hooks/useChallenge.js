@@ -19,6 +19,7 @@ export const useChallenge = () => {
   const [error, setError] = useState(null);
   const [ongoingChallenge, setOngoingChallenge] = useState(null);
   const [allChallenges, setAllChallenges] = useState([]);
+  const [weightHistory, setWeightHistory] = useState([]);
 
   // 모달 닫기 핸들러
   const handleCloseModal = useCallback(() => {
@@ -80,7 +81,7 @@ export const useChallenge = () => {
       console.log('Fetching all challenges...');
       console.log('Authorization header:', apiClient.defaults.headers.common['Authorization']);
       const response = await apiClient.get('/challenge/user/challenges', {
-        params: { t: new Date().getTime() }, // 캐시 방지
+        params: { t: new Date().getTime() },
       });
       const data = response.data;
       console.log('Fetched all challenges:', data);
@@ -110,11 +111,43 @@ export const useChallenge = () => {
     }
   }, [navigate]);
 
+  // 몸무게 히스토리 조회
+  const fetchWeightHistory = useCallback(async (startDate) => {
+    try {
+      setLoading(true);
+      console.log('Fetching weight history...', { startDate });
+      const response = await apiClient.get('/challenge/user/weight-history', {
+        params: { startDate, t: new Date().getTime() },
+      });
+      const data = response.data;
+      console.log('Fetched weight history:', data);
+      setWeightHistory(data || []);
+    } catch (err) {
+      console.error('Failed to fetch weight history:', {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+      });
+      setModalTitle('오류');
+      setModalMessage('몸무게 히스토리 조회에 실패했습니다.');
+      setModalOpen(true);
+      setWeightHistory([]);
+    } finally {
+      setLoading(false);
+      console.log('Fetch weight history complete.');
+    }
+  }, []);
+
   // 챌린지 데이터 갱신
   const refreshChallenges = useCallback(async () => {
     await fetchOngoingChallenge();
     await fetchAllChallenges();
-  }, [fetchOngoingChallenge, fetchAllChallenges]);
+    if (ongoingChallenge?.startDate) {
+      await fetchWeightHistory(ongoingChallenge.startDate);
+    } else {
+      setWeightHistory([]);
+    }
+  }, [fetchOngoingChallenge, fetchAllChallenges, fetchWeightHistory, ongoingChallenge]);
 
   // endDate 계산 헬퍼
   const calculateEndDate = (start, period, unit) => {
@@ -263,5 +296,7 @@ export const useChallenge = () => {
     fetchOngoingChallenge,
     allChallenges,
     fetchAllChallenges,
+    weightHistory,
+    fetchWeightHistory,
   };
 };

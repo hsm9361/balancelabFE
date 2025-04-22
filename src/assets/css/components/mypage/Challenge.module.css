@@ -486,6 +486,39 @@
   box-shadow: 0 4px 12px rgba(217, 83, 79, 0.4);
 }
 
+/* 몸무게 히스토리 섹션 */
+.weightHistorySection {
+  margin-top: 24px;
+  padding: 16px;
+  background: linear-gradient(145deg, #f8fafc, #e6ecef);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 차트 제목 */
+.chartTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #3b5a7a;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* 차트 컨테이너 */
+.chartContainer {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+/* 데이터 없음 메시지 */
+.noData {
+  text-align: center;
+  font-size: 1rem;
+  color: #6c757d;
+  padding: 20px;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .card {
@@ -547,5 +580,9 @@
   .modalButton {
     padding: 8px 20px;
     font-size: 0.9rem;
+  }
+
+  .chartContainer {
+    height: 250px;
   }
 }
