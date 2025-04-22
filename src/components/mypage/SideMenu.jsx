@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import { FaCircleUser } from 'react-icons/fa6';
 import { FaCalendarAlt } from 'react-icons/fa';
-import { HiDocumentReport } from 'react-icons/hi';
+import { HiDocumentReport, HiDocumentAdd } from 'react-icons/hi';
 
 function SideMenu({ activeTab, setActiveTab }) {
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -20,6 +20,7 @@ function SideMenu({ activeTab, setActiveTab }) {
     //   ],
     // },
     { id: 'myBalance', name: 'MyBalance', icon: <HiDocumentReport /> },
+    { id: 'challenge', name: 'Challenge', icon: <HiDocumentAdd /> },
   ];
 
   useEffect(() => {

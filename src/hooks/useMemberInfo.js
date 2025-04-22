@@ -50,6 +50,7 @@ export const useMemberInfo = (reset) => {
       reset(info);
       setProfileImageUrl(data.profileImageUrl || null);
       setLoading(false);
+      return data; // 데이터 반환 추가
     } catch (err) {
       console.error('Fetch error:', err.message, err.stack);
       if (err.message === 'Authentication required') {
@@ -59,6 +60,7 @@ export const useMemberInfo = (reset) => {
       }
       setError(`회원 정보를 불러오는데 실패했습니다: ${err.message}`);
       setLoading(false);
+      throw err; // 에러 던지기
     }
   }, [reset]);
 
