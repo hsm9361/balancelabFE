@@ -15,6 +15,7 @@ export const useChallenge = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [ongoingChallenge, setOngoingChallenge] = useState(null);
+  const [allChallenges, setAllChallenges] = useState([]);
   const hasFetched = useRef(false);
 
   // 모달 닫기 핸들러
@@ -24,14 +25,14 @@ export const useChallenge = () => {
     setModalTitle('알림');
   }, []);
 
-  // 챌린지 조회
+  // 진행 중인 챌린지 조회
   const fetchOngoingChallenge = useCallback(async () => {
     try {
       setLoading(true);
       console.log('Fetching ongoing challenge...');
       const response = await apiClient.get('/challenge/user/ongoing');
       const data = response.data;
-      // 상태 변경 최소화
+      console.log('Fetched ongoing challenge:', data);
       setOngoingChallenge((prev) => {
         if (JSON.stringify(prev) !== JSON.stringify(data)) {
           console.log('Updating ongoingChallenge:', data);
@@ -41,7 +42,6 @@ export const useChallenge = () => {
       });
       setChallengeStatus(data ? '진행중' : '');
       setIsChallengeRegistered(!!data);
-      // endDate 문자열로 유지
       setEndDate((prev) => {
         const newEndDate = data?.endDate ? data.endDate : null;
         if (prev !== newEndDate) {
@@ -67,6 +67,27 @@ export const useChallenge = () => {
     }
   }, []);
 
+  // 모든 챌린지 조회
+  const fetchAllChallenges = useCallback(async () => {
+    try {
+      setLoading(true);
+      console.log('Fetching all challenges...');
+      const response = await apiClient.get('/challenge/user/challenges');
+      const data = response.data;
+      console.log('Fetched all challenges:', data);
+      setAllChallenges(data || []);
+    } catch (err) {
+      console.error('Failed to fetch all challenges:', err);
+      setModalTitle('오류');
+      setModalMessage('챌린지 목록 조회에 실패했습니다.');
+      setModalOpen(true);
+      setAllChallenges([]);
+    } finally {
+      setLoading(false);
+      console.log('Fetch all challenges complete.');
+    }
+  }, []);
+
   // endDate 계산 헬퍼
   const calculateEndDate = (start, period, unit) => {
     const startDate = new Date(start);
@@ -81,21 +102,28 @@ export const useChallenge = () => {
   };
 
   // 챌린지 등록
-  const registerChallenge = useCallback(async (goal) => {
+  const registerChallenge = useCallback(async (goal, startWeight) => {
     setLoading(true);
     setError(null);
 
     try {
-      // endDate 계산
-      const calculatedEndDate = calculateEndDate(startDate, period, periodUnit);
+      if (goal !== '체중조절') {
+        throw new Error('유효하지 않은 목표입니다.');
+      }
+
+      const parsedStartWeight = parseFloat(startWeight);
+      if (isNaN(parsedStartWeight) || parsedStartWeight <= 0) {
+        throw new Error('시작 몸무게는 0보다 커야 합니다.');
+      }
 
       const challengeData = {
         goal,
-        period: parseInt(period), // 숫자만 전송
-        periodUnit, // "개월" 또는 "년"
-        targetWeight: goal === '체중조절' ? parseInt(targetWeight) : null,
+        period: parseInt(period),
+        periodUnit,
+        startWeight: parsedStartWeight,
+        targetWeight: parseFloat(targetWeight),
         startDate: startDate.toISOString().split('T')[0],
-        endDate: calculatedEndDate,
+        endDate: calculateEndDate(startDate, period, periodUnit),
       };
 
       console.log('전송 데이터:', challengeData);
@@ -113,14 +141,14 @@ export const useChallenge = () => {
       setStartDate(new Date());
       setEndDate(null);
       await fetchOngoingChallenge();
+      await fetchAllChallenges();
     } catch (err) {
       console.error('챌린지 등록 에러:', {
         message: err.message,
         status: err.response?.status,
         data: err.response?.data,
-        headers: err.response?.headers,
       });
-      const errorMessage = err.response?.data?.message || '챌린지 등록 중 오류가 발생했습니다.';
+      const errorMessage = err.response?.data?.message || err.message || '챌린지 등록 중 오류가 발생했습니다.';
       setError(errorMessage);
       setModalTitle('오류');
       setModalMessage(errorMessage);
@@ -128,9 +156,9 @@ export const useChallenge = () => {
     } finally {
       setLoading(false);
     }
-  }, [period, periodUnit, targetWeight, startDate]);
+  }, [period, periodUnit, targetWeight, startDate, fetchOngoingChallenge, fetchAllChallenges]);
 
-  // 챌린지 실패 처리
+  // 챌린지 중단 처리
   const failOngoingChallenge = useCallback(async (challengeId) => {
     try {
       setLoading(true);
@@ -140,17 +168,18 @@ export const useChallenge = () => {
       setChallengeStatus('');
       setEndDate(null);
       setModalTitle('성공');
-      setModalMessage('챌린지가 실패로 처리되었습니다.');
+      setModalMessage('챌린지가 중단되었습니다.');
       setModalOpen(true);
+      await fetchAllChallenges();
     } catch (err) {
-      console.error('챌린지 실패 처리 에러:', err);
+      console.error('챌린지 중단 처리 에러:', err);
       setModalTitle('오류');
-      setModalMessage('챌린지 실패 처리 중 오류가 발생했습니다.');
+      setModalMessage('챌린지 중단 처리 중 오류가 발생했습니다.');
       setModalOpen(true);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchAllChallenges]);
 
   // 챌린지 실패 확인
   const failChallenge = useCallback(() => {
@@ -172,13 +201,14 @@ export const useChallenge = () => {
     [handleCloseModal, failOngoingChallenge, ongoingChallenge]
   );
 
-  // 초기 챌린지 조회 (한 번만 실행)
+  // 초기 데이터 조회
   useEffect(() => {
     if (!hasFetched.current) {
       hasFetched.current = true;
       fetchOngoingChallenge();
+      fetchAllChallenges();
     }
-  }, [fetchOngoingChallenge]);
+  }, [fetchOngoingChallenge, fetchAllChallenges]);
 
   return {
     periodUnit,
@@ -207,5 +237,7 @@ export const useChallenge = () => {
     setModalOpen,
     ongoingChallenge,
     fetchOngoingChallenge,
+    allChallenges,
+    fetchAllChallenges,
   };
 };
