@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../assets/css/pages/calendar/calendarPage.module.css';
+import styles from '../../assets/css/pages/calendar/addDietModal.module.css';
 import apiClient from '../../services/apiClient';
 import dietIcon from 'assets/images/diary.png';
 

@@ -1,642 +1,256 @@
-/* 캘린더 페이지 컨테이너 */
-.calendarPageContainer {
-  padding: 2rem;
+/* 기본 스타일 */
+.weekView .react-calendar__month-view__days {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
 }
-
-/* 페이지 제목 */
-.pageTitle {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+.weekView .react-calendar__month-view__days__day {
+  flex: 1 !important;
+  max-width: 14.28% !important;
+}
+.weekView .react-calendar__month-view__weekdays {
+  display: flex !important;
+  flex-direction: row !important;
+}
+.weekView .react-calendar__month-view__weekdays__weekday {
+  flex: 1 !important;
+  max-width: 14.28% !important;
   text-align: center;
-  color: #1a3c6d;
-}
-
-/* 콘텐츠 래퍼 */
-.contentWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-/* 날짜 선택 버튼 그룹 */
-.daySelector {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 1rem 0;
-}
-
-.daySelector button {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  background: #2196f3;
-  border-radius: 8px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.daySelector .activeDay {
-  background: #1976d2;
-  color: white;
-}
-
-/* 콘텐츠 영역 */
-.contentArea {
-  width: 100%;
-  max-width: 600px;
-}
-
-/* 일일 식단 정보 */
-.dailyMealInfo {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-}
-
-.dailyMealInfo h3 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.mealBlock {
-  margin-bottom: 1.5rem;
-}
-
-.mealBlock strong {
-  display: inline-block;
-  margin-bottom: 0.3rem;
-  font-size: 1rem;
-}
-
-.mealBlock ul {
-  padding-left: 1rem;
-}
-
-.noEvent {
-  color: #888;
   font-size: 0.9rem;
 }
-
-/* 버튼 섹션 */
-.buttonSection {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
+.hiddenTile {
+  display: none !important;
 }
-
-.actionBtn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  background: #2196f3;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.actionBtn:hover {
-  background: #1976d2;
-}
-
-/* 모달 오버레이 */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-}
-
-/* 모달 콘텐츠 */
-.modalContent {
-  background: white;
-  padding: 2rem;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: modalSlideIn 0.3s ease-out;
-  position: relative;
-  box-sizing: border-box;
-}
-
-/* Webkit 기반 브라우저용 스크롤바 커스터마이징 */
-.modalContent::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modalContent::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 20px;
-  margin: 10px;
-}
-
-.modalContent::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
-}
-
-.modalContent::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-/* Firefox용 스크롤바 스타일 */
-.modalContent {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-}
-
-/* 모달 애니메이션 */
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 모달 헤더 */
-.modalHeader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.modalIcon {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.modalContent h3 {
-  margin: 0;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-/* 식사 유형 선택 */
-.mealTypeSelector {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  align-items: center;
-}
-
-.mealTypeSelect {
-  width: 200px;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-}
-
-/* 날짜 및 시간 선택 */
-.timeDateSelector {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin: 1rem 0;
-  justify-content: center;
-}
-
-.dateDisplay {
-  padding: 0.8rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex: 1;
-}
-
-.dateDisplay:hover {
-  border-color: #007bff;
-  background-color: #fff;
-}
-
-.dateDisplay:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-  outline: none;
-}
-
-.timeSelector {
-  position: relative;
-  flex: 1;
-}
-
-.timeDisplay {
-  padding: 0.8rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.timeDisplay:hover {
-  border-color: #007bff;
-  background-color: #fff;
-}
-
-.timeDropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-}
-
-.timeButton {
-  display: block;
-  width: 100%;
-  padding: 0.8rem;
-  border: none;
-  background: #f8f9fa;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-align: left;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.timeButton:hover {
-  background: #e3f2fd;
-  color: #007bff;
-}
-
-/* 메뉴 그리드 */
-.menuGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.menuItem {
-  background: #f8f9fa;
-  padding: 1.2rem;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  transition: all 0.3s ease;
-}
-
-.menuItem:hover {
-  border-color: #007bff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.menuHeader {
+.navigationWrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
 }
-
-.menuNumber {
-  font-weight: 600;
-  color: #495057;
-}
-
-.removeButton {
-  background: none;
+.navigationWrapper button {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
   border: none;
-  color: #dc3545;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.removeButton:hover {
-  transform: scale(1.1);
-}
-
-.menuInputs {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.foodNameInput {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  font-size: 1rem;
-  margin-bottom: 0.8rem;
-  transition: all 0.3s ease;
-}
-
-.foodNameInput:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-  outline: none;
-}
-
-.amountInput {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.amountNumberInput {
-  flex: 1;
-  padding: 0.8rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  width: 50%; /* 입력 필드 길이 줄임 */
-}
-
-.amountNumberInput:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-  outline: none;
-}
-
-.unitButtons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.unitButton {
-  padding: 0.6rem 1rem;
-  background: #e3f2fd;
-  border: 1px solid #007bff;
-  border-radius: 8px;
-  color: #007bff;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.unitButton:hover {
-  background: #007bff;
-  color: white;
-}
-
-.unitButton.active {
-  background: #007bff;
-  color: white;
-  border-color: #0056b3;
-}
-
-.addMenuButton {
-  width: 100%;
-  padding: 1rem;
-  background: #e3f2fd;
-  border: 2px dashed #007bff;
-  border-radius: 12px;
-  color: #007bff;
-  font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  margin: 1rem 0;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
-
-.addMenuButton:hover {
-  background: #007bff;
-  color: white;
-  border-style: solid;
-}
-
-.plusIcon {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-/* 모달 버튼 */
-.modalButtons {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-}
-
-.submitButton {
-  padding: 1rem 2rem;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.submitButton:hover {
-  background: #0056b3;
+.navigationWrapper button:hover,
+.navigationWrapper button:active {
+  background-color: #e0e0e0;
   transform: translateY(-2px);
 }
-
-.cancelButton {
-  padding: 1rem 2rem;
-  background: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.cancelButton:hover {
-  background: #e9ecef;
-  transform: translateY(-2px);
-}
-
-/* 토글 버튼 래퍼 */
 .toggleWrapper {
   display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
   justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
 }
-
-.toggleWrapper button {
-  padding: 0.6rem 1.2rem;
-  background: #2b5f9a;
-  color: white;
-  border: none;
+.toggleButton {
+  padding: 8px 16px;
+  border: 2px solid #ccc;
   border-radius: 8px;
-  font-weight: bold;
+  background-color: #fff;
   cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s ease;
 }
-
-/* 페이드 슬라이드 애니메이션 */
-.fadeSlideIn {
-  animation: fadeSlide 0.4s ease;
+.toggleButton:hover,
+.toggleButton:active {
+  background-color: #f0f0f0;
+  border-color: #007bff;
 }
-
-@keyframes fadeSlide {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.activeToggle {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
-
-/* 날짜 버튼 */
-.dayButton {
-  padding: 0.6rem 1.2rem;
-  background: var(--primary-light);
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: bold;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.dayButton:hover {
-  background: var(--primary-color);
-  color: white;
-}
-
-.dayButton.activeDay {
-  background: var(--primary-color);
-  color: white;
-}
-
-/* 식사 카드 */
-.mealCards {
+.calendarContainer {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1.5rem 0;
+  gap: 20px;
 }
-
+.calendarWrapper {
+  flex: 1;
+}
+.mealCards {
+  flex: 1;
+}
+.selectedDateTitle {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
 .mealCard {
-  background: white;
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
-
 .mealTime {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+.mealLabel {
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-right: 10px;
 }
-
-.mealContents {
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
+.mealTimeRange {
+  color: #666;
 }
-
-.nutritionInfo {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.addButton {
-  margin: 0 auto;
-  padding: 0.8rem 1.5rem;
-  background: #2b5f9a;
-  color: white;
-  border-radius: 8px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .deleteButton {
-  margin-left: auto;
   background: none;
   border: none;
-  color: red;
-  font-weight: bold;
   cursor: pointer;
+  color: #ff0000;
+}
+.mealContents {
+  margin-top: 5px;
+}
+.noEvents {
+  color: #666;
+}
+.addButton {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.addButton:hover,
+.addButton:active {
+  background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
-/* 날짜 위에 표시되는 점 (식단 기록 있음) */
-.eventDot {
-  width: 8px;
-  height: 8px;
-  background-color: #a8e6a1;
-  border-radius: 50%;
+/* 이벤트 표시 스타일 */
+.eventBottomBorder {
   position: absolute;
-  top: 6px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: linear-gradient(135deg, #007bff, #00b7eb); /* 파란색 그라데이션 */
+  border-radius: 2px;
+}
+.eventBar {
+  position: absolute;
+  bottom: 2px;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: linear-gradient(135deg, #007bff, #00b7eb); /* 파란색 그라데이션 */
+  border-radius: 2px;
 }
 
-/* 달력 타일의 기본 스타일 충돌 방지 */
+/* 내비게이션 스타일 */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.react-calendar__navigation__label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+}
+.react-calendar__navigation__arrow {
+  font-size: 1.4rem;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.react-calendar__navigation__arrow:hover,
+.react-calendar__navigation__arrow:active {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+/* 타일 스타일 */
 .react-calendar__tile {
   position: relative;
-  padding-top: 14px; /* 위에 점이 들어갈 공간 확보 */
+  padding: 10px;
+  text-align: center;
+  color: #333; /* 글자 색상 명확히 */
+  transition: background-color 0.2s ease;
+}
+.react-calendar__tile:hover,
+.react-calendar__tile:active {
+  background-color: #f5f5f5; /* 밝은 회색으로 호버/터치 */
+}
+.selectedTile {
+  background-color: #e3f2fd !important;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+  color: #333; /* 선택된 타일에서도 글자 가독성 유지 */
 }
 
-/* 반응형 디자인 */
+/* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
-  .menuGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .modalContent {
-    width: 95%;
-    padding: 1rem;
-  }
-
-  .timeDateSelector {
+  .calendarContainer {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 10px;
   }
-
-  .dateDisplay {
+  .calendarWrapper,
+  .mealCards {
     width: 100%;
   }
-
-  .timeDisplay {
-    width: 100%;
+  .react-calendar__month-view__days__day {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+  .weekView .react-calendar__month-view__days__day {
+    max-width: 14.28% !important;
+    padding: 6px;
+    font-size: 0.8rem;
+  }
+  .weekView .react-calendar__month-view__weekdays__weekday {
+    font-size: 0.8rem;
+  }
+  .react-calendar__navigation__label {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+  .react-calendar__navigation__arrow {
+    font-size: 1.2rem;
+    padding: 6px 12px;
+  }
+  .toggleWrapper {
+    gap: 6px;
+    margin-bottom: 15px;
+  }
+  .toggleButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  .navigationWrapper button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  .addButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  .selectedDateTitle {
+    font-size: 1.1rem;
+  }
+  .mealCard {
+    padding: 8px;
   }
 }
