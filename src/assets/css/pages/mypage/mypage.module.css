@@ -603,7 +603,7 @@ body {
   margin-top: 2rem;
   padding: 0 3rem;
   position: relative;
-  background-color: #edf5ff;
+  background-color: var(--background-gray); /* #edf5ff */
 }
 
 .targetLine {
@@ -672,7 +672,7 @@ body {
   position: absolute;
   bottom: -30px;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary); /* #5A7391 */
   font-weight: 500;
   width: 100%;
   text-align: center;
@@ -680,14 +680,15 @@ body {
 
 .barValue {
   position: absolute;
-  top: -25px;
+  bottom: 100%; /* 막대 상단에 텍스트를 붙임 */
   font-size: 0.8rem;
-  color: #007bff;
+  color: var(--text-primary); /* #1A3C6D */
   font-weight: 600;
-  opacity: 0;
-  transition: opacity 0.3s ease;
   width: 100%;
   text-align: center;
+  transform: translateY(-2px); /* 막대와 약간의 간격 유지 */
+  opacity: 0; /* 항상 표시 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* 가독성을 위한 미세한 그림자 */
 }
 
 .barContainer:hover .barValue {
@@ -867,4 +868,73 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* History Header */
+.historyHeader {
+  display: flex;
+  padding: 10px 15px;
+  background-color: var(--primary-light);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.historyNutrient {
+  flex: 1;
+  text-align: right;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Update historyItem to align with header */
+.historyItem {
+  display: flex;
+  padding: 15px;
+  border-radius: var(--radius-md);
+  background-color: var(--background-gray);
+  transition: var(--transition-normal);
+  align-items: center;
+}
+
+/* Ensure consistent widths */
+.historyDate {
+  width: 100px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.historyMeal {
+  width: 60px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Update historyCalories to historyNutrient */
+.historyNutrient {
+  flex: 1;
+  text-align: right;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .historyHeader,
+  .historyItem {
+    padding: 10px;
+  }
+
+  .historyDate {
+    width: 80px;
+  }
+
+  .historyMeal {
+    width: 50px;
+  }
+
+  .historyNutrient {
+    font-size: 0.9rem;
+  }
 }
