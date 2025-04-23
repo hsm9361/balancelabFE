@@ -189,7 +189,7 @@
   left: 10%;
   right: 10%;
   height: 3px;
-  background: linear-gradient(135deg, #7c55e4, #2b6cb0);
+  background: linear-gradient(135deg, #eaf8ff, #2b6cb0);
   border-radius: 2px;
 }
 .eventBar {
@@ -198,7 +198,7 @@
   left: 10%;
   right: 10%;
   height: 4px;
-  background: linear-gradient(135deg, #7c55e4, #2b6cb0);
+  background: linear-gradient(135deg, #eaf8ff, #2b6cb0);
   border-radius: 2px;
 }
 
