@@ -3,7 +3,7 @@ import styles from '../../assets/css/components/mypage/Challenge.module.css';
 import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../components/common/CustomModal';
 import { useChallenge } from '../../hooks/useChallenge';
-import { userService } from '../../services/userService';
+import { useMemberInfo } from '../../hooks/useMemberInfo';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -15,8 +15,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import useAuth from '../../hooks/useAuth';
-
+ 
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -55,60 +54,86 @@ function Challenge() {
     weightHistory,
   } = useChallenge();
 
-  const { isAuthenticated } = useAuth();
+  const { fetchMemberInfo, error: memberError, loading: memberLoading } = useMemberInfo(() => {});
   const [userWeight, setUserWeight] = useState(null);
-  const [memberLoading, setMemberLoading] = useState(true);
-  const [memberError, setMemberError] = useState(null);
 
+  // 목표 옵션 배열
   const goalOptions = [
     { value: '체중조절', label: '⚖️ 체중조절', icon: '⚖️' },
   ];
 
-  const fetchMemberInfo = async () => {
-    setMemberLoading(true);
-    setMemberError(null);
-    try {
-      const data = await userService.getUserBodyInfo();
-      console.log('🪵 MemberInfo:', data);
-      if (!data) throw new Error('회원 정보가 null입니다.');
-      if (data.weight) setUserWeight(parseFloat(data.weight));
-      else {
-        setModalTitle('오류');
-        setModalMessage('몸무게 정보를 불러올 수 없습니다. 회원 정보 페이지에서 설정해주세요.');
-        setModalOpen(true);
-      }
-    } catch (err) {
-      setModalTitle('오류');
-      setModalMessage('데이터를 불러오는데 실패했습니다: ' + err.message);
-      setModalOpen(true);
-      setMemberError(err.message);
-    } finally {
-      setMemberLoading(false);
-    }
-  };
-
+  // 진행률 계산
   const calculateProgress = () => {
-    if (!ongoingChallenge?.startWeight || !ongoingChallenge?.targetWeight || !userWeight) return 0;
-    const start = parseFloat(ongoingChallenge.startWeight);
-    const target = parseFloat(ongoingChallenge.targetWeight);
-    const current = parseFloat(userWeight);
-    if (isNaN(start) || isNaN(target) || isNaN(current)) return 0;
-    const totalChange = target - start;
-    if (totalChange === 0) return 100;
-    const currentChange = current - start;
-    let progress = (currentChange / totalChange) * 100;
-    progress = Math.min(Math.max(progress, 0), 100);
-    return progress.toFixed(0);
+    if (!ongoingChallenge?.startWeight || !ongoingChallenge?.targetWeight || !userWeight) {
+      console.warn('Progress calculation: Missing weights', {
+        startWeight: ongoingChallenge?.startWeight,
+        targetWeight: ongoingChallenge?.targetWeight,
+        userWeight,
+      });
+      return 0;
+    }
+
+    const startWeight = parseFloat(ongoingChallenge.startWeight);
+    const targetWeight = parseFloat(ongoingChallenge.targetWeight);
+    const currentWeight = parseFloat(userWeight);
+
+    if (isNaN(startWeight) || isNaN(targetWeight) || isNaN(currentWeight)) {
+      console.error('Progress calculation: Invalid weight values', {
+        startWeight,
+        targetWeight,
+        currentWeight,
+      });
+      return 0;
+    }
+
+    const targetChange = targetWeight - startWeight;
+    if (targetChange === 0) {
+      console.warn('Progress calculation: No weight change required');
+      return 100;
+    }
+
+    const currentChange = currentWeight - startWeight;
+    let progress = (currentChange / targetChange) * 100;
+
+    if (targetChange > 0) {
+      progress = Math.min(Math.max(progress, 0), 100);
+    } else {
+      progress = Math.min(Math.max(progress, 0), 100);
+    }
+
+    const finalProgress = progress.toFixed(0);
+    console.log('Progress calculation:', {
+      startWeight,
+      targetWeight,
+      currentWeight,
+      targetChange,
+      currentChange,
+      progress: finalProgress,
+    });
+
+    return finalProgress;
   };
 
+  // 몸무게 히스토리 디버깅
+  useEffect(() => {
+    console.log('Weight history for chart:', weightHistory);
+    weightHistory.forEach((entry) => {
+      console.log('Parsing insDate:', entry.insDate, new Date(entry.insDate));
+    });
+  }, [weightHistory]);
+
+  // 몸무게 히스토리 차트 데이터
   const chartData = {
-    labels: weightHistory.map((e) =>
-      new Date(e.insDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+    labels: weightHistory.map((entry) =>
+      new Date(entry.insDate).toLocaleDateString('ko-KR', {
+        month: 'short',
+        day: 'numeric',
+      })
     ),
     datasets: [
       {
         label: '몸무게 (kg)',
-        data: weightHistory.map((e) => e.weight),
+        data: weightHistory.map((entry) => entry.weight),
         borderColor: '#4a90e2',
         backgroundColor: 'rgba(74, 144, 226, 0.2)',
         fill: true,
@@ -139,7 +164,10 @@ function Challenge() {
       legend: {
         position: 'top',
         labels: {
-          font: { family: "'Poppins', sans-serif", size: 14 },
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+          },
           color: '#3b5a7a',
         },
       },
@@ -157,11 +185,18 @@ function Challenge() {
           display: true,
           text: '날짜',
           color: '#3b5a7a',
-          font: { family: "'Poppins', sans-serif", size: 14, weight: '500' },
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+            weight: '500',
+          },
         },
         ticks: {
           color: '#6c757d',
-          font: { family: "'Poppins', sans-serif", size: 12 },
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 12,
+          },
         },
       },
       y: {
@@ -169,61 +204,159 @@ function Challenge() {
           display: true,
           text: '몸무게 (kg)',
           color: '#3b5a7a',
-          font: { family: "'Poppins', sans-serif", size: 14, weight: '500' },
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 14,
+            weight: '500',
+          },
         },
         ticks: {
           color: '#6c757d',
-          font: { family: "'Poppins', sans-serif", size: 12 },
+          font: {
+            family: "'Poppins', sans-serif",
+            size: 12,
+          },
         },
-        suggestedMin: Math.min(...weightHistory.map((e) => e.weight), parseFloat(ongoingChallenge?.targetWeight ?? Infinity)) - 5,
-        suggestedMax: Math.max(...weightHistory.map((e) => e.weight), parseFloat(ongoingChallenge?.targetWeight ?? -Infinity)) + 5,
+        suggestedMin: Math.min(
+          ...weightHistory.map((entry) => entry.weight),
+          ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : Infinity
+        ) - 5,
+        suggestedMax: Math.max(
+          ...weightHistory.map((entry) => entry.weight),
+          ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : -Infinity
+        ) + 5,
       },
     },
   };
 
+  // 유저 정보 로드
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchMemberInfo();
-    } else {
-      navigate('/login', { state: { from: '/mypage' }, replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
-  useEffect(() => {
-    const handleAuthUpdate = () => {
-      if (isAuthenticated) {
-        fetchMemberInfo();
+    const loadData = async () => {
+      try {
+        const data = await fetchMemberInfo();
+        console.log('Fetched member info:', data);
+        if (data?.weight) {
+          setUserWeight(parseFloat(data.weight));
+        } else {
+          setModalTitle('오류');
+          setModalMessage('몸무게 정보를 불러올 수 없습니다. 회원 정보 페이지에서 설정해주세요.');
+          setModalOpen(true);
+        }
+      } catch (err) {
+        console.error('Failed to load data:', err);
+        setModalTitle('오류');
+        setModalMessage('데이터를 불러오는데 실패했습니다: ' + err.message);
+        setModalOpen(true);
       }
     };
-    window.addEventListener('auth-update', handleAuthUpdate);
-    return () => {
-      window.removeEventListener('auth-update', handleAuthUpdate);
-    };
-  }, [isAuthenticated, fetchMemberInfo]);
+    loadData();
+  }, [fetchMemberInfo, setModalTitle, setModalMessage, setModalOpen]);
 
+  // 챌린지 상태 디버깅
+  useEffect(() => {
+    console.log('Challenge state:', {
+      ongoingChallenge,
+      isChallengeRegistered,
+      challengeStatus,
+      endDate,
+      allChallenges,
+      weightHistory,
+    });
+    console.log('Filtered past challenges:', allChallenges.filter((challenge) => challenge.status !== 'ONGOING'));
+  }, [ongoingChallenge, isChallengeRegistered, challengeStatus, endDate, allChallenges, weightHistory]);
+
+  // 체중 비교 함수
   const getWeightChangeLabel = () => {
     if (!targetWeight || !userWeight) return { label: '', className: '' };
     const target = parseFloat(targetWeight);
     if (isNaN(target)) return { label: '', className: '' };
-    if (target > userWeight) return { label: '증가', className: 'increase' };
-    if (target < userWeight) return { label: '감소', className: 'decrease' };
-    return { label: '유지', className: 'maintain' };
+    let label, className;
+    if (target > userWeight) {
+      label = '증가';
+      className = 'increase';
+    } else if (target < userWeight) {
+      label = '감소';
+      className = 'decrease';
+    } else {
+      label = '유지';
+      className = 'maintain';
+    }
+    console.log('Target:', targetWeight, 'User Weight:', userWeight, 'Label:', label);
+    return { label, className };
   };
 
+  // 챌린지 등록 래퍼 함수
   const handleRegisterChallenge = () => {
-    if (!period || !targetWeight || !Number(period) || !Number(targetWeight) || Number(period) <= 0 || Number(targetWeight) <= 0 || !userWeight) {
+    const finalGoal = '체중조절';
+
+    if (!period || !targetWeight) {
       setModalTitle('오류');
-      setModalMessage('입력값을 확인해주세요.');
+      setModalMessage('기간과 목표 체중을 입력해주세요.');
       setModalOpen(true);
       return;
     }
-    registerChallenge('체중조절', userWeight);
+    if (!Number(period) || Number(period) <= 0) {
+      setModalTitle('오류');
+      setModalMessage('기간은 1 이상의 숫자를 입력해주세요.');
+      setModalOpen(true);
+      return;
+    }
+    if (!Number(targetWeight) || Number(targetWeight) <= 0) {
+      setModalTitle('오류');
+      setModalMessage('목표 체중은 1 이상의 숫자를 입력해주세요.');
+      setModalOpen(true);
+      return;
+    }
+    if (!userWeight) {
+      setModalTitle('오류');
+      setModalMessage('현재 몸무게 정보를 불러올 수 없습니다.');
+      setModalOpen(true);
+      return;
+    }
+
+    registerChallenge(finalGoal, userWeight);
   };
 
+  // 실패 버튼 핸들러
+  const handleFailChallenge = () => {
+    setModalTitle('확인');
+    setModalMessage('이 챌린지를 중단하시겠습니까?');
+    setModalOpen(true);
+  };
+
+  // 등록 섹션 표시 조건
   const showRegisterSection = !ongoingChallenge || (endDate && new Date() > new Date(endDate)) || !isChallengeRegistered;
 
-  if (memberLoading) return <div className={styles.loading}>유저 정보 로딩 중...</div>;
-  if (memberError) return <div className={styles.error}>{memberError}</div>;
+  // 상태 한글 변환
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'ONGOING':
+        return '진행 중';
+      case 'COMPLETED':
+        return '완료';
+      case 'FAILED':
+        return '중단';
+      default:
+        return status;
+    }
+  };
+
+  if (memberLoading) {
+    return <div className={styles.loading}>유저 정보 로딩 중...</div>;
+  }
+  if (memberError) {
+    return (
+      <div className={styles.error}>
+        {memberError}
+        <button
+          onClick={() => fetchMemberInfo()}
+          className={styles.retryButton}
+        >
+          재시도
+        </button>
+      </div>
+    );
+  }
 
   const { label: weightChangeLabel, className: weightChangeClass } = getWeightChangeLabel();
 
@@ -375,61 +508,60 @@ function Challenge() {
       {/* 과거 챌린지 */}
       <div className={styles.pastChallengesSection}>
         <h2 className={styles.subtitle}>과거 챌린지</h2>
-        {allChallenges.length > 0 ? (
-          allChallenges
-            .filter((challenge) => challenge.status !== 'ONGOING')
-            .map((challenge) => (
-              <div key={challenge.id} className={styles.challengeCard}>
-                <div className={styles.challengeInfo}>
-                  <div className={styles.challengeHeader}>
-                    <span className={styles.goalIcon}>
-                      {goalOptions[0].icon}
-                    </span>
-                    <h3 className={styles.challengeTitle}>{challenge.goal}</h3>
-                  </div>
-                  <div className={styles.challengeDetails}>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>📅</span>
-                      기간: {challenge.period}{challenge.periodUnit}
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>🚀</span>
-                      시작 날짜: {new Date(challenge.startDate + 'T00:00:00').toLocaleDateString()}
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>🏁</span>
-                      종료 날짜: {new Date(challenge.endDate + 'T00:00:00').toLocaleDateString()}
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>⚖️</span>
-                      시작 몸무게: {challenge.startWeight}kg
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>🎯</span>
-                      목표 체중: {challenge.targetWeight}kg
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>📊</span>
-                      상태: <span className={`${styles.statusLabel} ${styles[challenge.status.toLowerCase()]}`}>
-                        {getStatusLabel(challenge.status)}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
+        {allChallenges.length > 0 && allChallenges.some((challenge) => challenge.status !== 'ONGOING') ? (
+          <div className={styles.tableContainer}>
+            <table className={styles.challengeTable}>
+              <thead>
+                <tr>
+                  <th>목표</th>
+                  <th>기간</th>
+                  <th>시작 날짜</th>
+                  <th>종료 날짜</th>
+                  <th>시작 체중</th>
+                  <th>목표 체중</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allChallenges
+                  .filter((challenge) => challenge.status !== 'ONGOING')
+                  .map((challenge) => (
+                    <tr key={challenge.id}>
+                      <td>
+                        <span className={styles.goalIcon}>{goalOptions[0].icon}</span>
+                        {challenge.goal}
+                      </td>
+                      <td>{challenge.period}{challenge.periodUnit}</td>
+                      <td>{new Date(challenge.startDate + 'T00:00:00').toLocaleDateString()}</td>
+                      <td>{new Date(challenge.endDate + 'T00:00:00').toLocaleDateString()}</td>
+                      <td>{challenge.startWeight}kg</td>
+                      <td>{challenge.targetWeight}kg</td>
+                      <td>
+                        <span className={`${styles.statusLabel} ${styles[challenge.status.toLowerCase()]}`}>
+                          {getStatusLabel(challenge.status)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <div className={styles.noChallenges}>
             과거 챌린지가 없습니다.
           </div>
         )}
       </div>
+
       <CustomModal
         isOpen={modalOpen}
+        onClose={handleCloseModal}
         title={modalTitle}
         message={modalMessage}
-        onClose={handleCloseModal}
-        onConfirm={handleModalConfirm}
+        onConfirm={
+          modalTitle === '성공' ? handleCloseModal :
+          modalTitle === '확인' ? () => handleModalConfirm('fail') : null
+        }
       />
     </div>
   );
