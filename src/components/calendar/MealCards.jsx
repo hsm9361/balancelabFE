@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import calendarStyles from 'assets/css/pages/calendar/calendarPage.module.css';
+import faceIcon from 'assets/images/faceicon.png';
 
 function MealCards({ date, selectedDateEvents, handleDeleteMeal, setShowModal }) {
   return (
@@ -36,7 +37,10 @@ function MealCards({ date, selectedDateEvents, handleDeleteMeal, setShowModal })
               </div>
             ))
           ) : (
-            <p className={calendarStyles.noEvents}>선택한 날짜에 기록된 식단이 없습니다.</p>
+            <div className={calendarStyles.noEvents}>
+              <img src={faceIcon} alt="No events icon" />
+              <p>선택한 날짜에 기록된 식단이 없습니다.</p>
+            </div>
           )}
         </motion.div>
       </AnimatePresence>

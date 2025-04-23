@@ -11,12 +11,13 @@
 
 .pageContainer {
     display: flex;
+    flex-direction: column; /* 추가: 세로 방향 정렬 */
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px); /* Adjust based on your header/footer height */
+    min-height: calc(100vh - 80px);
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 40px;
-    animation: fadeInUp 0.5s ease-out forwards; /* Add animation */
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
 .cardContainer {
@@ -97,3 +98,9 @@
     background-color: #224c7a;
     transform: scale(1.03);
 } 
+
+.titleContainer {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeInUp 0.5s ease-out forwards;
+}

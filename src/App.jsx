@@ -20,11 +20,13 @@ import DietConsulting from './pages/dietConsulting/DietConsultingResult.jsx';
 import DietConsultIndex from './pages/dietConsulting/DietConsultIndex.jsx';
 import AnalysisPage from './pages/AnalysisPage.jsx';
 import HealthPredictionIndex from './pages/healthPrediction/HealthPredictionIndex.jsx';
+import WeightReminderPopup from './pages/mypage/WeightReminderPopup.jsx';
 
 function App() {
   return (
     <div className="App">
       <Header />
+      <WeightReminderPopup />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
