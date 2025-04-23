@@ -26,6 +26,7 @@ function DietAnalysisPage() {
       navigate('/analysis/diet-analysis/result', {
         state: { 
           result,
+          message,
           selectedTime: selectedTime || '점심'
         },
       });
