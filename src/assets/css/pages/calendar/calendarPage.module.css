@@ -1,4 +1,4 @@
-/* 기본 스타일 */
+/* 기존 스타일 유지 */
 .weekView .react-calendar__month-view__days {
   display: flex !important;
   flex-direction: row !important;
@@ -160,9 +160,9 @@
   margin: 15px 0;
 }
 .noEvents img {
-  width: 10rem; /* 이미지 크기 조정 */
+  width: 10rem;
   height: 10rem;
-  margin-bottom: 15px; /* 이미지와 텍스트 간격 */
+  margin-bottom: 15px;
 }
 .addButton {
   padding: 10px 20px;
@@ -181,8 +181,6 @@
   background-color: #245c94;
   transform: translateY(-2px);
 }
-
-/* 이벤트 표시 스타일 */
 .eventBottomBorder {
   position: absolute;
   bottom: 0;
@@ -201,8 +199,6 @@
   background: linear-gradient(135deg, #eaf8ff, #2b6cb0);
   border-radius: 2px;
 }
-
-/* 내비게이션 스타일 */
 .react-calendar__navigation {
   display: flex;
   justify-content: space-between;
@@ -232,8 +228,6 @@
   background-color: #f0f0f0;
   transform: translateY(-2px);
 }
-
-/* 타일 스타일 */
 .react-calendar__tile {
   position: relative;
   padding: 10px;
@@ -251,8 +245,6 @@
   box-shadow: 0 2px 4px rgba(43, 108, 176, 0.2);
   color: #333;
 }
-
-/* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
   .calendarContainer {
     flex-direction: column;
@@ -304,5 +296,55 @@
   }
   .mealCard {
     padding: 12px;
+  }
+}
+
+/* 캘린더 접기/펴기 버튼 스타일 */
+.toggleCalendarButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+
+.toggleCalendarButton:hover,
+.toggleCalendarButton:active {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toggleCalendarButton svg {
+  fill: #333; /* VscFoldUp/VscFoldDown은 fill 속성 사용 */
+  width: 20px;
+  height: 20px;
+}
+
+/* 캘린더 접힘/펼침 애니메이션 */
+.calendarWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .toggleCalendarButton {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  .toggleCalendarButton svg {
+    width: 18px;
+    height: 18px;
   }
 }

@@ -1,33 +1,34 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { VscFoldUp, VscFoldDown } from 'react-icons/vsc';
 import CalendarView from '../components/calendar/CalendarView';
 import MealCards from '../components/calendar/MealCards';
 import AddDietModal from 'components/calendar/AddMealModal';
 import CustomModal from '../components/common/CustomModal';
+import AuthModal from '../components/auth/AuthModal';
 import apiClient from '../services/apiClient';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import calendarStyles from 'assets/css/pages/calendar/calendarPage.module.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-
-import { useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth'; // 인증 상태 가져오기
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import useAuth from '../hooks/useAuth';
 
 dayjs.locale('ko');
 
 function CalendarPage() {
-
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth(); // 로그인 여부 확인
-
+  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
   const [date, setDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('month');
-  const [initialized, setInitialized] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(true);
   const [modalState, setModalState] = useState({
     isOpen: false,
     title: '',
@@ -35,14 +36,38 @@ function CalendarPage() {
     onConfirm: null,
   });
   const [weekRange, setWeekRange] = useState({ minDate: null, maxDate: null });
-  const userId = 1;
+  const userId = user?.id || 1;
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      handleDateChange(date);
-      fetchDietEvents(date);
+  const handleGoogleLogin = useCallback(() => {
+    try {
+      const width = 500;
+      const height = 600;
+      const left = window.screenX + (window.outerWidth - width) / 2;
+      const top = window.screenY + (window.outerHeight - height) / 2;
+
+      const redirectUri = encodeURIComponent('http://localhost:3000/oauth/callback');
+      const googleAuthUrl = `http://localhost:8080/oauth2/authorization/google?redirect_uri=${redirectUri}`;
+
+      const loginWindow = window.open(
+        googleAuthUrl,
+        'Google Login',
+        `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
+      );
+
+      if (loginWindow) {
+        loginWindow.focus();
+      } else {
+        toast.error('팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용해주세요.');
+      }
+    } catch (error) {
+      console.error('Failed to open login window:', error);
+      toast.error('로그인 창을 열 수 없습니다. 다시 시도해주세요.');
     }
-  }, [isAuthenticated, date]);
+  }, []);
+
+  const handleCloseAuthModal = useCallback(() => {
+    setShowAuthModal(false);
+  }, []);
 
   const formatDate = useCallback((date) => {
     const year = date.getFullYear();
@@ -63,11 +88,9 @@ function CalendarPage() {
           maxDate: new Date(end),
         };
       }
-      const start = new Date(date.getFullYear(), date.getMonth(), 1);
-      const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
       return {
-        startDate: formatDate(start),
-        endDate: formatDate(end),
+        startDate: formatDate(new Date(date.getFullYear(), date.getMonth(), 1)),
+        endDate: formatDate(new Date(date.getFullYear(), date.getMonth() + 1, 0)),
         minDate: null,
         maxDate: null,
       };
@@ -75,13 +98,9 @@ function CalendarPage() {
     [formatDate]
   );
 
-  useEffect(() => {
-    const { minDate, maxDate } = getDateRange(date, viewMode);
-    setWeekRange({ minDate, maxDate });
-  }, [date, viewMode, getDateRange]);
-
   const fetchDietEvents = useCallback(
     async (baseDate, mode = viewMode) => {
+      if (!isAuthenticated) return;
       const { startDate, endDate } = getDateRange(baseDate, mode);
       try {
         const res = await apiClient.get(`/food-record/member/range`, {
@@ -99,19 +118,21 @@ function CalendarPage() {
       } catch (error) {
         console.error('식단 데이터 조회 오류:', error);
         setEvents([]);
+        toast.error('식단 데이터를 불러오는 중 오류가 발생했습니다.');
         setModalState({
           isOpen: true,
           title: '오류',
-          message: `식단 데이터를 불러오는 중 오류가 발생했습니다: ${error.message}`,
+          message: '식단 데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.',
           onConfirm: null,
         });
       }
     },
-    [getDateRange, userId, viewMode]
+    [getDateRange, userId, viewMode, isAuthenticated]
   );
 
   const handleDateChange = useCallback(
     async (newDate) => {
+      if (!isAuthenticated) return;
       setDate(newDate);
       const formatted = formatDate(newDate);
       try {
@@ -137,15 +158,16 @@ function CalendarPage() {
       } catch (error) {
         console.error('선택 날짜 식단 조회 오류:', error);
         setSelectedDateEvents([]);
+        toast.error('선택한 날짜의 식단 데이터를 불러오는 중 오류가 발생했습니다.');
         setModalState({
           isOpen: true,
           title: '오류',
-          message: `선택한 날짜의 식단 데이터를 불러오는 중 오류가 발생했습니다: ${error.message}`,
+          message: '선택한 날짜의 식단 데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.',
           onConfirm: null,
         });
       }
     },
-    [formatDate, userId]
+    [formatDate, userId, isAuthenticated]
   );
 
   const getMealType = (mealTime) => {
@@ -175,10 +197,11 @@ function CalendarPage() {
         await fetchDietEvents(date);
       } catch (error) {
         console.error('식단 추가 처리 오류:', error);
+        toast.error('식단 추가에 실패했습니다.');
         setModalState({
           isOpen: true,
           title: '추가 실패',
-          message: `식단 추가에 실패했습니다: ${error.message}`,
+          message: '식단 추가에 실패했습니다. 다시 시도해주세요.',
           onConfirm: null,
         });
       } finally {
@@ -209,10 +232,11 @@ function CalendarPage() {
           })
           .catch((err) => {
             console.error('삭제 실패:', err);
+            toast.error('식단 삭제에 실패했습니다.');
             setModalState({
               isOpen: true,
               title: '삭제 실패',
-              message: `식단 삭제에 실패했습니다: ${err.message}`,
+              message: '식단 삭제에 실패했습니다. 다시 시도해주세요.',
               onConfirm: null,
             });
           });
@@ -224,18 +248,43 @@ function CalendarPage() {
     setModalState({ isOpen: false, title: '', message: '', onConfirm: null });
   };
 
-  useEffect(() => {
-    if (initialized) {
-      handleDateChange(date);
-      fetchDietEvents(date);
-    }
-  }, [initialized]);
+  const toggleCalendarVisibility = () => {
+    setIsCalendarVisible((prev) => !prev);
+  };
 
   useEffect(() => {
-    if (initialized) {
+    const { minDate, maxDate } = getDateRange(date, viewMode);
+    setWeekRange({ minDate, maxDate });
+  }, [date, viewMode, getDateRange]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchDietEvents(date);
+      handleDateChange(date);
+    } else {
+      setShowAuthModal(true);
+    }
+  }, [isAuthenticated, date, fetchDietEvents, handleDateChange]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
       fetchDietEvents(date, viewMode);
     }
-  }, [initialized, viewMode, date, fetchDietEvents]);
+  }, [isAuthenticated, viewMode, date, fetchDietEvents]);
+
+  useEffect(() => {
+    const handleAuthUpdate = () => {
+      if (isAuthenticated) {
+        fetchDietEvents(date);
+        handleDateChange(date);
+        setShowAuthModal(false);
+      }
+    };
+    window.addEventListener('auth-update', handleAuthUpdate);
+    return () => {
+      window.removeEventListener('auth-update', handleAuthUpdate);
+    };
+  }, [isAuthenticated, date, fetchDietEvents, handleDateChange]);
 
   return (
     <div className={styles.tabContent}>
@@ -266,6 +315,20 @@ function CalendarPage() {
           주간 보기
         </motion.button>
       </div>
+      <button
+        className={calendarStyles.toggleCalendarButton}
+        onClick={toggleCalendarVisibility}
+      >
+        {isCalendarVisible ? (
+          <>
+            <VscFoldUp size={20} /> 캘린더 접기
+          </>
+        ) : (
+          <>
+            <VscFoldDown size={20} /> 캘린더 펴기
+          </>
+        )}
+      </button>
       <AnimatePresence mode="wait">
         <motion.div
           key={viewMode}
@@ -275,16 +338,18 @@ function CalendarPage() {
           transition={{ duration: 0.3 }}
           className={calendarStyles.calendarContainer}
         >
-          <CalendarView
-            date={date}
-            setDate={setDate}
-            viewMode={viewMode}
-            events={events}
-            weekRange={weekRange}
-            formatDate={formatDate}
-            handleDateChange={handleDateChange}
-            fetchDietEvents={fetchDietEvents}
-          />
+          {isCalendarVisible && (
+            <CalendarView
+              date={date}
+              setDate={setDate}
+              viewMode={viewMode}
+              events={events}
+              weekRange={weekRange}
+              formatDate={formatDate}
+              handleDateChange={handleDateChange}
+              fetchDietEvents={fetchDietEvents}
+            />
+          )}
           <MealCards
             date={date}
             selectedDateEvents={selectedDateEvents}
@@ -308,6 +373,13 @@ function CalendarPage() {
         message={modalState.message}
         onConfirm={modalState.onConfirm}
       />
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={handleCloseAuthModal}
+        type="required"
+        onGoogleLogin={handleGoogleLogin}
+      />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }
