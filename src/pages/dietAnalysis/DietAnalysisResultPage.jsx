@@ -40,6 +40,11 @@ const DietAnalysisResultPage = () => {
     setIsModalOpen(false);
   };
 
+  // 메시지에서 줄바꿈 제거
+  const inputMessage = location.state?.message
+    ? location.state.message.replace(/[\r\n]+/g, ' ').trim()
+    : '';
+
   if (!result) {
     return (
       <div className={styles.resultContainer}>
@@ -62,12 +67,18 @@ const DietAnalysisResultPage = () => {
     totalNutrition: result.total_nutrition,
     deficientNutrients: result.deficient_nutrients,
     nextMealSuggestion: result.next_meal_suggestion,
+    inputMessage,
   });
 
   return (
     <div className={styles.resultContainer}>
       <div id="diet-analysis-content" className={`${styles.content} pdf-capture`}>
         <h1 className={styles.title}>식단 분석 결과</h1>
+        {inputMessage && (
+          <div className={styles.section}>
+            <p className={styles.inputMessage}>{inputMessage}</p>
+          </div>
+        )}
         <div className={styles.section}>
           <FoodList foodList={result.food_list || []} />
         </div>

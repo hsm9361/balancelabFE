@@ -2,13 +2,29 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000; /* 매우 높은 z-index로 최상위 보장 */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* 모달 오버레이 활성화 */
+.modalOverlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 모달 컨텐츠 활성화 */
+.modalOverlay.open .modalContent {
+  opacity: 1;
+  transform: translate(-50%, -50%);
 }
 
 .modalContent {
@@ -19,6 +35,34 @@
   width: 90%;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 80vh;
+  overflow-y: auto;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  z-index: 10001; /* 오버레이 위에 표시 */
+}
+
+/* 스크롤바 스타일 */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: #f8fafc; /* Challenge.module.css와 동일 */
+  border-radius: 8px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: #4a90e2; /* Challenge 페이지의 주요 색상 */
+  border-radius: 8px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: #3b5a7a; /* 호버 시 어두운 색 */
 }
 
 .modalTitle {
