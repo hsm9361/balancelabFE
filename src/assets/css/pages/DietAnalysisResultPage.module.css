@@ -88,6 +88,26 @@
   opacity: 0.6;
 }
 
+.inputMessageTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c5282;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.inputMessage {
+  font-size: 1rem;
+  color: #4a5568;
+  line-height: 1.5;
+  background: #f7fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  word-break: break-word;
+}
+
 @media (max-width: 768px) {
   .resultContainer {
     padding: 60px 15px;

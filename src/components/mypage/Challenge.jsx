@@ -508,49 +508,44 @@ function Challenge() {
       {/* 과거 챌린지 */}
       <div className={styles.pastChallengesSection}>
         <h2 className={styles.subtitle}>과거 챌린지</h2>
-        {allChallenges.length > 0 ? (
-          allChallenges
-            .filter((challenge) => challenge.status !== 'ONGOING')
-            .map((challenge) => (
-              <div key={challenge.id} className={styles.challengeCard}>
-                <div className={styles.challengeInfo}>
-                  <div className={styles.challengeHeader}>
-                    <span className={styles.goalIcon}>
-                      {goalOptions[0].icon}
-                    </span>
-                    <h3 className={styles.challengeTitle}>{challenge.goal}</h3>
-                  </div>
-                  <div className={styles.challengeDetails}>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>📅</span>
-                      기간: {challenge.period}{challenge.periodUnit}
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>🚀</span>
-                      시작 날짜: {new Date(challenge.startDate + 'T00:00:00').toLocaleDateString()}
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>🏁</span>
-                      종료 날짜: {new Date(challenge.endDate + 'T00:00:00').toLocaleDateString()}
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>⚖️</span>
-                      시작 몸무게: {challenge.startWeight}kg
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>🎯</span>
-                      목표 체중: {challenge.targetWeight}kg
-                    </p>
-                    <p className={styles.challengeDetail}>
-                      <span className={styles.detailIcon}>📊</span>
-                      상태: <span className={`${styles.statusLabel} ${styles[challenge.status.toLowerCase()]}`}>
-                        {getStatusLabel(challenge.status)}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
+        {allChallenges.length > 0 && allChallenges.some((challenge) => challenge.status !== 'ONGOING') ? (
+          <div className={styles.tableContainer}>
+            <table className={styles.challengeTable}>
+              <thead>
+                <tr>
+                  <th>목표</th>
+                  <th>기간</th>
+                  <th>시작 날짜</th>
+                  <th>종료 날짜</th>
+                  <th>시작 체중</th>
+                  <th>목표 체중</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allChallenges
+                  .filter((challenge) => challenge.status !== 'ONGOING')
+                  .map((challenge) => (
+                    <tr key={challenge.id}>
+                      <td>
+                        <span className={styles.goalIcon}>{goalOptions[0].icon}</span>
+                        {challenge.goal}
+                      </td>
+                      <td>{challenge.period}{challenge.periodUnit}</td>
+                      <td>{new Date(challenge.startDate + 'T00:00:00').toLocaleDateString()}</td>
+                      <td>{new Date(challenge.endDate + 'T00:00:00').toLocaleDateString()}</td>
+                      <td>{challenge.startWeight}kg</td>
+                      <td>{challenge.targetWeight}kg</td>
+                      <td>
+                        <span className={`${styles.statusLabel} ${styles[challenge.status.toLowerCase()]}`}>
+                          {getStatusLabel(challenge.status)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <div className={styles.noChallenges}>
             과거 챌린지가 없습니다.
