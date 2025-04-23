@@ -1,8 +1,25 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add useNavigate for navigation
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import axios from 'axios';
 
 function MyBalance() {
+  const [clickedRecordIndex, setClickedRecordIndex] = useState(null); // Track clicked record
+  const navigate = useNavigate(); // For navigation
+  const handleRecordClick = (index) => {
+    // Toggle the button visibility: show if clicked, hide if clicked again
+    setClickedRecordIndex(clickedRecordIndex === index ? null : index);
+  };
+
+  const handleCalendarNavigate = (date) => {
+    // date는 이미 Date 객체이므로 문자열로 변환할 필요가 없습니다.
+    console.log('Navigating with date:', date);
+    navigate('/calendar', {
+      state: { selectedDate: date }, // Date 객체 그대로 전달
+    });
+    setClickedRecordIndex(null); // 말풍선 버튼 숨김
+  };
+
   const [nutritionData, setNutritionData] = useState({
     calories: 0,
     protein: 0,
@@ -232,8 +249,6 @@ function MyBalance() {
     const nutrientLabel = getNutrientLabel();
     const unit = getUnit();
 
-    console.log('Goal Value:', goalValue, 'Selected Nutrient:', selectedNutrient);
-
     // goalValue가 null 또는 undefined일 경우
     if (goalValue == null) {
       return `챌린지를 시작하고 목표 ${nutrientLabel}를 설정해 보세요!`;
@@ -278,6 +293,7 @@ function MyBalance() {
       <div className={styles.balanceContainer}>
         <div className={styles.summarySection}>
           <h3 className={styles.sectionTitle}>영양 섭취 요약</h3>
+          <h5 className={styles.sectionTitle2}>최근 7일 영양소 평균</h5>
           {nutritionData.calories === 0 &&
           nutritionData.protein === 0 &&
           nutritionData.carbo === 0 &&
@@ -291,7 +307,7 @@ function MyBalance() {
               >
                 <div className={styles.nutritionIcon}>🔥</div>
                 <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.calories)}kcal</div>
+                  <div className={styles.nutritionValue}>{Math.round(nutritionData.calories/7*100)/100}kcal</div>
                   <div className={styles.nutritionLabel}>
                     열량 (목표: {Math.round(goalNutrition.goalCalories || 0)}kcal)
                   </div>
@@ -303,7 +319,7 @@ function MyBalance() {
               >
                 <div className={styles.nutritionIcon}>🥩</div>
                 <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.protein)}g</div>
+                  <div className={styles.nutritionValue}>{Math.round(nutritionData.protein/7*100)/100}g</div>
                   <div className={styles.nutritionLabel}>
                     단백질 (목표: {Math.round(goalNutrition.goalProtein || 0)}g)
                   </div>
@@ -315,7 +331,7 @@ function MyBalance() {
               >
                 <div className={styles.nutritionIcon}>🍚</div>
                 <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.carbo)}g</div>
+                  <div className={styles.nutritionValue}>{Math.round(nutritionData.carbo/7*100)/100}g</div>
                   <div className={styles.nutritionLabel}>
                     탄수화물 (목표: {Math.round(goalNutrition.goalCarbo || 0)}g)
                   </div>
@@ -327,7 +343,7 @@ function MyBalance() {
               >
                 <div className={styles.nutritionIcon}>🥑</div>
                 <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.fat)}g</div>
+                  <div className={styles.nutritionValue}>{Math.round(nutritionData.fat/7*100)/100}g</div>
                   <div className={styles.nutritionLabel}>
                     지방 (목표: {Math.round(goalNutrition.goalFat || 0)}g)
                   </div>
@@ -376,25 +392,36 @@ function MyBalance() {
             <div className={styles.historyList}>
               <div className={styles.historyHeader}>
                 <div className={styles.historyDate}>날짜</div>
-                <div className={styles.historyMeal}>구분</div>
                 <div className={styles.historyNutrient}>칼로리</div>
                 <div className={styles.historyNutrient}>탄수화물</div>
                 <div className={styles.historyNutrient}>단백질</div>
                 <div className={styles.historyNutrient}>지방</div>
               </div>
               {recentRecords.map((record, index) => (
-                <div key={index} className={styles.historyItem}>
+                <div
+                  key={index}
+                  className={styles.historyItem}
+                  onClick={() => handleRecordClick(index)}
+                  style={{ position: 'relative' }} // For positioning the speech bubble
+                >
                   <div className={styles.historyDate}>
                     {new Date(record.consumedDate).toLocaleDateString('ko-KR', {
                       month: 'long',
                       day: 'numeric',
                     })}
                   </div>
-                  <div className={styles.historyMeal}>일일 기록</div>
                   <div className={styles.historyNutrient}>{Math.round(record.sumCalories || 0)} kcal</div>
                   <div className={styles.historyNutrient}>{Math.round(record.sumCarbohydrates || 0)} g</div>
                   <div className={styles.historyNutrient}>{Math.round(record.sumProtein || 0)} g</div>
                   <div className={styles.historyNutrient}>{Math.round(record.sumFat || 0)} g</div>
+                  {clickedRecordIndex === index && (
+                    <button
+                      className={styles.speechBubbleButton}
+                      onClick={() => handleCalendarNavigate(record.consumedDate)}
+                    >
+                      캘린더로 이동
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

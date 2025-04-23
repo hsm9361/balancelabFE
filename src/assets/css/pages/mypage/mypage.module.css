@@ -503,7 +503,7 @@ body {
 }
 
 .sectionTitle {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 20px;
   color: var(--text-primary);
   font-weight: 600;
@@ -512,11 +512,30 @@ body {
   gap: 8px;
 }
 
+.sectionTitle2 {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle2::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 15px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
 .sectionTitle::before {
   content: '';
   display: block;
   width: 4px;
-  height: 18px;
+  height: 20px;
   background-color: var(--primary-color);
   border-radius: 2px;
 }
@@ -892,12 +911,49 @@ body {
 
 /* Update historyItem to align with header */
 .historyItem {
+  position: relative; /* Ensure the button is positioned relative to the historyItem */
+  cursor: pointer; /* Indicate clickability */
   display: flex;
-  padding: 15px;
-  border-radius: var(--radius-md);
-  background-color: var(--background-gray);
-  transition: var(--transition-normal);
   align-items: center;
+  padding: 10px;
+  transition: background-color 0.2s;
+}
+.historyItem:hover {
+  background-color: #f5f5f5; /* Subtle hover effect */
+}
+
+.speechBubbleButton {
+  position: absolute;
+  top: -40px; /* Move above the historyItem */
+  background-color: #007bff; /* Primary color */
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* Speech bubble triangle pointing downward */
+.speechBubbleButton::before {
+  content: '';
+  position: absolute;
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  bottom: -8px; /* Place at the bottom of the button */
+  border-top: 8px solid #007bff; /* Triangle points downward */
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+
+.speechBubbleButton:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.speechBubbleButton:hover::before {
+  border-top-color: #0056b3; /* Match hover background */
 }
 
 /* Ensure consistent widths */
@@ -926,6 +982,11 @@ body {
   .historyHeader,
   .historyItem {
     padding: 10px;
+  }
+  .speechBubbleButton {
+    right: -100px; /* Closer on smaller screens */
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
   .historyDate {

@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 import 'assets/css/pages/healthPrediction/HealthPrediction.css';
 import { userService } from '../../services/userService';
 import Predict from 'assets/images/predict.png';
@@ -38,8 +37,21 @@ function HealthPrediction() {
     setIsLoading(true);
     setError(null);
     try {
-      if (!isAuthenticated) {
-        throw new Error('Authentication required');
+      const response = await fetch('http://localhost:8080/api/health-prediction/predict', {
+        
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataWithMemberId),
+      });
+      
+  
+      if (!response.ok) {
+        const errorData = await response.text();
+        toast.error(errorData || '서버 응답 오류');
+        return;
       }
       const data = await userService.getUserBodyInfo();
       setMemberInfo(data);
@@ -142,109 +154,11 @@ function HealthPrediction() {
 
   return (
     <div className="health-prediction">
-      <h1>현재 등록된 신체 정보</h1>
-      <h2>{user?.username}님의 정보를 확인하고 수정할 수 있습니다</h2>
-      <form className="prediction-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label>회원 email</label>
-          <span>{user?.email}</span>
-        </div>
-        <div className="form-group">
-          <label htmlFor="height">키 (cm)</label>
-          <Controller
-            name="height"
-            control={control}
-            rules={{
-              required: '키는 필수 입력입니다.',
-              min: { value: 0, message: '0 이상 입력하세요.' },
-            }}
-            render={({ field }) => (
-              <input
-                type="number"
-                id="height"
-                step="0.1"
-                className={errors.height ? 'input-error' : ''}
-                {...field}
-              />
-            )}
-          />
-          {errors.height && <span className="error-text">{errors.height.message}</span>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="weight">몸무게 (kg)</label>
-          <Controller
-            name="weight"
-            control={control}
-            rules={{
-              required: '몸무게는 필수 입력입니다.',
-              min: { value: 0, message: '0 이상 입력하세요.' },
-            }}
-            render={({ field }) => (
-              <input
-                type="number"
-                id="weight"
-                step="0.1"
-                className={errors.weight ? 'input-error' : ''}
-                {...field}
-              />
-            )}
-          />
-          {errors.weight && <span className="error-text">{errors.weight.message}</span>}
-        </div>
-        <div className="form-group">
-          <label>성별</label>
-          <div className="radio-group">
-            <Controller
-              name="gender"
-              control={control}
-              rules={{ required: '성별은 필수 선택입니다.' }}
-              render={({ field }) => (
-                <>
-                  {genderOptions.map((option) => (
-                    <label key={option.value}>
-                      <input
-                        type="radio"
-                        value={option.value}
-                        checked={field.value === option.value}
-                        onChange={() => field.onChange(option.value)}
-                      />
-                      {option.label}
-                    </label>
-                  ))}
-                </>
-              )}
-            />
-          </div>
-          {errors.gender && <span className="error-text">{errors.gender.message}</span>}
-        </div>
-        <div className="button-group">
-          <button
-            type="submit"
-            className="consult-button"
-            disabled={isSubmitting || !isDirty}
-          >
-            {isSubmitting ? '저장 중...' : '정보 저장'}
-          </button>
-          <button
-            type="button"
-            className="back-button"
-            onClick={handleCancel}
-            disabled={isSubmitting}
-          >
-            취소
-          </button>
-          <button
-            type="button"
-            className="save-button"
-            onClick={handleProceedToForm}
-            disabled={isSubmitting}
-          >
-            건강 예측 문답 시작
-            <img src={Predict} alt="예측" className="plane-icon" />
-          </button>
-        </div>
-      </form>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <h1>🧬 질병 예측 시스템</h1>
+      <h2>질병 위험군을 예측해보세요!</h2>
+      
+      <HealthPredictionForm onSubmit={handleSubmit} />
+      <ToastContainer />
     </div>
   );
 }
