@@ -11,7 +11,7 @@ const apiClient = axios.create({
     Pragma: 'no-cache',
     Expires: '0',
   },
-  withCredentials: true
+  withCredentials: true,
 });
 
 // 리다이렉트 플래그
@@ -40,13 +40,9 @@ apiClient.interceptors.response.use(
   async (error) => {
     if (error.response) {
       if ((error.response.status === 401 || error.response.status === 403) && !isRedirecting) {
-        isRedirecting = true; // 리다이렉트 중복 방지
+        isRedirecting = true;
         localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
-
-        // refresh token을 사용한 토큰 갱신 로직이 있다면 여기서 구현
-        // 예: const newToken = await refreshToken();
-        // if (newToken) { ... }
 
         const redirectUrl = process.env.REACT_APP_OAUTH_REDIRECT
           ? `${BASE_URL}/oauth2/authorization/google`
@@ -62,7 +58,7 @@ apiClient.interceptors.response.use(
     } else {
       console.error('Error setting up request:', error.message);
     }
-    isRedirecting = false; // 에러 처리 후 리다이렉트 플래그 초기화
+    isRedirecting = false;
     return Promise.reject(error);
   }
 );

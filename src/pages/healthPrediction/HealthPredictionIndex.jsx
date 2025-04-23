@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'assets/css/pages/healthPrediction/HealthPrediction.css';
 import { memberService } from '../../services/memberService';
-import Predict from 'assets/images/predict.png'
+import Predict from 'assets/images/predict.png';
+import useAuth from '../../hooks/useAuth';
 
 const genderOptions = [
   { value: 'MALE', label: '남성' },
@@ -27,64 +28,85 @@ function HealthPrediction() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
-  const [memberInfo, setMemberInfo] = useState(null); // 기존 회원 정보 저장
+  const [memberInfo, setMemberInfo] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, user } = useAuth();
 
-  const fetchMemberInfo = async () => {
+  const fetchMemberInfo = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
     try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken || !isAuthenticated) {
+        throw new Error('Authentication required');
+      }
       const data = await memberService.getMemberInfo();
-      setMemberInfo(data); // 기존 정보 저장
+      setMemberInfo(data);
       reset({
         height: data.height || '',
         weight: data.weight || '',
         gender: data.gender || '',
       });
-      setIsLoading(false);
     } catch (err) {
       console.error('Fetch member info error:', err);
       if (err.message === 'Authentication required') {
-        localStorage.setItem('redirectPath', window.location.pathname);
-        navigate('/login', { replace: true });
+        localStorage.removeItem('accessToken');
+        navigate('/login', {
+          state: { from: location.pathname },
+          replace: true,
+        });
         return;
       }
-      setError('회원 정보를 불러오는데 실패했습니다.');
+      setError('회원 정보를 불러오는데 실패했습니다. 다시 시도해주세요.');
+    } finally {
       setIsLoading(false);
     }
-  };
+  }, [isAuthenticated, navigate, location.pathname, reset]);
 
   useEffect(() => {
-    fetchMemberInfo();
-  }, []);
+    if (isAuthenticated) {
+      fetchMemberInfo();
+    } else {
+      navigate('/login', {
+        state: { from: location.pathname },
+        replace: true,
+      });
+    }
+  }, [isAuthenticated, fetchMemberInfo, navigate, location.pathname]);
+
+  // 인증 상태 업데이트 이벤트 처리
+  useEffect(() => {
+    const handleAuthUpdate = () => {
+      if (isAuthenticated) {
+        fetchMemberInfo();
+      }
+    };
+    window.addEventListener('auth-updated', handleAuthUpdate);
+    return () => {
+      window.removeEventListener('auth-updated', handleAuthUpdate);
+    };
+  }, [isAuthenticated, fetchMemberInfo]);
 
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
-      // 기존 회원 정보와 입력 데이터를 병합
       const updateDto = {
         height: parseFloat(data.height) || null,
         weight: parseFloat(data.weight) || null,
         gender: data.gender || null,
-        // 기존 값을 유지
         username: memberInfo?.username || null,
         age: memberInfo?.age || null,
         membername: memberInfo?.membername || null,
         goalWeight: memberInfo?.goalWeight || null,
         activityLevel: memberInfo?.activityLevel || null,
       };
-      // dto를 JSON으로 변환해 'dto' 파트에 추가
       formData.append('dto', new Blob([JSON.stringify(updateDto)], { type: 'application/json' }));
-
-      console.log('FormData contents:');
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
 
       await memberService.updateMemberInfo(formData);
       toast.success('정보가 성공적으로 업데이트되었습니다.');
-      // 업데이트된 데이터를 반영해 폼 리셋
       reset(data);
-      // 최신 회원 정보 다시 가져오기
       await fetchMemberInfo();
     } catch (err) {
       console.error('Update error:', err);
@@ -100,6 +122,18 @@ function HealthPrediction() {
     fetchMemberInfo();
   };
 
+  const handleRetry = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      navigate('/login', {
+        state: { from: location.pathname },
+        replace: true,
+      });
+      return;
+    }
+    await fetchMemberInfo();
+  };
+
   if (isLoading) {
     return <div className="health-prediction"><div>Loading...</div></div>;
   }
@@ -110,10 +144,7 @@ function HealthPrediction() {
         <div>Error: {error}</div>
         <button
           className="consult-button"
-          onClick={() => {
-            setError(null);
-            fetchMemberInfo();
-          }}
+          onClick={handleRetry}
         >
           재시도
         </button>
@@ -124,11 +155,11 @@ function HealthPrediction() {
   return (
     <div className="health-prediction">
       <h1>현재 등록된 신체 정보</h1>
-      <h2>{memberInfo.membername}님의 정보를 확인하고 수정할 수 있습니다</h2>
+      <h2>{memberInfo?.membername}님의 정보를 확인하고 수정할 수 있습니다</h2>
       <form className="prediction-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
           <label>회원 email</label>
-          <span>{memberInfo.email}</span>
+          <span>{memberInfo?.email}</span>
         </div>
         <div className="form-group">
           <label htmlFor="height">키 (cm)</label>
