@@ -143,13 +143,6 @@ const MyInfo = () => {
       rules: { required: '성별은 필수 선택입니다.' },
     },
     {
-      name: 'activityLevel',
-      label: '활동 수준',
-      type: 'select',
-      options: activityLevelOptions,
-      rules: { required: '활동 수준은 필수 선택입니다.' },
-    },
-    {
       name: 'goalWeight',
       label: '목표 체중 (kg)',
       type: 'number',
@@ -161,6 +154,14 @@ const MyInfo = () => {
       step: '0.1',
     },
   ];
+
+  const activityField = {
+    name: 'activityLevel',
+    label: '활동 수준',
+    type: 'select',
+    options: activityLevelOptions,
+    rules: { required: '활동 수준은 필수 선택입니다.' },
+  };
 
   // 필드를 두 열로 나누기
   const midIndex = Math.ceil(fields.length / 2);
@@ -200,7 +201,8 @@ const MyInfo = () => {
           </div>
         </div>
 
-        {/* 정보 입력 섹션 */}
+        {/* 기본 정보 섹션 */}
+        <div className={styles.sectionTitle}>기본 정보</div>
         <div className={styles.infoSection}>
           <div className={styles.columns}>
             <div className={styles.column}>
@@ -288,24 +290,55 @@ const MyInfo = () => {
               ))}
             </div>
           </div>
+        </div>
 
-          <div className={styles.buttonGroup}>
-            <button
-              type="submit"
-              className={styles.saveButton}
-              disabled={isSubmitting || (!isDirty && !profileImage)}
-            >
-              {isSubmitting ? '저장 중...' : '저장'}
-            </button>
-            <button
-              type="button"
-              className={styles.cancelButton}
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
-              취소
-            </button>
+        {/* 활동 수준 섹션 */}
+        {/* <div className={styles.sectionTitle}>활동 수준 아래 고</div> */}
+        <div className={styles.activitySection}>
+          <div className={styles.formGroup}>
+            <label htmlFor={activityField.name} className={styles.label}>
+              {activityField.label}
+            </label>
+            <div className={styles.inputWrapper}>
+              <Controller
+                name={activityField.name}
+                control={control}
+                rules={activityField.rules}
+                render={({ field: controllerField }) => (
+                  <Select
+                    id={activityField.name}
+                    options={activityField.options}
+                    value={controllerField.value}
+                    onChange={controllerField.onChange}
+                    placeholder="선택하세요"
+                    className={styles.select}
+                    isClearable
+                  />
+                )}
+              />
+              {errors[activityField.name] && (
+                <span className={styles.fieldError}>{errors[activityField.name].message}</span>
+              )}
+            </div>
           </div>
+        </div>
+
+        <div className={styles.buttonGroup}>
+          <button
+            type="submit"
+            className={styles.saveButton}
+            disabled={isSubmitting || (!isDirty && !profileImage)}
+          >
+            {isSubmitting ? '저장 중...' : '저장'}
+          </button>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            취소
+          </button>
         </div>
       </form>
       <ToastContainer />
