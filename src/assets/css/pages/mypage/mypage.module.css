@@ -65,7 +65,7 @@ body {
   left: 0;
   width: 40px;
   height: 3px;
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
   border-radius: 2px;
 }
 
@@ -136,7 +136,7 @@ body {
 
 .menuItem.active {
   background-color: rgba(74, 144, 226, 0.2);
-  border-left: 4px solid var(--primary-color);
+  border-left: 4px solid #4A90E2;
   color: var(--primary-dark);
   font-weight: 700;
 }
@@ -211,7 +211,7 @@ body {
   left: 0;
   width: 60px;
   height: 3px;
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
 }
 
 /* 내정보 탭 스타일 */
@@ -259,13 +259,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary-color);
+  color: #4A90E2;
   font-weight: 500;
 }
 
 .editButton {
   padding: 10px 20px;
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -347,7 +347,7 @@ body {
 }
 
 :global(.react-calendar__navigation) {
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
   padding: 10px;
   color: white;
 }
@@ -369,7 +369,7 @@ body {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 0.9em;
-  color: var(--primary-color);
+  color: #4A90E2;
 }
 
 :global(.react-calendar__month-view__days__day) {
@@ -392,7 +392,7 @@ body {
 }
 
 :global(.react-calendar__tile--active) {
-  background-color: var(--primary-color) !important;
+  background-color: #4A90E2 !important;
   color: white;
 }
 
@@ -409,7 +409,7 @@ body {
   transform: translateX(-50%);
   width: 6px;
   height: 6px;
-  background-color: var(--accent-color);
+  background-color: #50E3C2;
   border-radius: 50%;
 }
 
@@ -437,7 +437,7 @@ body {
   left: 0;
   width: 30px;
   height: 2px;
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
 }
 
 .scheduleItems {
@@ -526,7 +526,7 @@ body {
   display: block;
   width: 4px;
   height: 15px;
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
   border-radius: 2px;
 }
 
@@ -535,7 +535,7 @@ body {
   display: block;
   width: 4px;
   height: 20px;
-  background-color: var(--primary-color);
+  background-color: #4A90E2;
   border-radius: 2px;
 }
 
@@ -565,7 +565,7 @@ body {
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color)); /* 그라디언트 보더 */
+  background-color: linear-gradient(to bottom, #4A90E2, #50E3C2); /* 그라디언트 보더 */
 }
 
 .nutritionCard:hover {
@@ -576,7 +576,7 @@ body {
 
 .nutritionIcon {
   font-size: 28px;
-  background: linear-gradient(135deg, var(--primary-light), var(--accent-color)); /* 아이콘 배경에 그라디언트 추가 */
+  background: linear-gradient(135deg, var(--primary-light), #50E3C2); /* 아이콘 배경에 그라디언트 추가 */
   width: 50px;
   height: 50px;
   display: flex;
@@ -757,7 +757,7 @@ body {
   flex: 1;
   text-align: right;
   font-weight: bold;
-  color: var(--primary-color);
+  color: #4A90E2;
 }
 
 /* 모바일 반응형 스타일 */
@@ -844,7 +844,7 @@ body {
 }
 
 .subMenuItem:hover {
-  color: var(--accent-color);
+  color: #50E3C2;
 }
 .subMenu {
   display: block;              /* ✅ 블록 요소로 바꾸기 */
@@ -875,7 +875,7 @@ body {
 }
 
 .subMenuItem:hover {
-  color: var(--accent-color);
+  color: #50E3C2;
 }
 
 /* fadeInUp Animation */
@@ -973,7 +973,7 @@ body {
   flex: 1;
   text-align: right;
   font-weight: bold;
-  color: var(--primary-color);
+  color: #4A90E2;
 }
 
 /* Responsive adjustments */

@@ -48,21 +48,11 @@ function HealthPredictionIndex() {
   };
 
   // Check for recent diet records
-  const checkDietRecords = async () => {
-    try {
-      const response = await memberService.getRecentDietRecords(); // Hypothetical endpoint
-      setHasDietRecords(response.records.length > 0);
-    } catch (err) {
-      console.error('Diet records check error:', err);
-      setHasDietRecords(false);
-      toast.warn('정확한 예측을 위해 식단 기록을 추가해주세요!');
-    }
-  };
 
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchMemberInfo(), checkDietRecords()]);
+      await Promise.all([fetchMemberInfo()]);
       setIsLoading(false);
     };
     loadData();

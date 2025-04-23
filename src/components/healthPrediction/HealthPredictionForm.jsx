@@ -55,12 +55,6 @@ function HealthPredictionForm({ onSubmit }) {
 
   return (
     <div className={styles.healthPrediction}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>건강 예측 설문지</h1>
-        <p className={styles.description}>
-          생활 습관과 가족력을 알려주시면 더욱 정확한 건강 예측을 제공합니다.
-        </p>
-      </header>
       <form onSubmit={handleSubmit} className={styles.predictionForm}>
         <div className={styles.formGroup}>
           <label>흡연하시나요?</label>

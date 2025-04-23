@@ -17,16 +17,6 @@
   }
   
   /* Main container */
-  .healthPrediction {
-    min-height: 100vh;
-    background: var(--background-gradient);
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: var(--font-family);
-    animation: fadeIn 1s ease-in-out;
-  }
   
   /* Header */
   .header {
