@@ -25,6 +25,7 @@ function MealCards({ date, selectedDateEvents, handleDeleteMeal, setShowModal })
                     <span className={calendarStyles.mealLabel}>{meal.type}</span>
                     <span className={calendarStyles.mealTimeRange}>{meal.time}</span>
                   </div>
+                  <div className={calendarStyles.mealContents}>{meal.items.join(', ')}</div>
                   <button
                     onClick={() => handleDeleteMeal(idx, meal.id)}
                     className={calendarStyles.deleteButton}
@@ -33,7 +34,6 @@ function MealCards({ date, selectedDateEvents, handleDeleteMeal, setShowModal })
                     ✕
                   </button>
                 </div>
-                <div className={calendarStyles.mealContents}>{meal.items.join(', ')}</div>
               </div>
             ))
           ) : (
