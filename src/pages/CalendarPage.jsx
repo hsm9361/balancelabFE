@@ -11,9 +11,16 @@ import calendarStyles from 'assets/css/pages/calendar/calendarPage.module.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth'; // 인증 상태 가져오기
+
 dayjs.locale('ko');
 
 function CalendarPage() {
+
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth(); // 로그인 여부 확인
+
   const location = useLocation();
   const [date, setDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('month');
@@ -31,11 +38,11 @@ function CalendarPage() {
   const userId = 1;
 
   useEffect(() => {
-    if (location.state?.viewMode) {
-      setViewMode(location.state.viewMode);
+    if (isAuthenticated) {
+      handleDateChange(date);
+      fetchDietEvents(date);
     }
-    setInitialized(true);
-  }, [location.state]);
+  }, [isAuthenticated, date]);
 
   const formatDate = useCallback((date) => {
     const year = date.getFullYear();
