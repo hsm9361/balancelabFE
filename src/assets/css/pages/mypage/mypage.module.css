@@ -65,7 +65,7 @@ body {
   left: 0;
   width: 40px;
   height: 3px;
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
   border-radius: 2px;
 }
 
@@ -137,7 +137,7 @@ body {
 
 .menuItem.active {
   background-color: rgba(74, 144, 226, 0.2);
-  border-left: 4px solid #4A90E2;
+  border-left: 4px solid var(--primary-color);
   color: var(--primary-dark);
   font-weight: 700;
 }
@@ -212,7 +212,7 @@ body {
   left: 0;
   width: 60px;
   height: 3px;
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
 }
 
 /* 내정보 탭 스타일 */
@@ -260,13 +260,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4A90E2;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
 .editButton {
   padding: 10px 20px;
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -348,7 +348,7 @@ body {
 }
 
 :global(.react-calendar__navigation) {
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
   padding: 10px;
   color: white;
 }
@@ -370,7 +370,7 @@ body {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 0.9em;
-  color: #4A90E2;
+  color: var(--primary-color);
 }
 
 :global(.react-calendar__month-view__days__day) {
@@ -393,7 +393,7 @@ body {
 }
 
 :global(.react-calendar__tile--active) {
-  background-color: #4A90E2 !important;
+  background-color: var(--primary-color) !important;
   color: white;
 }
 
@@ -410,7 +410,7 @@ body {
   transform: translateX(-50%);
   width: 6px;
   height: 6px;
-  background-color: #50E3C2;
+  background-color: var(--accent-color);
   border-radius: 50%;
 }
 
@@ -438,7 +438,7 @@ body {
   left: 0;
   width: 30px;
   height: 2px;
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
 }
 
 .scheduleItems {
@@ -527,7 +527,7 @@ body {
   display: block;
   width: 4px;
   height: 15px;
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
   border-radius: 2px;
 }
 
@@ -536,13 +536,13 @@ body {
   display: block;
   width: 4px;
   height: 20px;
-  background-color: #4A90E2;
+  background-color: var(--primary-color);
   border-radius: 2px;
 }
 
 .nutritionCards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -566,7 +566,7 @@ body {
   left: 0;
   width: 4px;
   height: 100%;
-  background-color: linear-gradient(to bottom, #4A90E2, #50E3C2); /* 그라디언트 보더 */
+  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color)); /* 그라디언트 보더 */
 }
 
 .nutritionCard:hover {
@@ -575,9 +575,13 @@ body {
   cursor:pointer;
 }
 
+.nutritionCard.active {
+  background: linear-gradient(145deg, #E6F0FA 0%, #D6E4FF 100%);
+}
+
 .nutritionIcon {
   font-size: 28px;
-  background: linear-gradient(135deg, var(--primary-light), #50E3C2); /* 아이콘 배경에 그라디언트 추가 */
+  background: linear-gradient(135deg, var(--primary-light), var(--accent-color)); /* 아이콘 배경에 그라디언트 추가 */
   width: 50px;
   height: 50px;
   display: flex;
@@ -606,6 +610,105 @@ body {
   font-size: 14px;
   color: var(--text-light);
   margin-top: 4px;
+}
+
+.calorieCard {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(145deg, #FFFFFF 0%, #F9FBFF 100%);
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.calorieCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+}
+
+.calorieCard:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+}
+
+.calorieCard.active {
+  background: linear-gradient(145deg, #E6F0FA 0%, #D6E4FF 100%);
+}
+
+/* Calorie Info */
+.calorieInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+/* Progress Bar */
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--primary-light);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+  transition: width 0.5s ease;
+}
+
+/* Calorie Status */
+.calorieStatus {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calorieStatus::before {
+  content: '';
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.overGoal {
+  color: #D32F2F; /* Red for exceeding goal */
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+.overGoal::before {
+  background-color: #D32F2F; /* Red line */
+}
+
+.underGoal {
+  color: #388E3C; /* Green for under goal */
+  background-color: rgba(56, 142, 60, 0.1);
+}
+
+.underGoal::before {
+  background-color: #388E3C; /* Green line */
 }
 
 .chartSection {
@@ -758,7 +861,7 @@ body {
   flex: 1;
   text-align: right;
   font-weight: bold;
-  color: #4A90E2;
+  color: var(--primary-color);
 }
 
 /* 모바일 반응형 스타일 */
@@ -791,7 +894,7 @@ body {
 /* 테블릿 반응형 스타일 */
 @media (min-width: 769px) and (max-width: 1024px) {
   .nutritionCards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -805,6 +908,15 @@ body {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
@@ -845,7 +957,7 @@ body {
 }
 
 .subMenuItem:hover {
-  color: #50E3C2;
+  color: var(--accent-color);
 }
 .subMenu {
   display: block;              /* ✅ 블록 요소로 바꾸기 */
@@ -876,7 +988,7 @@ body {
 }
 
 .subMenuItem:hover {
-  color: #50E3C2;
+  color: var(--accent-color);
 }
 
 /* fadeInUp Animation */
@@ -974,7 +1086,7 @@ body {
   flex: 1;
   text-align: right;
   font-weight: bold;
-  color: #4A90E2;
+  color: var(--primary-color);
 }
 
 /* Responsive adjustments */

@@ -1,23 +1,22 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom'; // Add useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import axios from 'axios';
 
 function MyBalance() {
-  const [clickedRecordIndex, setClickedRecordIndex] = useState(null); // Track clicked record
-  const navigate = useNavigate(); // For navigation
+  const [clickedRecordIndex, setClickedRecordIndex] = useState(null);
+  const navigate = useNavigate();
+
   const handleRecordClick = (index) => {
-    // Toggle the button visibility: show if clicked, hide if clicked again
     setClickedRecordIndex(clickedRecordIndex === index ? null : index);
   };
 
   const handleCalendarNavigate = (date) => {
-    // date는 이미 Date 객체이므로 문자열로 변환할 필요가 없습니다.
     console.log('Navigating with date:', date);
     navigate('/calendar', {
-      state: { selectedDate: date }, // Date 객체 그대로 전달
+      state: { selectedDate: date },
     });
-    setClickedRecordIndex(null); // 말풍선 버튼 숨김
+    setClickedRecordIndex(null);
   };
 
   const [nutritionData, setNutritionData] = useState({
@@ -26,7 +25,7 @@ function MyBalance() {
     carbo: 0,
     fat: 0,
   });
-  const [weeklyIntake, setWeeklyIntake] = useState([]); // 초기 주간 데이터
+  const [weeklyIntake, setWeeklyIntake] = useState([]);
   const [recentRecords, setRecentRecords] = useState([]);
   const [goalNutrition, setGoalNutrition] = useState({
     goalCalories: null,
@@ -37,11 +36,10 @@ function MyBalance() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedNutrient, setSelectedNutrient] = useState('calories');
-  const [cachedSummaries, setCachedSummaries] = useState([]); // 데이터 캐싱용 상태
+  const [cachedSummaries, setCachedSummaries] = useState([]);
 
   const token = localStorage.getItem('accessToken');
 
-  // 주간 데이터 초기화 함수
   const initializeWeeklyData = () => {
     const days = ['일', '월', '화', '수', '목', '금', '토'];
     return Array(7)
@@ -56,19 +54,17 @@ function MyBalance() {
   useEffect(() => {
     if (!token) {
       setError('로그인이 필요합니다.');
-      setWeeklyIntake(initializeWeeklyData()); // 빈 주간 데이터 설정
+      setWeeklyIntake(initializeWeeklyData());
       return;
     }
 
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // 백엔드 서버의 기본 URL 설정 (필요에 따라 수정)
-        axios.defaults.baseURL = 'http://localhost:8080'; // 백엔드 포트 확인 후 수정
+        axios.defaults.baseURL = 'http://localhost:8080';
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         axios.defaults.headers.common['Cache-Control'] = 'no-cache';
 
-        // 목표 영양소 가져오기
         let goalData = { goalCalories: null, goalProtein: null, goalCarbo: null, goalFat: null };
         try {
           console.log('Fetching goal data...');
@@ -84,13 +80,11 @@ function MyBalance() {
           if (goalError.response?.status === 404) {
             console.log('No goal data found, using default values.');
           } else {
-            throw goalError; // 다른 에러는 상위 catch로 전달
+            throw goalError;
           }
         }
-        console.log('Setting goalNutrition:', goalData);
         setGoalNutrition(goalData);
 
-        // 영양 요약 데이터 가져오기
         let summaries = [];
         try {
           console.log('Fetching nutrition summary...');
@@ -106,12 +100,11 @@ function MyBalance() {
           if (summaryError.response?.status === 404) {
             console.log('No nutrition summary found, using empty array.');
           } else {
-            throw summaryError; // 다른 에러는 상위 catch로 전달
+            throw summaryError;
           }
         }
         setCachedSummaries(summaries);
 
-        // 영양 섭취 요약 계산
         const summary = summaries.reduce(
           (acc, record) => ({
             calories: acc.calories + (record?.sumCalories || 0),
@@ -123,10 +116,8 @@ function MyBalance() {
         );
         setNutritionData(summary);
 
-        // 최근 기록 설정
         setRecentRecords(summaries.slice(0, 3));
 
-        // 주간 데이터 설정
         const weeklyData = aggregateWeeklyData(summaries, selectedNutrient);
         setWeeklyIntake(weeklyData);
       } catch (error) {
@@ -165,7 +156,6 @@ function MyBalance() {
     fetchData();
   }, [token]);
 
-  // selectedNutrient 변경 시 캐싱된 데이터로 주간 데이터 재집계
   useEffect(() => {
     const weeklyData = aggregateWeeklyData(cachedSummaries, selectedNutrient);
     setWeeklyIntake(weeklyData);
@@ -243,20 +233,31 @@ function MyBalance() {
     return dataMax * 1.1;
   };
 
-  // 동적 targetLabel 생성 함수
   const getTargetLabel = () => {
     const goalValue = getGoalValue();
     const nutrientLabel = getNutrientLabel();
     const unit = getUnit();
 
-    // goalValue가 null 또는 undefined일 경우
     if (goalValue == null) {
       return `챌린지를 시작하고 목표 ${nutrientLabel}를 설정해 보세요!`;
     }
 
-    // 정상적인 경우
     return `목표: ${Math.round(goalValue)} ${unit}`;
   };
+
+  // Calculate progress percentage for calories
+  const calorieProgress = goalNutrition.goalCalories
+    ? (nutritionData.calories / 7 / goalNutrition.goalCalories) * 100
+    : 0;
+
+  // Determine calorie status message
+  const calorieStatus = goalNutrition.goalCalories
+    ? calorieProgress > 100
+      ? `목표 칼로리 초과! (${Math.round(
+          (nutritionData.calories / 7 - goalNutrition.goalCalories) * 100) / 100}kcal 초과)`
+      : `칼로리 여유 (${Math.round(
+          (goalNutrition.goalCalories - nutritionData.calories / 7) * 100) / 100}kcal 남음)`
+    : '목표 칼로리가 설정되지 않았습니다.';
 
   if (error) {
     return (
@@ -300,56 +301,81 @@ function MyBalance() {
           nutritionData.fat === 0 ? (
             <p>영양 섭취 데이터가 없습니다.</p>
           ) : (
-            <div className={styles.nutritionCards}>
+            <>
+              {/* Calories Progress Bar */}
               <div
-                className={`${styles.nutritionCard} ${selectedNutrient === 'calories' ? styles.active : ''}`}
+                className={`${styles.calorieCard} ${selectedNutrient === 'calories' ? styles.active : ''}`}
                 onClick={() => setSelectedNutrient('calories')}
               >
                 <div className={styles.nutritionIcon}>🔥</div>
-                <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.calories/7*100)/100}kcal</div>
+                <div className={styles.calorieInfo}>
+                  <div className={styles.nutritionValue}>
+                    {Math.round(nutritionData.calories / 7 * 100) / 100}kcal
+                  </div>
                   <div className={styles.nutritionLabel}>
                     열량 (목표: {Math.round(goalNutrition.goalCalories || 0)}kcal)
                   </div>
-                </div>
-              </div>
-              <div
-                className={`${styles.nutritionCard} ${selectedNutrient === 'protein' ? styles.active : ''}`}
-                onClick={() => setSelectedNutrient('protein')}
-              >
-                <div className={styles.nutritionIcon}>🥩</div>
-                <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.protein/7*100)/100}g</div>
-                  <div className={styles.nutritionLabel}>
-                    단백질 (목표: {Math.round(goalNutrition.goalProtein || 0)}g)
+                  <div className={styles.progressBar}>
+                    <div
+                      className={styles.progressFill}
+                      style={{ width: `${Math.min(calorieProgress, 100)}%` }}
+                    ></div>
+                  </div>
+                  <div
+                    className={`${styles.calorieStatus} ${
+                      calorieProgress > 100 ? styles.overGoal : styles.underGoal
+                    }`}
+                  >
+                    {calorieStatus}
                   </div>
                 </div>
               </div>
-              <div
-                className={`${styles.nutritionCard} ${selectedNutrient === 'carbo' ? styles.active : ''}`}
-                onClick={() => setSelectedNutrient('carbo')}
-              >
-                <div className={styles.nutritionIcon}>🍚</div>
-                <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.carbo/7*100)/100}g</div>
-                  <div className={styles.nutritionLabel}>
-                    탄수화물 (목표: {Math.round(goalNutrition.goalCarbo || 0)}g)
+              {/* Other Nutrients Grid */}
+              <div className={styles.nutritionCards}>
+                <div
+                  className={`${styles.nutritionCard} ${selectedNutrient === 'protein' ? styles.active : ''}`}
+                  onClick={() => setSelectedNutrient('protein')}
+                >
+                  <div className={styles.nutritionIcon}>🥩</div>
+                  <div className={styles.nutritionInfo}>
+                    <div className={styles.nutritionValue}>
+                      {Math.round(nutritionData.protein / 7 * 100) / 100}g
+                    </div>
+                    <div className={styles.nutritionLabel}>
+                      단백질 (목표: {Math.round(goalNutrition.goalProtein || 0)}g)
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`${styles.nutritionCard} ${selectedNutrient === 'carbo' ? styles.active : ''}`}
+                  onClick={() => setSelectedNutrient('carbo')}
+                >
+                  <div className={styles.nutritionIcon}>🍚</div>
+                  <div className={styles.nutritionInfo}>
+                    <div className={styles.nutritionValue}>
+                      {Math.round(nutritionData.carbo / 7 * 100) / 100}g
+                    </div>
+                    <div className={styles.nutritionLabel}>
+                      탄수화물 (목표: {Math.round(goalNutrition.goalCarbo || 0)}g)
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`${styles.nutritionCard} ${selectedNutrient === 'fat' ? styles.active : ''}`}
+                  onClick={() => setSelectedNutrient('fat')}
+                >
+                  <div className={styles.nutritionIcon}>🥑</div>
+                  <div className={styles.nutritionInfo}>
+                    <div className={styles.nutritionValue}>
+                      {Math.round(nutritionData.fat / 7 * 100) / 100}g
+                    </div>
+                    <div className={styles.nutritionLabel}>
+                      지방 (목표: {Math.round(goalNutrition.goalFat || 0)}g)
+                    </div>
                   </div>
                 </div>
               </div>
-              <div
-                className={`${styles.nutritionCard} ${selectedNutrient === 'fat' ? styles.active : ''}`}
-                onClick={() => setSelectedNutrient('fat')}
-              >
-                <div className={styles.nutritionIcon}>🥑</div>
-                <div className={styles.nutritionInfo}>
-                  <div className={styles.nutritionValue}>{Math.round(nutritionData.fat/7*100)/100}g</div>
-                  <div className={styles.nutritionLabel}>
-                    지방 (목표: {Math.round(goalNutrition.goalFat || 0)}g)
-                  </div>
-                </div>
-              </div>
-            </div>
+            </>
           )}
         </div>
         <div className={styles.chartSection}>
@@ -402,7 +428,7 @@ function MyBalance() {
                   key={index}
                   className={styles.historyItem}
                   onClick={() => handleRecordClick(index)}
-                  style={{ position: 'relative' }} // For positioning the speech bubble
+                  style={{ position: 'relative' }}
                 >
                   <div className={styles.historyDate}>
                     {new Date(record.consumedDate).toLocaleDateString('ko-KR', {
