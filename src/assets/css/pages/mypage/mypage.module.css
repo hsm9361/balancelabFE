@@ -173,7 +173,7 @@ body {
 /* 콘텐츠 영역 */
 .contentArea {
   flex: 1;
-  padding: 0px;
+  padding: 0 30px;
   background-color: var(--background-light);
   overflow-y: auto;
 }
@@ -522,7 +522,7 @@ body {
 
 .nutritionCards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -552,6 +552,7 @@ body {
 .nutritionCard:hover {
   transform: translateY(-4px) scale(1.02); /* 살짝 확대하며 위로 이동 */
   box-shadow: var(--shadow-lg);
+  cursor:pointer;
 }
 
 .nutritionIcon {
@@ -728,7 +729,7 @@ body {
 }
 
 .historyMeal {
-  width: 60px;
+  width: 65px;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -906,7 +907,7 @@ body {
 }
 
 .historyMeal {
-  width: 60px;
+  width: 65px;
   font-weight: 600;
   color: var(--text-primary);
 }
