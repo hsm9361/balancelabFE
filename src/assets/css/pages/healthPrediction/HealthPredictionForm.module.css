@@ -1,299 +1,282 @@
-/* Define global variables for consistency */
-:root {
-    --primary-color: #2C5282; /* Deep blue for buttons */
-    --primary-light: #7FB3FF; /* Light blue for accents */
-    --accent-color: #1A365D; /* Darker blue for hover */
-    --text-primary: #2D3748; /* Dark gray-blue for text */
-    --text-secondary: #4A5568; /* Muted gray for secondary text */
-    --background-gradient: linear-gradient(135deg, #e6f0fa 0%, #b8c8e8 100%);
-    --background-white: #ffffff;
-    --border-color: #d1d5db; /* Disabled state */
-    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.15);
-    --radius-md: 15px;
-    --radius-lg: 20px;
-    --transition-normal: all 0.3s ease;
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+/* Main container */
+
+
+ /* Header */
+ .header {
+  text-align: center;
+  margin-bottom: 40px;
+  max-width: 800px;
+ }
+
+ .title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2D3748; /* --text-primary */
+  margin-bottom: 10px;
+  position: relative;
+ }
+
+ .title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: #7FB3FF; /* --primary-light */
+  animation: underline 1.5s ease-in-out infinite alternate;
+ }
+
+ .description {
+  font-size: 1.2rem;
+  color: #4A5568; /* --text-secondary */
+  line-height: 1.6;
+ }
+
+ /* Form styling */
+ .predictionForm {
+  width: 100%;
+  max-width: 800px;
+  background: #ffffff; /* --background-white */
+  border-radius: 20px; /* --radius-lg */
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* --shadow-sm */
+  transition: all 0.3s ease; /* --transition-normal */
+ }
+
+ .predictionForm:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
+ }
+
+ /* Form group (row layout for yes/no questions) */
+ .formGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+ }
+
+ .formGroup label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2D3748; /* --text-primary */
+  min-width: 250px;
+  white-space: nowrap;
+ }
+
+ /* Form group 2 (column layout for weekly questions) */
+ .formGroup2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+ }
+
+ .formGroup2 label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2D3748; /* --text-primary */
+  text-align: center;
+ }
+
+ /* Remove border from last form group */
+ .formGroup:last-child,
+ .formGroup2:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+ }
+
+ /* Radio group (yes/no questions) */
+ .radioGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+ }
+
+ .radioGroup label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.96rem;
+  font-weight: 500;
+  color: #4A5568; /* --text-secondary */
+  cursor: pointer;
+  transition: all 0.3s ease; /* --transition-normal */
+ }
+
+ .radioGroup label:hover {
+  color: #2C5282; /* --primary-color */
+ }
+
+ /* Radio group 2 (weekly questions) */
+ .radioGroup2 {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+ }
+
+ .radioGroup2 label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.96rem;
+  font-weight: 500;
+  color: #4A5568; /* --text-secondary */
+  cursor: pointer;
+  transition: all 0.3s ease; /* --transition-normal */
+  width: 20%;
+  justify-content: center;
+  padding: 0.25rem;
+ }
+
+ .radioGroup2 label:hover {
+  color: #2C5282; /* --primary-color */
+ }
+
+ /* Radio inputs */
+ .radioGroup input[type="radio"],
+ .radioGroup2 input[type="radio"] {
+  appearance: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid #7FB3FF; /* --primary-light */
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease; /* --transition-normal */
+ }
+
+ .radioGroup input[type="radio"]:hover,
+ .radioGroup2 input[type="radio"]:hover {
+  border-color: #2C5282; /* --primary-color */
+ }
+
+ .radioGroup input[type="radio"]:checked,
+ .radioGroup2 input[type="radio"]:checked {
+  background-color: #2C5282; /* --primary-color */
+  border-color: #2C5282; /* --primary-color */
+ }
+
+ .radioGroup input[type="radio"]:checked::after,
+ .radioGroup2 input[type="radio"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: bold;
+ }
+
+ /* Submit button */
+ .predictButton {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* --transition-normal */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* --shadow-sm */
+  background: linear-gradient(90deg, #2C5282 0%, #7FB3FF 100%); /* --primary-color, --primary-light */
+  color: white;
+  display: block;
+  margin: 2rem auto 0;
+ }
+
+ .predictButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
+ }
+
+ .predictButton:disabled {
+  background: #d1d5db; /* --border-color */
+  color: #6b7280;
+  cursor: not-allowed;
+  box-shadow: none;
+ }
+
+ /* Animations */
+ @keyframes underline {
+  0% {
+   transform: translateX(-50%) scaleX(0);
   }
-  
-  /* Main container */
-  
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    max-width: 800px;
+  100% {
+   transform: translateX(-50%) scaleX(1);
   }
-  
+ }
+
+ @keyframes fadeIn {
+  from {
+   opacity: 0;
+   transform: translateY(20px);
+  }
+  to {
+   opacity: 1;
+   transform: translateY(0);
+  }
+ }
+
+ /* Responsive design */
+ @media (max-width: 768px) {
+  .healthPrediction {
+   padding: 20px 15px;
+  }
+
   .title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-    position: relative;
+   font-size: 2rem;
   }
-  
-  .title::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 3px;
-    background: var(--primary-light);
-    animation: underline 1.5s ease-in-out infinite alternate;
-  }
-  
+
   .description {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
+   font-size: 1rem;
   }
-  
-  /* Form styling */
+
   .predictionForm {
-    width: 100%;
-    max-width: 800px;
-    background: var(--background-white);
-    border-radius: var(--radius-lg);
-    padding: 30px;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition-normal);
+   padding: 20px;
   }
-  
-  .predictionForm:hover {
-    box-shadow: var(--shadow-md);
-  }
-  
-  /* Form group (row layout for yes/no questions) */
+
   .formGroup {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+   flex-direction: column;
+   align-items: flex-start;
   }
-  
+
   .formGroup label {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    min-width: 250px;
-    white-space: nowrap;
+   min-width: auto;
+   margin-bottom: 0.5rem;
   }
-  
-  /* Form group 2 (column layout for weekly questions) */
-  .formGroup2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .formGroup2 label {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    text-align: center;
-  }
-  
-  /* Remove border from last form group */
-  .formGroup:last-child,
-  .formGroup2:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  
-  /* Radio group (yes/no questions) */
+
   .radioGroup {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-start;
-    width: 100%;
+   flex-direction: column;
+   gap: 0.5rem;
   }
-  
-  .radioGroup label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.96rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: var(--transition-normal);
+
+  .formGroup2 label {
+   font-size: 1rem;
   }
-  
-  .radioGroup label:hover {
-    color: var(--primary-color);
-  }
-  
-  /* Radio group 2 (weekly questions) */
+
   .radioGroup2 {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    max-width: 600px;
+   gap: 0.25rem;
   }
-  
+
   .radioGroup2 label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.96rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: var(--transition-normal);
-    width: 20%;
-    justify-content: center;
-    padding: 0.25rem;
+   width: 25%;
+   font-size: 0.88rem;
   }
-  
-  .radioGroup2 label:hover {
-    color: var(--primary-color);
-  }
-  
-  /* Radio inputs */
-  .radioGroup input[type="radio"],
-  .radioGroup2 input[type="radio"] {
-    appearance: none;
-    width: 1.2rem;
-    height: 1.2rem;
-    border: 2px solid var(--primary-light);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: var(--transition-normal);
-  }
-  
-  .radioGroup input[type="radio"]:hover,
-  .radioGroup2 input[type="radio"]:hover {
-    border-color: var(--primary-color);
-  }
-  
-  .radioGroup input[type="radio"]:checked,
-  .radioGroup2 input[type="radio"]:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-  }
-  
-  .radioGroup input[type="radio"]:checked::after,
-  .radioGroup2 input[type="radio"]:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
-  
-  /* Submit button */
+
   .predictButton {
-    padding: 12px 30px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: var(--transition-normal);
-    box-shadow: var(--shadow-sm);
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
-    color: white;
-    display: block;
-    margin: 2rem auto 0;
+   width: 100%;
+   max-width: 300px;
+   padding: 10px 20px;
   }
-  
-  .predictButton:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-  
-  .predictButton:disabled {
-    background: var(--border-color);
-    color: #6b7280;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-  
-  /* Animations */
-  @keyframes underline {
-    0% {
-      transform: translateX(-50%) scaleX(0);
-    }
-    100% {
-      transform: translateX(-50%) scaleX(1);
-    }
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .healthPrediction {
-      padding: 20px 15px;
-    }
-  
-    .title {
-      font-size: 2rem;
-    }
-  
-    .description {
-      font-size: 1rem;
-    }
-  
-    .predictionForm {
-      padding: 20px;
-    }
-  
-    .formGroup {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .formGroup label {
-      min-width: auto;
-      margin-bottom: 0.5rem;
-    }
-  
-    .radioGroup {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  
-    .formGroup2 label {
-      font-size: 1rem;
-    }
-  
-    .radioGroup2 {
-      gap: 0.25rem;
-    }
-  
-    .radioGroup2 label {
-      width: 25%;
-      font-size: 0.88rem;
-    }
-  
-    .predictButton {
-      width: 100%;
-      max-width: 300px;
-      padding: 10px 20px;
-    }
-  }
+ }
