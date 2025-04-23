@@ -16,7 +16,8 @@ dayjs.locale('ko');
 function CalendarPage() {
   const location = useLocation();
   const [date, setDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState('month'); // 'month' or 'week'
+  const [viewMode, setViewMode] = useState('month');
+  const [initialized, setInitialized] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -29,14 +30,13 @@ function CalendarPage() {
   const [weekRange, setWeekRange] = useState({ minDate: null, maxDate: null });
   const userId = 1;
 
-  // URL로 전달된 viewMode 처리
   useEffect(() => {
     if (location.state?.viewMode) {
       setViewMode(location.state.viewMode);
     }
+    setInitialized(true);
   }, [location.state]);
 
-  // 날짜 포맷팅 함수
   const formatDate = useCallback((date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -44,12 +44,11 @@ function CalendarPage() {
     return `${year}-${month}-${day}`;
   }, []);
 
-  // 주간/월간 날짜 범위 계산
   const getDateRange = useCallback(
     (date, mode) => {
       if (mode === 'week') {
-        const start = dayjs(date).startOf('week').toDate(); // 월요일
-        const end = dayjs(date).endOf('week').toDate(); // 일요일
+        const start = dayjs(date).startOf('week').toDate();
+        const end = dayjs(date).endOf('week').toDate();
         return {
           startDate: formatDate(start),
           endDate: formatDate(end),
@@ -69,13 +68,11 @@ function CalendarPage() {
     [formatDate]
   );
 
-  // 주간 범위 업데이트
   useEffect(() => {
     const { minDate, maxDate } = getDateRange(date, viewMode);
     setWeekRange({ minDate, maxDate });
   }, [date, viewMode, getDateRange]);
 
-  // 식단 이벤트 조회
   const fetchDietEvents = useCallback(
     async (baseDate, mode = viewMode) => {
       const { startDate, endDate } = getDateRange(baseDate, mode);
@@ -106,7 +103,6 @@ function CalendarPage() {
     [getDateRange, userId, viewMode]
   );
 
-  // 날짜 변경 시 식단 조회
   const handleDateChange = useCallback(
     async (newDate) => {
       setDate(newDate);
@@ -145,7 +141,6 @@ function CalendarPage() {
     [formatDate, userId]
   );
 
-  // 식사 시간대 분류
   const getMealType = (mealTime) => {
     if (!mealTime) return '기타';
     const [start] = mealTime.split(' ~ ');
@@ -155,13 +150,11 @@ function CalendarPage() {
     return '저녁';
   };
 
-  // 단위 포맷팅
   const formatUnit = (unit) => {
     if (unit === 'serving') return '인분';
     return unit || 'g';
   };
 
-  // 식단 추가 처리
   const handleAddMeal = useCallback(
     async (mealType, menus) => {
       try {
@@ -188,7 +181,6 @@ function CalendarPage() {
     [date, handleDateChange, fetchDietEvents]
   );
 
-  // 식단 삭제
   const handleDeleteMeal = (indexToDelete, foodId) => {
     setModalState({
       isOpen: true,
@@ -221,21 +213,22 @@ function CalendarPage() {
     });
   };
 
-  // 모달 닫기
   const closeModal = () => {
     setModalState({ isOpen: false, title: '', message: '', onConfirm: null });
   };
 
-  // 초기 데이터 로드
   useEffect(() => {
-    handleDateChange(date);
-    fetchDietEvents(date);
-  }, []); // 초기 로드
+    if (initialized) {
+      handleDateChange(date);
+      fetchDietEvents(date);
+    }
+  }, [initialized]);
 
-  // 뷰 모드 변경 시 데이터 갱신
   useEffect(() => {
-    fetchDietEvents(date, viewMode);
-  }, [viewMode, date, fetchDietEvents]);
+    if (initialized) {
+      fetchDietEvents(date, viewMode);
+    }
+  }, [initialized, viewMode, date, fetchDietEvents]);
 
   return (
     <div className={styles.tabContent}>
