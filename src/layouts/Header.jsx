@@ -51,9 +51,10 @@ const Header = memo(() => {
     }
   }, []);
 
+  // 로그인 버튼 클릭 시 바로 Google 로그인 호출
   const handleLoginClick = useCallback(() => {
-    setShowAuthModal(true);
-  }, []);
+    handleGoogleLogin();
+  }, [handleGoogleLogin]);
 
   const handleLogoutClick = useCallback(() => {
     handleLogout();
@@ -142,7 +143,6 @@ const Header = memo(() => {
       if (!isAuthenticated) {
         e.preventDefault();
         setShowAuthModal(true);
-        // 원래 의도한 경로를 state에 저장
         navigate(location.pathname, { state: { from: to } });
       } else {
         closeMenu();
@@ -194,7 +194,6 @@ const Header = memo(() => {
               onClick={(e) => handleProtectedRouteClick(e, '/healthprediction')}
             >
               건강예측
-
             </Link>
             <Link
               to="/diet-consulting"
