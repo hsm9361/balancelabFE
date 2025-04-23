@@ -158,7 +158,7 @@ const MyInfo = () => {
             <Controller
               name="height"
               control={control}
-              rules={{ required: '키는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              rules={{ required: '키는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } , max:{ value: 250, message: '250 이하로 입력하세요.' }} }
               render={({ field }) => (
                 <input
                   type="number"
@@ -177,7 +177,7 @@ const MyInfo = () => {
             <Controller
               name="weight"
               control={control}
-              rules={{ required: '몸무게는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              rules={{ required: '몸무게는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } ,max:{ value: 200, message: '200 이하로 입력하세요.' }}}
               render={({ field }) => (
                 <input
                   type="number"
@@ -196,7 +196,7 @@ const MyInfo = () => {
             <Controller
               name="age"
               control={control}
-              rules={{ required: '나이는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              rules={{ required: '나이는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' }, max:{ value: 110, message: '110 이하로 입력하세요.' } }}
               render={({ field }) => (
                 <input
                   type="number"
@@ -258,7 +258,7 @@ const MyInfo = () => {
             <Controller
               name="goalWeight"
               control={control}
-              rules={{ required: '목표 체중은 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
+              rules={{ required: '목표 체중은 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' }, max:{ value: 200, message: '200 이하로 입력하세요.' } }}
               render={({ field }) => (
                 <input
                   type="number"
