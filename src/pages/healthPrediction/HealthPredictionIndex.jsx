@@ -76,6 +76,7 @@ function HealthPredictionIndex() {
         weight: parseFloat(data.weight) || null,
         username: memberInfo?.username || null,
         age: memberInfo?.age || null,
+        gender:memberInfo?.gender || null,
         membername: memberInfo?.membername || null,
         goalWeight: memberInfo?.goalWeight || null,
         activityLevel: memberInfo?.activityLevel || null,

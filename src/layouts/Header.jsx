@@ -1,12 +1,12 @@
-// src/layouts/Header.jsx
-import React, { useState, useCallback, memo, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, memo, useEffect, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import styles from '../assets/css/layouts/Header.module.css';
 import useAuth from '../hooks/useAuth';
 import AuthModal from '../components/auth/AuthModal';
 import RequiredInfoModal from '../components/auth/RequiredInfoModal';
-import logo from 'assets/images/logo.svg'; // logo.svg 파일 경로에 맞게 수정
+import logo from 'assets/images/logo.svg';
+import { toast } from 'react-toastify';
 
 const Header = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,30 +15,24 @@ const Header = memo(() => {
   const [authModalType, setAuthModalType] = useState('required');
   const { user, handleLogout, isAuthenticated, updateAuthState } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const loginWindowRef = useRef(null);
 
   const handleGoogleLogin = useCallback(() => {
     try {
-      // 이미 열린 창이 있다면 닫기 시도
-      try {
-        if (loginWindowRef.current) {
-          loginWindowRef.current.close();
-        }
-      } catch (closeError) {
-        console.error('Error closing existing login window:', closeError);
+      if (loginWindowRef.current) {
+        loginWindowRef.current.close();
       }
       loginWindowRef.current = null;
 
-      // 팝업 창 크기와 위치 계산
       const width = 500;
       const height = 600;
       const left = window.screenX + (window.outerWidth - width) / 2;
       const top = window.screenY + (window.outerHeight - height) / 2;
 
-      // 구글 로그인 URL에 redirect_uri 추가
       const redirectUri = encodeURIComponent('http://localhost:3000/oauth/callback');
       const googleAuthUrl = `http://localhost:8080/oauth2/authorization/google?redirect_uri=${redirectUri}`;
-      
+
       loginWindowRef.current = window.open(
         googleAuthUrl,
         'Google Login',
@@ -48,17 +42,18 @@ const Header = memo(() => {
       if (loginWindowRef.current) {
         loginWindowRef.current.focus();
       } else {
-        console.error('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+        toast.error('팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용해주세요.');
       }
     } catch (error) {
       console.error('Failed to open login window:', error);
+      toast.error('로그인 창을 열 수 없습니다. 다시 시도해주세요.');
       loginWindowRef.current = null;
     }
   }, []);
 
   const handleLoginClick = useCallback(() => {
-    handleGoogleLogin();
-  }, [handleGoogleLogin]);
+    setShowAuthModal(true);
+  }, []);
 
   const handleLogoutClick = useCallback(() => {
     handleLogout();
@@ -67,7 +62,7 @@ const Header = memo(() => {
   }, [handleLogout, navigate]);
 
   const toggleMenu = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const closeMenu = useCallback(() => {
@@ -78,76 +73,84 @@ const Header = memo(() => {
     setShowAuthModal(false);
   }, []);
 
-  // 사용자 정보 저장 및 설정
-  const handleAuthData = async (authData) => {
-    try {
-      const { username, email, accessToken, refreshToken, hasRequiredInfo } = authData;
-      
-      const authState = {
-        user: {
-          username: username || email,
-          email,
-          hasRequiredInfo
-        },
-        accessToken,
-        refreshToken,
-        status: 'authenticated'
-      };
+  const handleAuthData = useCallback(
+    async (authData) => {
+      try {
+        const { username, email, accessToken, refreshToken, hasRequiredInfo } = authData;
+        const authState = {
+          user: {
+            username: username || email,
+            email,
+            hasRequiredInfo: hasRequiredInfo || 'N',
+          },
+          accessToken,
+          refreshToken,
+          status: 'authenticated',
+        };
 
-      // 로컬 스토리지에 인증 정보 저장
-      localStorage.setItem('auth-storage', JSON.stringify({ state: authState }));
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('auth-storage', JSON.stringify({ state: authState }));
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
 
-      // 전역 인증 상태 업데이트
-      updateAuthState(authState);
+        updateAuthState(authState);
+        window.dispatchEvent(new CustomEvent('auth-update', { detail: authState }));
 
-      // CustomEvent를 발생시켜 현재 창의 상태 업데이트 트리거
-      window.dispatchEvent(new CustomEvent('auth-update', { detail: authState }));
+        return authState;
+      } catch (error) {
+        console.error('Error handling auth data:', error);
+        toast.error('인증 데이터를 처리하는 중 오류가 발생했습니다.');
+        return null;
+      }
+    },
+    [updateAuthState]
+  );
 
-      return authState;
-    } catch (error) {
-      console.error('Error handling auth data:', error);
-      return null;
-    }
-  };
-
-  // 로그인 메시지 처리
-  const handleLoginMessage = useCallback(async (event) => {
-    // 출처 검증
-    if (event.origin !== window.location.origin) {
-      return;
-    }
-
-    const { type, error, ...authData } = event.data;
-    
-    // type이 LOGIN_SUCCESS가 아닌 경우 무시
-    if (type !== 'LOGIN_SUCCESS') {
-      return;
-    }
-
-    try {
-      // hasRequiredInfo 값이 없는 경우 'N'으로 설정
-      if (!authData.hasRequiredInfo) {
-        authData.hasRequiredInfo = 'N';
+  const handleLoginMessage = useCallback(
+    async (event) => {
+      if (event.origin !== window.location.origin) {
+        return;
       }
 
-      // 햄버거 메뉴 닫기
-      setIsOpen(false);
-
-      // 인증 상태 업데이트
-      const authState = await handleAuthData(authData);
-
-      // hasRequiredInfo가 'N'인 경우 모달 표시
-      if (authState && (authData.hasRequiredInfo === 'N' || authData.hasRequiredInfo === 'n')) {
-        setShowRequiredInfoModal(true);
+      const { type, error, ...authData } = event.data;
+      if (type !== 'LOGIN_SUCCESS') {
+        return;
       }
-    } catch (err) {
-      console.error('Failed to process login:', err);
-    }
-  }, [updateAuthState]);
 
-  // 메시지 이벤트 리스너 설정
+      try {
+        setIsOpen(false);
+        setShowAuthModal(false);
+        const authState = await handleAuthData(authData);
+
+        if (authState) {
+          const redirectTo = location.state?.from || '/';
+          if (authState.user.hasRequiredInfo === 'N') {
+            setShowRequiredInfoModal(true);
+          } else {
+            navigate(redirectTo, { replace: true });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to process login:', err);
+        toast.error('로그인 처리에 실패했습니다. 다시 시도해주세요.');
+      }
+    },
+    [handleAuthData, navigate, location.state]
+  );
+
+  const handleProtectedRouteClick = useCallback(
+    (e, to) => {
+      if (!isAuthenticated) {
+        e.preventDefault();
+        setShowAuthModal(true);
+        // 원래 의도한 경로를 state에 저장
+        navigate(location.pathname, { state: { from: to } });
+      } else {
+        closeMenu();
+      }
+    },
+    [isAuthenticated, navigate, location.pathname, closeMenu]
+  );
+
   useEffect(() => {
     window.addEventListener('message', handleLoginMessage);
     return () => {
@@ -155,7 +158,6 @@ const Header = memo(() => {
     };
   }, [handleLoginMessage]);
 
-  // 컴포넌트 언마운트 시 정리
   useEffect(() => {
     return () => {
       if (loginWindowRef.current) {
@@ -163,6 +165,12 @@ const Header = memo(() => {
       }
     };
   }, []);
+
+  const handleRequiredInfoModalClose = useCallback(() => {
+    setShowRequiredInfoModal(false);
+    const redirectTo = location.state?.from || '/';
+    navigate(redirectTo, { replace: true });
+  }, [navigate, location.state]);
 
   return (
     <>
@@ -180,20 +188,41 @@ const Header = memo(() => {
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           <nav className={`${styles.navMenu} ${isOpen ? styles.open : ''}`}>
-            <Link to="/healthprediction" className={styles.navLink} onClick={closeMenu}>
-            건강예측
+            <Link
+              to="/healthprediction"
+              className={styles.navLink}
+              onClick={(e) => handleProtectedRouteClick(e, '/healthprediction')}
+            >
+              건강예측
+
             </Link>
-            <Link to="/diet-consulting" className={styles.navLink} onClick={closeMenu}>
-            식단추천
+            <Link
+              to="/diet-consulting"
+              className={styles.navLink}
+              onClick={(e) => handleProtectedRouteClick(e, '/diet-consulting')}
+            >
+              식단추천
             </Link>
-            <Link to="/analysis" className={styles.navLink} onClick={closeMenu}>
+            <Link
+              to="/analysis"
+              className={styles.navLink}
+              onClick={(e) => handleProtectedRouteClick(e, '/analysis')}
+            >
               식단분석
             </Link>
-            <Link to="/calendar" className={styles.navLink} onClick={closeMenu}>
+            <Link
+              to="/calendar"
+              className={styles.navLink}
+              onClick={(e) => handleProtectedRouteClick(e, '/calendar')}
+            >
               캘린더
             </Link>
             {isAuthenticated && (
-              <Link to="/mypage" className={styles.navLink} onClick={closeMenu}>
+              <Link
+                to="/mypage"
+                className={styles.navLink}
+                onClick={(e) => handleProtectedRouteClick(e, '/mypage')}
+              >
                 마이페이지
               </Link>
             )}
@@ -213,10 +242,11 @@ const Header = memo(() => {
         isOpen={showAuthModal}
         onClose={handleCloseModal}
         type={authModalType}
+        onGoogleLogin={handleGoogleLogin}
       />
       <RequiredInfoModal
         isOpen={showRequiredInfoModal}
-        onClose={() => setShowRequiredInfoModal(false)}
+        onClose={handleRequiredInfoModalClose}
       />
     </>
   );

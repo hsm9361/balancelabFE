@@ -1,4 +1,4 @@
-/* 기본 스타일 */
+/* 기존 스타일 유지 */
 .weekView .react-calendar__month-view__days {
   display: flex !important;
   flex-direction: row !important;
@@ -31,7 +31,7 @@
   padding: 8px 16px;
   background-color: #f0f0f0;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
@@ -44,51 +44,84 @@
 }
 .toggleWrapper {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 20px;
   justify-content: center;
 }
 .toggleButton {
-  padding: 8px 16px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
   background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #333;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .toggleButton:hover,
 .toggleButton:active {
-  background-color: #f0f0f0;
-  border-color: #007bff;
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 .activeToggle {
-  background-color: #007bff;
+  background-color: #2862b2;
   color: #fff;
-  border-color: #007bff;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(124, 85, 228, 0.3);
+}
+.activeToggle:hover,
+.activeToggle:active {
+  background-color: rgb(17, 78, 147);
 }
 .calendarContainer {
   display: flex;
   gap: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .calendarWrapper {
   flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 .mealCards {
   flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 300px;
 }
 .selectedDateTitle {
   font-size: 1.2rem;
   margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
 }
 .mealCard {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+.mealCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .mealTime {
   display: flex;
@@ -98,6 +131,9 @@
 .mealLabel {
   font-weight: bold;
   margin-right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .mealTimeRange {
   color: #666;
@@ -109,36 +145,49 @@
   color: #ff0000;
 }
 .mealContents {
-  margin-top: 5px;
+  margin-top: 8px;
+  color: #444;
 }
 .noEvents {
   color: #666;
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  text-align: center;
+  margin: 15px 0;
+}
+.noEvents img {
+  width: 10rem;
+  height: 10rem;
+  margin-bottom: 15px;
 }
 .addButton {
-  padding: 8px 16px;
-  background-color: #007bff;
+  padding: 10px 20px;
+  background-color: #2b6cb0;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
   transition: background-color 0.2s ease, transform 0.2s ease;
+  align-self: center;
 }
 .addButton:hover,
 .addButton:active {
-  background-color: #0056b3;
+  background-color: #245c94;
   transform: translateY(-2px);
 }
-
-/* 이벤트 표시 스타일 */
 .eventBottomBorder {
   position: absolute;
   bottom: 0;
   left: 10%;
   right: 10%;
   height: 3px;
-  background: linear-gradient(135deg, #007bff, #00b7eb); /* 파란색 그라데이션 */
+  background: linear-gradient(135deg, #eaf8ff, #2b6cb0);
   border-radius: 2px;
 }
 .eventBar {
@@ -147,11 +196,9 @@
   left: 10%;
   right: 10%;
   height: 4px;
-  background: linear-gradient(135deg, #007bff, #00b7eb); /* 파란색 그라데이션 */
+  background: linear-gradient(135deg, #eaf8ff, #2b6cb0);
   border-radius: 2px;
 }
-
-/* 내비게이션 스타일 */
 .react-calendar__navigation {
   display: flex;
   justify-content: space-between;
@@ -181,31 +228,28 @@
   background-color: #f0f0f0;
   transform: translateY(-2px);
 }
-
-/* 타일 스타일 */
 .react-calendar__tile {
   position: relative;
   padding: 10px;
   text-align: center;
-  color: #333; /* 글자 색상 명확히 */
+  color: #333;
   transition: background-color 0.2s ease;
 }
 .react-calendar__tile:hover,
 .react-calendar__tile:active {
-  background-color: #f5f5f5; /* 밝은 회색으로 호버/터치 */
+  background-color: #f5f5f5;
 }
 .selectedTile {
-  background-color: #e3f2fd !important;
+  background-color: #e6f0fa !important;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
-  color: #333; /* 선택된 타일에서도 글자 가독성 유지 */
+  box-shadow: 0 2px 4px rgba(43, 108, 176, 0.2);
+  color: #333;
 }
-
-/* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
   .calendarContainer {
     flex-direction: column;
     gap: 10px;
+    padding: 15px;
   }
   .calendarWrapper,
   .mealCards {
@@ -232,25 +276,75 @@
     padding: 6px 12px;
   }
   .toggleWrapper {
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 15px;
   }
   .toggleButton {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
   .navigationWrapper button {
     padding: 6px 12px;
     font-size: 0.85rem;
   }
   .addButton {
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-size: 0.85rem;
   }
   .selectedDateTitle {
     font-size: 1.1rem;
   }
   .mealCard {
-    padding: 8px;
+    padding: 12px;
+  }
+}
+
+/* 캘린더 접기/펴기 버튼 스타일 */
+.toggleCalendarButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+
+.toggleCalendarButton:hover,
+.toggleCalendarButton:active {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toggleCalendarButton svg {
+  fill: #333; /* VscFoldUp/VscFoldDown은 fill 속성 사용 */
+  width: 20px;
+  height: 20px;
+}
+
+/* 캘린더 접힘/펼침 애니메이션 */
+.calendarWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .toggleCalendarButton {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  .toggleCalendarButton svg {
+    width: 18px;
+    height: 18px;
   }
 }

@@ -40,8 +40,6 @@ const MyInfo = () => {
     setError,
   } = useMemberInfo(reset);
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
@@ -56,11 +54,9 @@ const MyInfo = () => {
     (e) => {
       const file = e.target.files[0];
       if (file) {
-        console.log('Selected file:', file.name);
         setProfileImage(file);
         const reader = new FileReader();
         reader.onloadend = () => {
-          console.log('FileReader result:', reader.result);
           setProfileImageUrl(reader.result);
         };
         reader.readAsDataURL(file);
@@ -97,9 +93,84 @@ const MyInfo = () => {
     );
   }
 
+  const fields = [
+    {
+      name: 'membername',
+      label: '이름',
+      type: 'text',
+      rules: {
+        required: '이름은 필수 입력입니다.',
+        maxLength: { value: 50, message: '이름은 50자 이내로 입력하세요.' },
+      },
+    },
+    {
+      name: 'height',
+      label: '키 (cm)',
+      type: 'number',
+      rules: {
+        required: '키는 필수 입력입니다.',
+        min: { value: 0, message: '0 이상 입력하세요.' },
+        max: { value: 250, message: '250 이하로 입력하세요.' },
+      },
+      step: '0.1',
+    },
+    {
+      name: 'weight',
+      label: '몸무게 (kg)',
+      type: 'number',
+      rules: {
+        required: '몸무게는 필수 입력입니다.',
+        min: { value: 0, message: '0 이상 입력하세요.' },
+        max: { value: 200, message: '200 이하로 입력하세요.' },
+      },
+      step: '0.1',
+    },
+    {
+      name: 'age',
+      label: '나이',
+      type: 'number',
+      rules: {
+        required: '나이는 필수 입력입니다.',
+        min: { value: 0, message: '0 이상 입력하세요.' },
+        max: { value: 110, message: '110 이하로 입력하세요.' },
+      },
+    },
+    {
+      name: 'gender',
+      label: '성별',
+      type: 'select',
+      options: genderOptions,
+      rules: { required: '성별은 필수 선택입니다.' },
+    },
+    {
+      name: 'activityLevel',
+      label: '활동 수준',
+      type: 'select',
+      options: activityLevelOptions,
+      rules: { required: '활동 수준은 필수 선택입니다.' },
+    },
+    {
+      name: 'goalWeight',
+      label: '목표 체중 (kg)',
+      type: 'number',
+      rules: {
+        required: '목표 체중은 필수 입력입니다.',
+        min: { value: 0, message: '0 이상 입력하세요.' },
+        max: { value: 200, message: '200 이하로 입력하세요.' },
+      },
+      step: '0.1',
+    },
+  ];
+
+  // 필드를 두 열로 나누기
+  const midIndex = Math.ceil(fields.length / 2);
+  const leftFields = fields.slice(0, midIndex);
+  const rightFields = fields.slice(midIndex);
+
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        {/* 프로필 이미지 섹션 */}
         <div className={styles.profileSection}>
           <div className={styles.imageContainer}>
             {profileImageUrl ? (
@@ -108,11 +179,9 @@ const MyInfo = () => {
                 alt="프로필"
                 className={styles.profileImage}
                 onError={(e) => {
-                  console.error('Image load failed:', getImageUrl(profileImageUrl));
                   e.target.style.display = 'none';
                   e.target.nextSibling.style.display = 'block';
                 }}
-                onLoad={() => console.log('Image loaded successfully:', getImageUrl(profileImageUrl))}
               />
             ) : (
               <FaUser className={styles.defaultIcon} />
@@ -131,145 +200,93 @@ const MyInfo = () => {
           </div>
         </div>
 
+        {/* 정보 입력 섹션 */}
         <div className={styles.infoSection}>
-          <div className={styles.formGroup}>
-            <label htmlFor="membername">이름</label>
-            <Controller
-              name="membername"
-              control={control}
-              rules={{
-                required: '이름은 필수 입력입니다.',
-                maxLength: { value: 50, message: '이름은 50자 이내로 입력하세요.' },
-              }}
-              render={({ field }) => (
-                <input
-                  type="text"
-                  id="membername"
-                  className={styles.input}
-                  {...field}
-                />
-              )}
-            />
-            {errors.membername && <span className={styles.fieldError}>{errors.membername.message}</span>}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="height">키 (cm)</label>
-            <Controller
-              name="height"
-              control={control}
-              rules={{ required: '키는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
-              render={({ field }) => (
-                <input
-                  type="number"
-                  id="height"
-                  className={styles.input}
-                  step="0.1"
-                  {...field}
-                />
-              )}
-            />
-            {errors.height && <span className={styles.fieldError}>{errors.height.message}</span>}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="weight">몸무게 (kg)</label>
-            <Controller
-              name="weight"
-              control={control}
-              rules={{ required: '몸무게는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
-              render={({ field }) => (
-                <input
-                  type="number"
-                  id="weight"
-                  className={styles.input}
-                  step="0.1"
-                  {...field}
-                />
-              )}
-            />
-            {errors.weight && <span className={styles.fieldError}>{errors.weight.message}</span>}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="age">나이</label>
-            <Controller
-              name="age"
-              control={control}
-              rules={{ required: '나이는 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
-              render={({ field }) => (
-                <input
-                  type="number"
-                  id="age"
-                  className={styles.input}
-                  {...field}
-                />
-              )}
-            />
-            {errors.age && <span className={styles.fieldError}>{errors.age.message}</span>}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="gender">성별</label>
-            <Controller
-              name="gender"
-              control={control}
-              rules={{ required: '성별은 필수 선택입니다.' }}
-              render={({ field }) => (
-                <Select
-                  id="gender"
-                  options={genderOptions}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="선택하세요"
-                  className={styles.select}
-                  isClearable
-                />
-              )}
-            />
-            {errors.gender && <span className={styles.fieldError}>{errors.gender.message}</span>}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="activityLevel">활동 수준</label>
-            <Controller
-              name="activityLevel"
-              control={control}
-              rules={{ required: '활동 수준은 필수 선택입니다.' }}
-              render={({ field }) => (
-                <Select
-                  id="activityLevel"
-                  options={activityLevelOptions}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="선택하세요"
-                  className={styles.select}
-                  isClearable
-                />
-              )}
-            />
-            {errors.activityLevel && (
-              <span className={styles.fieldError}>{errors.activityLevel.message}</span>
-            )}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="goalWeight">목표 체중 (kg)</label>
-            <Controller
-              name="goalWeight"
-              control={control}
-              rules={{ required: '목표 체중은 필수 입력입니다.', min: { value: 0, message: '0 이상 입력하세요.' } }}
-              render={({ field }) => (
-                <input
-                  type="number"
-                  id="goalWeight"
-                  className={styles.input}
-                  step="0.1"
-                  {...field}
-                />
-              )}
-            />
-            {errors.goalWeight && <span className={styles.fieldError}>{errors.goalWeight.message}</span>}
+          <div className={styles.columns}>
+            <div className={styles.column}>
+              {leftFields.map((field) => (
+                <div key={field.name} className={styles.formGroup}>
+                  <label htmlFor={field.name} className={styles.label}>
+                    {field.label}
+                  </label>
+                  <div className={styles.inputWrapper}>
+                    <Controller
+                      name={field.name}
+                      control={control}
+                      rules={field.rules}
+                      render={({ field: controllerField }) => (
+                        <>
+                          {field.type === 'select' ? (
+                            <Select
+                              id={field.name}
+                              options={field.options}
+                              value={controllerField.value}
+                              onChange={controllerField.onChange}
+                              placeholder="선택하세요"
+                              className={styles.select}
+                              isClearable
+                            />
+                          ) : (
+                            <input
+                              type={field.type}
+                              id={field.name}
+                              className={styles.input}
+                              step={field.step || undefined}
+                              {...controllerField}
+                            />
+                          )}
+                        </>
+                      )}
+                    />
+                    {errors[field.name] && (
+                      <span className={styles.fieldError}>{errors[field.name].message}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className={styles.column}>
+              {rightFields.map((field) => (
+                <div key={field.name} className={styles.formGroup}>
+                  <label htmlFor={field.name} className={styles.label}>
+                    {field.label}
+                  </label>
+                  <div className={styles.inputWrapper}>
+                    <Controller
+                      name={field.name}
+                      control={control}
+                      rules={field.rules}
+                      render={({ field: controllerField }) => (
+                        <>
+                          {field.type === 'select' ? (
+                            <Select
+                              id={field.name}
+                              options={field.options}
+                              value={controllerField.value}
+                              onChange={controllerField.onChange}
+                              placeholder="선택하세요"
+                              className={styles.select}
+                              isClearable
+                            />
+                          ) : (
+                            <input
+                              type={field.type}
+                              id={field.name}
+                              className={styles.input}
+                              step={field.step || undefined}
+                              {...controllerField}
+                            />
+                          )}
+                        </>
+                      )}
+                    />
+                    {errors[field.name] && (
+                      <span className={styles.fieldError}>{errors[field.name].message}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className={styles.buttonGroup}>
