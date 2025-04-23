@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import styles from 'assets/css/pages/healthPrediction/HealthPredictionForm.module.css';
 
 function HealthPredictionForm({ onSubmit }) {
   const [formData, setFormData] = useState({
-    id:'',
+    id: '',
     age: '',
     height: '',
     weight: '',
@@ -18,15 +19,14 @@ function HealthPredictionForm({ onSubmit }) {
     dailyFat: '',
     dailySodium: '',
     dailyFibrin: '',
-    dailyWater: ''
+    dailyWater: '',
   });
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -48,295 +48,176 @@ function HealthPredictionForm({ onSubmit }) {
       dailyFat: parseFloat(formData.dailyFat),
       dailySodium: parseFloat(formData.dailySodium),
       dailyFibrin: parseFloat(formData.dailyFibrin),
-      dailyWater: parseFloat(formData.dailyWater)
+      dailyWater: parseFloat(formData.dailyWater),
     };
     onSubmit(inputData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="prediction-form">
-      
-      <div className="form-group">
-        <label>흡연하시나요?</label>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="smokeDaily"
-              value="yes"
-              checked={formData.smokeDaily === 'yes'}
-              onChange={handleChange}
-            />
-            예
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="smokeDaily"
-              value="no"
-              checked={formData.smokeDaily === 'no'}
-              onChange={handleChange}
-            />
-            아니요
-          </label>
+    <div className={styles.healthPrediction}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>건강 예측 설문지</h1>
+        <p className={styles.description}>
+          생활 습관과 가족력을 알려주시면 더욱 정확한 건강 예측을 제공합니다.
+        </p>
+      </header>
+      <form onSubmit={handleSubmit} className={styles.predictionForm}>
+        <div className={styles.formGroup}>
+          <label>흡연하시나요?</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="smokeDaily"
+                value="yes"
+                checked={formData.smokeDaily === 'yes'}
+                onChange={handleChange}
+                required
+              />
+              예
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="smokeDaily"
+                value="no"
+                checked={formData.smokeDaily === 'no'}
+                onChange={handleChange}
+                required
+              />
+              아니요
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div className="form-group2">
-        <label>일주일에 몇 번 술을 드시나요?</label>
-        <div className="radio-group2">
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="0"
-              checked={formData.drinkWeekly === '0'}
-              onChange={handleChange}
-            />
-            0회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="1"
-              checked={formData.drinkWeekly === '1'}
-              onChange={handleChange}
-            />
-            1회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="2"
-              checked={formData.drinkWeekly === '2'}
-              onChange={handleChange}
-            />
-            2회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="3"
-              checked={formData.drinkWeekly === '3'}
-              onChange={handleChange}
-            />
-            3회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="4"
-              checked={formData.drinkWeekly === '4'}
-              onChange={handleChange}
-            />
-            4회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="5"
-              checked={formData.drinkWeekly === '5'}
-              onChange={handleChange}
-            />
-            5회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="6"
-              checked={formData.drinkWeekly === '6'}
-              onChange={handleChange}
-            />
-            6회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="drinkWeekly"
-              value="7"
-              checked={formData.drinkWeekly === '7'}
-              onChange={handleChange}
-            />
-            7회
-          </label>
+        <div className={styles.formGroup2}>
+          <label>일주일에 몇 번 술을 드시나요?</label>
+          <div className={styles.radioGroup2}>
+            {['0', '1', '2', '3', '4', '5', '6', '7'].map((value) => (
+              <label key={value}>
+                <input
+                  type="radio"
+                  name="drinkWeekly"
+                  value={value}
+                  checked={formData.drinkWeekly === value}
+                  onChange={handleChange}
+                  required
+                />
+                {value}회
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="form-group2">
-        <label>일주일에 몇 번 운동하시나요?</label>
-        <div className="radio-group2">
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="0"
-              checked={formData.exerciseWeekly === '0'}
-              onChange={handleChange}
-            />
-            0회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="1"
-              checked={formData.exerciseWeekly === '1'}
-              onChange={handleChange}
-            />
-            1회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="2"
-              checked={formData.exerciseWeekly === '2'}
-              onChange={handleChange}
-            />
-            2회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="3"
-              checked={formData.exerciseWeekly === '3'}
-              onChange={handleChange}
-            />
-            3회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="4"
-              checked={formData.exerciseWeekly === '4'}
-              onChange={handleChange}
-            />
-            4회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="5"
-              checked={formData.exerciseWeekly === '5'}
-              onChange={handleChange}
-            />
-            5회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="6"
-              checked={formData.exerciseWeekly === '6'}
-              onChange={handleChange}
-            />
-            6회
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="exerciseWeekly"
-              value="7"
-              checked={formData.exerciseWeekly === '7'}
-              onChange={handleChange}
-            />
-            7회
-          </label>
+        <div className={styles.formGroup2}>
+          <label>일주일에 몇 번 운동하시나요?</label>
+          <div className={styles.radioGroup2}>
+            {['0', '1', '2', '3', '4', '5', '6', '7'].map((value) => (
+              <label key={value}>
+                <input
+                  type="radio"
+                  name="exerciseWeekly"
+                  value={value}
+                  checked={formData.exerciseWeekly === value}
+                  onChange={handleChange}
+                  required
+                />
+                {value}회
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="form-group">
-        <label>가족 중 당뇨병 환자가 있으신가요?</label>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="historyDiabetes"
-              value="yes"
-              checked={formData.historyDiabetes === 'yes'}
-              onChange={handleChange}
-            />
-            예
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="historyDiabetes"
-              value="no"
-              checked={formData.historyDiabetes === 'no'}
-              onChange={handleChange}
-            />
-            아니요
-          </label>
+        <div className={styles.formGroup}>
+          <label>가족 중 당뇨병 환자가 있으신가요?</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="historyDiabetes"
+                value="yes"
+                checked={formData.historyDiabetes === 'yes'}
+                onChange={handleChange}
+                required
+              />
+              예
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="historyDiabetes"
+                value="no"
+                checked={formData.historyDiabetes === 'no'}
+                onChange={handleChange}
+                required
+              />
+              아니요
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div className="form-group">
-        <label>고혈압 가족력이 있으신가요?</label>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="historyHypertension"
-              value="yes"
-              checked={formData.historyHypertension === 'yes'}
-              onChange={handleChange}
-            />
-            예
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="historyHypertension"
-              value="no"
-              checked={formData.historyHypertension === 'no'}
-              onChange={handleChange}
-            />
-            아니요
-          </label>
+        <div className={styles.formGroup}>
+          <label>고혈압 가족력이 있으신가요?</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="historyHypertension"
+                value="yes"
+                checked={formData.historyHypertension === 'yes'}
+                onChange={handleChange}
+                required
+              />
+              예
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="historyHypertension"
+                value="no"
+                checked={formData.historyHypertension === 'no'}
+                onChange={handleChange}
+                required
+              />
+              아니요
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div className="form-group">
-        <label>가족 중 심혈관 질환을 앓고 계신 분이 있나요?</label>
-        <div className="radio-group">
-          <label>
-            <input
-              type="radio"
-              name="historyCardiovascular"
-              value="yes"
-              checked={formData.historyCardiovascular === 'yes'}
-              onChange={handleChange}
-            />
-            예
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="historyCardiovascular"
-              value="no"
-              checked={formData.historyCardiovascular === 'no'}
-              onChange={handleChange}
-            />
-            아니요
-          </label>
+        <div className={styles.formGroup}>
+          <label>가족 중 심혈관 질환 환자가 있나요?</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                name="historyCardiovascular"
+                value="yes"
+                checked={formData.historyCardiovascular === 'yes'}
+                onChange={handleChange}
+                required
+              />
+              예
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="historyCardiovascular"
+                value="no"
+                checked={formData.historyCardiovascular === 'no'}
+                onChange={handleChange}
+                required
+              />
+              아니요
+            </label>
+          </div>
         </div>
-      </div>
 
-      
-
-      <button type="submit" className="predict-button">결과 확인하기</button>
-    </form>
+        <button type="submit" className={styles.predictButton}>
+          결과 확인하기
+        </button>
+      </form>
+    </div>
   );
 }
 
-export default HealthPredictionForm; 
+export default HealthPredictionForm;

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import 'assets/css/pages/healthPrediction/HealthPrediction.css';
 import HealthPredictionForm from 'components/healthPrediction/HealthPredictionForm';
@@ -56,7 +58,8 @@ function HealthPrediction() {
   
       if (!response.ok) {
         const errorData = await response.text();
-        throw new Error(errorData.detail || '서버 응답 오류');
+        toast.error(errorData || '서버 응답 오류');
+        return;
       }
   
       const predictions = await response.json();
@@ -79,8 +82,9 @@ function HealthPrediction() {
     <div className="health-prediction">
       <h1>🧬 질병 예측 시스템</h1>
       <h2>질병 위험군을 예측해보세요!</h2>
-
+      
       <HealthPredictionForm onSubmit={handleSubmit} />
+      <ToastContainer />
     </div>
   );
 }
