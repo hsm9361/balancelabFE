@@ -6,8 +6,6 @@ import breakfastImg from 'assets/images/breakfast.png';
 import lunchImg from 'assets/images/lunch.png';
 import dinnerImg from 'assets/images/dinner.png';
 import snackImg from 'assets/images/snack.png';
-import dietAi from 'assets/images/diet-ai.png';
-import useSaveAsPDF from '../../hooks/useSaveAsPDF'; // 훅 임포트
 
 const mealImages = {
   아침: breakfastImg,
@@ -17,42 +15,36 @@ const mealImages = {
 };
 
 function DietConsulting() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [dietData, setDietData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [memberId, setMemberId] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [name, setName] = useState(null);
-
-  // useSaveAsPDF 훅 호출
-  const { saveAsPDF, isSaving } = useSaveAsPDF('diet-analysis-content', 'diet-recommendation');
 
   const fetchMemberInfo = async () => {
     try {
-      console.log('fetchMemberInfo 시작');
       const data = await memberService.getMemberInfo();
-      console.log('fetchMemberInfo 성공:', data);
       setMemberId(data.id);
-      setName(data.membername);
+      setName(data.username);
     } catch (err) {
-      console.error('fetchMemberInfo 에러:', err);
       if (err.message === 'Authentication required') {
         localStorage.setItem('redirectPath', window.location.pathname);
-        navigate('/login');
         return;
       }
       setError('회원 정보를 불러오는데 실패했습니다.');
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchMemberInfo();
-  }, []);
+    fetchMemberInfo(); // 이 줄이 있어야 memberId를 세팅합니다.
+  });
 
   useEffect(() => {
     const fetchDietRecommendation = async () => {
-      console.log('fetchDietRecommendation 시작, memberId:', memberId);
       try {
         setDietData(null);
         setIsLoading(true);
@@ -65,30 +57,27 @@ function DietConsulting() {
           credentials: 'include',
         });
 
-        console.log('fetch 응답 상태:', response.status);
-
         if (!response.ok) {
-          throw new Error(`식단 추천 요청 실패: ${response.statusText}`);
+          throw new Error('식단 추천을 불러오는데 실패했습니다.');
         }
 
         const result = await response.json();
         console.log('서버 응답:', result);
+        if (typeof result.data === 'string') {
+          throw new Error(result.data); // 예: "사용자 정보가 없습니다"
+        }
         const parsed = result.data;
         setDietData(parsed);
+        
       } catch (error) {
-        console.error('fetchDietRecommendation 에러:', error);
-        setError(error.message);
-        alert(error.message);
+        console.error('Error fetching diet recommendation:', error);
       } finally {
-        console.log('fetchDietRecommendation 완료');
         setIsLoading(false);
       }
     };
 
     if (memberId) {
       fetchDietRecommendation();
-    } else {
-      console.log('memberId 없음, fetchDietRecommendation 스킵');
     }
   }, [memberId]);
 
@@ -101,7 +90,7 @@ function DietConsulting() {
       </div>
     );
   }
-
+  
   if (isLoading) {
     return (
       <div className="diet-consulting">
@@ -112,97 +101,92 @@ function DietConsulting() {
       </div>
     );
   }
-
-  if (!dietData) {
+  
+  if (!dietData || dietData.error || !dietData['식단 추천']) {
     return (
       <div className="diet-consulting">
-        <h1>🙅‍♀️데이터를 불러올 수 없습니다🙅‍♂️</h1>
-        <button onClick={() => navigate('/')}>홈으로 돌아가기</button>
+        <h1>🙅‍♀️{dietData?.error || '데이터를 불러올 수 없습니다'}🙅‍♂️</h1>
+        <button className="back-button" onClick={() => navigate('/')}>홈으로 돌아가기</button>
       </div>
     );
   }
-
+  
   const { '건강 위험도 분석': riskAnalysis, '목표 기반 추천': goalRec, '식단 추천': meals, '주의사항': caution } = dietData;
+  
+  // 나머지 렌더링 로직은 동일
+
+  
 
   return (
     <div className="diet-consulting">
-      {/* PDF로 저장할 콘텐츠를 감싸는 div에 id 추가 */}
-      <div id="diet-analysis-content">
-        <h1>{name}님의 식단 추천</h1>
-        <img src={dietAi} alt="AI" className="ai-icon" />
+      <h1>🍽️ {name}님의 식단 추천</h1>
 
-        <div className="analysis-section">
-          <h2>건강 위험도 분석</h2>
-          <div className="speech-bubble">{riskAnalysis}</div>
+      <div className="analysis-section">
+        <h2>건강 위험도 분석</h2>
+        <div className="speech-bubble">{riskAnalysis}</div>
 
-          <h2>목표 기반 추천</h2>
-          <div className="speech-bubble">{goalRec}</div>
+        <h2>목표 기반 추천</h2>
+        <div className="speech-bubble">{goalRec}</div>
 
-          <h2>식단 추천</h2>
-          <div className="food-recommend">
-            <div className="meal-header">
-              <img src={mealImages['아침']} alt="Breakfast" className="meal-icon" />
-              <h3>🥚아침</h3>
-            </div>
-            <ul>
-              {meals?.['아침']?.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="food-recommend">
-            <div className="meal-header">
-              <img src={mealImages['점심']} alt="Lunch" className="meal-icon" />
-              <h3>🍔점심</h3>
-            </div>
-            <ul>
-              {meals['점심']?.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="food-recommend">
-            <div className="meal-header">
-              <img src={mealImages['저녁']} alt="Dinner" className="meal-icon" />
-              <h3>🍖저녁</h3>
-            </div>
-            <ul>
-              {meals['저녁']?.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="food-recommend">
-            <div className="meal-header">
-              <img src={mealImages['간식']} alt="Snack" className="meal-icon" />
-              <h3>🍩간식</h3>
-            </div>
-            <ul>
-              {meals['간식']?.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <h2>주의사항</h2>
-          <div className="speech-bubble">{caution}</div>
+        <h2>식단 추천</h2>
+        <div className="food-recommend">
+        <div className="meal-header">
+          <img src={mealImages['아침']} alt="Breakfast" className="meal-icon" />
+          <h3>🥚아침</h3>
         </div>
+        <ul>
+          {meals?.['아침']?.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="food-recommend">
+        <div className="meal-header">
+          <img src={mealImages['점심']} alt="Lunch" className="meal-icon" />
+          <h3>🍔점심</h3>
+        </div>
+        <ul>
+          {meals['점심']?.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="food-recommend">
+        <div className="meal-header">
+          <img src={mealImages['저녁']} alt="Dinner" className="meal-icon" />
+          <h3>🍖저녁</h3>
+        </div>
+        <ul>
+          {meals['저녁']?.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="food-recommend">
+        <div className="meal-header">
+          <img src={mealImages['간식']} alt="Snack" className="meal-icon" />
+          <h3>🍩간식</h3>
+        </div>
+        <ul>
+          {meals['간식']?.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+
+        <h2>주의사항</h2>
+        <div className="speech-bubble">{caution}</div>
       </div>
 
       <div className="button-group">
-        <button className="back-button" onClick={() => navigate('/healthprediction')}>
-          돌아가기
-        </button>
-        {/* PDF 저장 버튼 추가 */}
-        <button
-          className="save-pdf-button"
-          onClick={saveAsPDF}
-          disabled={isSaving}
+        <button 
+          className="back-button"
+          onClick={() => navigate('/healthprediction')}
         >
-          {isSaving ? 'PDF 저장 중...' : 'PDF로 저장'}
+          돌아가기
         </button>
       </div>
     </div>

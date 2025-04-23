@@ -1,7 +1,7 @@
 /* DietConsulting.css */
 
 /* CSS Variables for Consistency */
-:root {
+/* :root {
   --primary-color: #4a90e2;
   --secondary-color: #feca57;
   --background-color: #f9f9f9;
@@ -9,7 +9,7 @@
   --text-color: #2c3e50;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   --border-radius: 12px;
-}
+} */
 
 /* Base Layout */
 .diet-consulting {
@@ -171,7 +171,7 @@
 }
 
 /* CSS Variables for Consistency */
-:root {
+/* :root {
   --primary-color: #4a90e2;
   --secondary-color: #feca57;
   --background-color: #f9f9f9;
@@ -179,41 +179,37 @@
   --text-color: #2c3e50;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   --border-radius: 12px;
-}
+} */
 
 /* Base Layout */
 .diet-consulting {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  background: var(--background-color);
+  background: #f9f9f9;
   min-height: 100vh;
   scroll-behavior: smooth;
 }
 
 .diet-consulting h1 {
   text-align: center;
-  margin-bottom: 2.5rem;
-  color: var(--text-color);
+  color: #2c3e50;
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 /* Analysis Section */
 .analysis-section {
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
+  background: #ffffff;
+  border-radius: 12px;
   padding: 2rem;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin-bottom: 0.5rem;
 }
 
 .analysis-section h2 {
   text-align: center;
-  color: var(--text-color);
+  color: #2c3e50;
   margin-bottom: 0.5rem;
   font-size: 1.8rem;
 }
@@ -222,13 +218,13 @@
 .speech-bubble {
   position: relative;
   background: linear-gradient(135deg, #cfe5ff, #e3f0ff);
-  border-radius: var(--border-radius);
+  border-radius: 12px;
   padding: 1.5rem;
   font-size: 1.1rem;
-  color: var(--text-color);
+  color: #2c3e50;
   line-height: 1.6;
   margin: 0.3rem 0;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   white-space: pre-line;
 }
 
@@ -244,9 +240,9 @@
 /* Food Recommend */
 .food-recommend {
   background: linear-gradient(135deg, #a5c3f1, #dceaff);
-  border-radius: var(--border-radius);
+  border-radius: 12px;
   padding: 0.7rem;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
@@ -281,7 +277,7 @@
   height: 60px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid var(--primary-color);
+  border: 2px solid #4a90e2;
   transition: transform 0.3s ease;
 }
 .meal-icon {
@@ -289,7 +285,7 @@
   height: 48px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid var(--primary-color);
+  border: 2px solid #4a90e2;
   transition: transform 0.3s ease;
 }
 
@@ -299,7 +295,7 @@
 
 .food-recommend h3 {
   font-size: 1.6rem;
-  color: var(--text-color);
+  color: #2c3e50;
   margin: 0;
 }
 
@@ -311,7 +307,7 @@
 
 .food-recommend li {
   font-size: 1.1rem;
-  color: var(--text-color);
+  color: #2c3e50;
   padding: 0.1rem 0;
   position: relative;
   padding-left: 20px;
@@ -321,7 +317,7 @@
   content: '•';
   position: absolute;
   left: 0;
-  color: var(--primary-color);
+  color: #4a90e2;
   font-size: 1.2rem;
 }
 
@@ -332,7 +328,7 @@
 }
 
 .action-button {
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(45deg, #4a90e2, #feca57);
   color: white;
   border: none;
   padding: 0.8rem 2rem;
@@ -344,7 +340,7 @@
 
 .action-button:hover {
   transform: scale(1.05);
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Loading Spinner */
@@ -358,7 +354,7 @@
 
 .loading-spinner {
   border: 6px solid #f3f3f3;
-  border-top: 6px solid var(--primary-color);
+  border-top: 6px solid #4a90e2;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -368,16 +364,16 @@
 
 .loading-container p {
   font-size: 1.2rem;
-  color: var(--text-color);
+  color: #2c3e50;
 }
 
 /* Error Container */
 .error-container {
   text-align: center;
   padding: 3rem;
-  background: var(--card-bg);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin: 2rem auto;
   max-width: 600px;
 }

@@ -11,8 +11,8 @@ function DietConsultIndex() {
     <div className="diet-consulting">
       <div className="consult-container">
         <div className='ai-header'>
-        <img src={dietAi} alt="AI" className="ai-icon" />
         <h1>AI 식단 추천</h1>
+        <img src={dietAi} alt="AI" className="ai-icon" />
         </div>
         <div className="consult-content">
           <div className="consult-image">
