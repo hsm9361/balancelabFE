@@ -6,7 +6,7 @@ import breakfastImg from 'assets/images/breakfast.png';
 import lunchImg from 'assets/images/lunch.png';
 import dinnerImg from 'assets/images/dinner.png';
 import snackImg from 'assets/images/snack.png';
-import useSaveAsPDF from '../../hooks/recommendAsPdf.js';
+import useSaveAsPDF from '../../hooks/useSaveAsPDF.js';
 
 const mealImages = {
   아침: breakfastImg,
