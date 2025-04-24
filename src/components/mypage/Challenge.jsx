@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../assets/css/components/mypage/Challenge.module.css';
 import { useNavigate } from 'react-router-dom';
 import CustomModal from '../../components/common/CustomModal';
@@ -15,7 +15,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
- 
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -56,6 +56,23 @@ function Challenge() {
 
   const { fetchMemberInfo, error: memberError, loading: memberLoading } = useMemberInfo(() => {});
   const [userWeight, setUserWeight] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // 드롭다운 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        console.log('Clicked outside, closing dropdown');
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // 목표 옵션 배열
   const goalOptions = [
@@ -317,16 +334,26 @@ function Challenge() {
     registerChallenge(finalGoal, userWeight);
   };
 
+  // 드롭다운 토글
+  const toggleDropdown = () => {
+    console.log('Toggling dropdown, current state:', isDropdownOpen);
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   // 실패 버튼 핸들러
   const handleFailChallenge = () => {
+    console.log('Fail challenge triggered');
     setModalTitle('확인');
     setModalMessage('이 챌린지를 중단하시겠습니까?');
     setModalOpen(true);
+    setIsDropdownOpen(false);
   };
 
   // 등록 섹션 표시 조건
-  const showRegisterSection = !ongoingChallenge || (endDate && new Date() > new Date(endDate)) || !isChallengeRegistered;
-
+  const showRegisterSection = (
+    (!ongoingChallenge || (endDate && new Date() > new Date(endDate)) || !isChallengeRegistered)
+    && showRegisterForm
+  );
   // 상태 한글 변환
   const getStatusLabel = (status) => {
     switch (status) {
@@ -363,7 +390,7 @@ function Challenge() {
   return (
     <div className={styles.container}>
       {/* 챌린지 등록 섹션 */}
-      {showRegisterSection && (
+      {(showRegisterSection && showRegisterForm) && (
         <div className={styles.card}>
           <h1 className={styles.title}>나만의 챌린지 시작하기</h1>
 
@@ -392,6 +419,9 @@ function Challenge() {
 
           <div className={styles.section}>
             <label className={styles.label}>목표 체중 (kg)</label>
+            <span className={styles.currentWeightLabel}>
+              🏋️ 현재 몸무게 {userWeight ? `${userWeight}kg` : '로딩 중...'}
+            </span>
             <div className={styles.inputGroup}>
               <input
                 type="number"
@@ -427,9 +457,9 @@ function Challenge() {
       )}
 
       {/* 진행 중인 챌린지 */}
-      {ongoingChallenge && (
-        <div className={styles.ongoingSection}>
-          <h2 className={styles.subtitle}>진행 중인 챌린지</h2>
+      <div className={styles.ongoingSection}>
+        <h2 className={styles.subtitle}>진행 중인 챌린지</h2>
+        {ongoingChallenge ? (
           <div className={styles.challengeCard}>
             <div className={styles.challengeInfo}>
               <div className={styles.challengeHeader}>
@@ -437,73 +467,117 @@ function Challenge() {
                   {goalOptions[0].icon}
                 </span>
                 <h3 className={styles.challengeTitle}>{ongoingChallenge.goal}</h3>
-              </div>
-              <div className={styles.progressContainer}>
-                <div className={styles.progressBar}>
-                  <div
-                    className={styles.progressFill}
-                    style={{ width: `${calculateProgress()}%` }}
-                  ></div>
-                </div>
-                <span className={styles.progressText}>{calculateProgress()}% 달성</span>
-              </div>
-              <div className={styles.challengeDetails}>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>📅</span>
-                  기간: {ongoingChallenge.period}{ongoingChallenge.periodUnit}
-                </p>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>🚀</span>
-                  시작 날짜: {new Date(ongoingChallenge.startDate + 'T00:00:00').toLocaleDateString()}
-                </p>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>🏁</span>
-                  종료 날짜: {new Date(ongoingChallenge.endDate + 'T00:00:00').toLocaleDateString()}
-                </p>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>⚖️</span>
-                  시작 몸무게: {ongoingChallenge.startWeight}kg
-                </p>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>🎯</span>
-                  목표 체중: {ongoingChallenge.targetWeight}kg
-                </p>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>🏋️</span>
-                  현재 몸무게: {userWeight ? `${userWeight}kg` : '로딩 중...'}
-                </p>
-                <p className={styles.challengeDetail}>
-                  <span className={styles.detailIcon}>📊</span>
-                  상태: <span className={`${styles.statusLabel} ${styles[ongoingChallenge.status.toLowerCase()]}`}>
-                    {ongoingChallenge.status ? getStatusLabel(ongoingChallenge.status) : '로딩 중...'}
-                  </span>
-                </p>
+                <button
+                  className={styles.moreButton}
+                  onClick={toggleDropdown}
+                  disabled={loading}
+                >
+                  ...
+                </button>
+                {isDropdownOpen && (
+                  <div className={styles.dropdownMenu} ref={dropdownRef}>
+                    <button
+                      className={styles.failButton}
+                      onClick={handleFailChallenge}
+                      disabled={loading}
+                    >
+                      <span className={styles.failButtonIcon}>✕</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            {ongoingChallenge.status === 'ONGOING' && (
-              <button
-                className={styles.failButton}
-                onClick={handleFailChallenge}
-                disabled={loading}
-              >
-                중단
-              </button>
-            )}
-          </div>
-
-          {/* 몸무게 히스토리 그래프 */}
-          <div className={styles.weightHistorySection}>
-            <h3 className={styles.chartTitle}>몸무게 변화</h3>
-            {weightHistory.length > 0 ? (
-              <div className={styles.chartContainer}>
-                <Line data={chartData} options={chartOptions} />
+            {/* 진행률 컨테이너 */}
+            <div className={styles.progressContainer}>
+              <div className={styles.progressBar}>
+                <div
+                  className={styles.progressFill}
+                  style={{ width: `${calculateProgress()}%` }}
+                ></div>
               </div>
-            ) : (
-              <p className={styles.noData}>몸무게 히스토리가 없습니다.</p>
-            )}
+              <div className={styles.progressTextContainer}>
+                <span className={styles.progressZero}>0%</span>
+                <span className={styles.progressText}>{calculateProgress()}% 달성</span>
+              </div>
+            </div>
+
+            {/* 챌린지 세부 정보 */}
+            <div className={styles.challengeDetails}>
+              <table className={styles.challengeTable}>
+                <tbody>
+                  <tr className={styles.challengeRow}>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        📅 기간: {ongoingChallenge.period}{ongoingChallenge.periodUnit}
+                      </span>
+                    </td>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        📊 상태: <span className={`${styles.statusLabel} ${styles[ongoingChallenge.status.toLowerCase()]}`}>
+                          {ongoingChallenge.status ? getStatusLabel(ongoingChallenge.status) : '로딩 중...'}
+                        </span>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr className={styles.challengeRow}>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        🚀 시작 날짜: {new Date(ongoingChallenge.startDate + 'T00:00:00').toLocaleDateString()}
+                      </span>
+                    </td>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        🏁 종료 날짜: {new Date(ongoingChallenge.endDate + 'T00:00:00').toLocaleDateString()}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr className={styles.challengeRow}>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        ⚖️ 시작 몸무게: {ongoingChallenge.startWeight}kg
+                      </span>
+                    </td>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        🎯 목표 체중: {ongoingChallenge.targetWeight}kg
+                      </span>
+                    </td>
+                    <td className={styles.challengeCell}>
+                      <span className={styles.challengeText}>
+                        🏋️ 현재 몸무게: {userWeight ? `${userWeight}kg` : '로딩 중...'}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* 몸무게 히스토리 그래프 */}
+            <div className={styles.weightHistorySection}>
+              <h3 className={styles.chartTitle}>몸무게 변화</h3>
+              {weightHistory.length > 0 ? (
+                <div className={styles.chartContainer}>
+                  <Line data={chartData} options={chartOptions} />
+                </div>
+              ) : (
+                <p className={styles.noData}>몸무게 히스토리가 없습니다.</p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          !showRegisterForm && (
+            <div className={styles.noChallenges}>
+              <p>현재 진행 중인 챌린지가 없습니다.<br />새 챌린지를 시작해 보세요!</p>
+              <button
+                className={styles.startChallengeButton}
+                onClick={() => setShowRegisterForm(true)}
+              >
+                챌린지 시작하기
+              </button>
+            </div>
+          )
+        )}
+      </div>
 
       {/* 과거 챌린지 */}
       <div className={styles.pastChallengesSection}>
