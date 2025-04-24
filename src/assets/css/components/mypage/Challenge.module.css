@@ -136,7 +136,7 @@
 /* 버튼 컨테이너 */
 .buttonContainer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 16px;
 }
 
@@ -609,7 +609,7 @@
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  text-align: left;
+  text-align: center;
 }
 
 .challengeTable tr {
@@ -629,6 +629,54 @@
   margin-right: 8px;
   font-size: 1.2rem;
 }
+
+.weightRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.weightColumn {
+  flex: 1;
+  max-width: 48%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 현재 몸무게도 input처럼 스타일링 */
+.inputLikeBox {
+  border: 1px solid #ced4da;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  color: #495057;
+  font-size: 1rem;
+}
+
+/* 입력창 오른쪽에 변화 텍스트 정렬 */
+.weightChangeLabel {
+  margin-left: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 50px;
+  text-align: left;
+}
+
+
+/* 변화 상태별 색상 */
+.decrease {
+  color: #d9534f;
+}
+.increase {
+  color: #5cb85c;
+}
+.maintain {
+  color: #0275d8;
+}
+
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {

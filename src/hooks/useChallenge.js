@@ -15,6 +15,7 @@ export const useChallenge = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('알림');
+  const [modalConfirmHandler, setModalConfirmHandler] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [ongoingChallenge, setOngoingChallenge] = useState(null);
@@ -26,6 +27,7 @@ export const useChallenge = () => {
     setModalOpen(false);
     setModalMessage('');
     setModalTitle('알림');
+    setModalConfirmHandler(null);
   }, []);
 
   // 진행 중인 챌린지 조회
@@ -36,6 +38,11 @@ export const useChallenge = () => {
       const response = await apiClient.get('/challenge/user/ongoing');
       const data = response.data;
       console.log('Fetched ongoing challenge:', data);
+      // 소수점 포맷팅
+      if (data) {
+        data.startWeight = parseFloat(data.startWeight).toFixed(1);
+        data.targetWeight = parseFloat(data.targetWeight).toFixed(1);
+      }
       setOngoingChallenge((prev) => {
         if (JSON.stringify(prev) !== JSON.stringify(data)) {
           console.log('Updating ongoingChallenge:', data);
@@ -85,6 +92,13 @@ export const useChallenge = () => {
       });
       const data = response.data;
       console.log('Fetched all challenges:', data);
+      // 소수점 포맷팅
+      if (data) {
+        data.forEach((challenge) => {
+          challenge.startWeight = parseFloat(challenge.startWeight).toFixed(1);
+          challenge.targetWeight = parseFloat(challenge.targetWeight).toFixed(1);
+        });
+      }
       setAllChallenges(data || []);
     } catch (err) {
       console.error('Failed to fetch all challenges:', {
@@ -121,6 +135,12 @@ export const useChallenge = () => {
       });
       const data = response.data;
       console.log('Fetched weight history:', data);
+      // 소수점 포맷팅
+      if (data) {
+        data.forEach((entry) => {
+          entry.weight = parseFloat(entry.weight).toFixed(1);
+        });
+      }
       setWeightHistory(data || []);
     } catch (err) {
       console.error('Failed to fetch weight history:', {
@@ -168,13 +188,22 @@ export const useChallenge = () => {
     setError(null);
 
     try {
-      if (goal !== '체중조절') {
-        throw new Error('유효하지 않은 목표입니다.');
+      const parsedStartWeight = parseFloat(startWeight);
+      const parsedTargetWeight = parseFloat(targetWeight);
+
+      // 소수점 자릿수 제한 (최대 1자리)
+      if (parsedStartWeight.toString().split('.')[1]?.length > 1) {
+        throw new Error('시작 몸무게는 소수점 1자리까지만 입력 가능합니다.');
+      }
+      if (parsedTargetWeight.toString().split('.')[1]?.length > 1) {
+        throw new Error('목표 체중은 소수점 1자리까지만 입력 가능합니다.');
       }
 
-      const parsedStartWeight = parseFloat(startWeight);
       if (isNaN(parsedStartWeight) || parsedStartWeight <= 0) {
         throw new Error('시작 몸무게는 0보다 커야 합니다.');
+      }
+      if (isNaN(parsedTargetWeight) || parsedTargetWeight <= 0) {
+        throw new Error('목표 체중은 0보다 커야 합니다.');
       }
 
       const challengeData = {
@@ -182,7 +211,7 @@ export const useChallenge = () => {
         period: parseInt(period),
         periodUnit,
         startWeight: parsedStartWeight,
-        targetWeight: parseFloat(targetWeight),
+        targetWeight: parsedTargetWeight,
         startDate: startDate.toISOString().split('T')[0],
         endDate: calculateEndDate(startDate, period, periodUnit),
       };
@@ -283,6 +312,8 @@ export const useChallenge = () => {
     modalOpen,
     modalMessage,
     modalTitle,
+    modalConfirmHandler,
+    setModalConfirmHandler,
     loading,
     error,
     handleCloseModal,

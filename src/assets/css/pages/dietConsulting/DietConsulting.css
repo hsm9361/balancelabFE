@@ -32,6 +32,9 @@
   color: #2C3E50;
   font-size: 2.5rem;
   margin-bottom: 2rem;
+  text-shadow: -1px 1px 1px #c0d2e675;
+  color: #2c5282;
+
 }
 
 .consult-content {
@@ -46,7 +49,7 @@
 }
 
 .consult-image img {
-  max-width: 100%;
+  max-width: 85%;
   height: auto;
   border-radius: 15px;
 }
@@ -194,7 +197,7 @@
 .diet-consulting h1 {
   text-align: center;
   color: #2c3e50;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
 }
 
@@ -210,7 +213,7 @@
 .analysis-section h2 {
   text-align: center;
   color: #2c3e50;
-  margin-bottom: 0.5rem;
+  margin: 1rem 0;
   font-size: 1.8rem;
 }
 
