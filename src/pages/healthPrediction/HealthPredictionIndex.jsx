@@ -5,7 +5,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { memberService } from '../../services/memberService';
 import { FaUtensils, FaUser, FaClipboardList } from 'react-icons/fa';
-import Predict from 'assets/images/predict.png';
 import styles from 'assets/css/pages/healthPrediction/HealthPredictionIndex.module.css'; // Use CSS Modules
 
 function HealthPredictionIndex() {
@@ -23,7 +22,6 @@ function HealthPredictionIndex() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [memberInfo, setMemberInfo] = useState(null);
-  const [hasDietRecords, setHasDietRecords] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -47,8 +45,6 @@ function HealthPredictionIndex() {
     }
   };
 
-  // Check for recent diet records
-
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -66,17 +62,12 @@ function HealthPredictionIndex() {
         weight: parseFloat(data.weight) || null,
         username: memberInfo?.username || null,
         age: memberInfo?.age || null,
-        gender:memberInfo?.gender || null,
+        gender: memberInfo?.gender || null,
         membername: memberInfo?.membername || null,
         goalWeight: memberInfo?.goalWeight || null,
         activityLevel: memberInfo?.activityLevel || null,
       };
       formData.append('dto', new Blob([JSON.stringify(updateDto)], { type: 'application/json' }));
-
-      console.log('FormData contents:');
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
 
       await memberService.updateMemberInfo(formData);
       toast.success('정보가 성공적으로 업데이트되었습니다.');
@@ -90,10 +81,6 @@ function HealthPredictionIndex() {
 
   const handleProceedToForm = () => {
     navigate('/healthprediction/form');
-  };
-
-  const handleCancel = () => {
-    fetchMemberInfo();
   };
 
   if (isLoading) {
@@ -122,7 +109,7 @@ function HealthPredictionIndex() {
   }
 
   return (
-    <div className="health-prediction">
+    <div className={styles.healthPrediction}>
       <header className={styles.header}>
         <h1 className={styles.title}>맞춤형 건강 예측</h1>
         <p className={styles.description}>
@@ -143,71 +130,78 @@ function HealthPredictionIndex() {
           </li>
         </ul>
       </div>
-      <form className={styles.predictionForm} onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.formGroup}>
-          <label>회원 email</label>
-          <span>{memberInfo.email}</span>
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="height">키 (cm)</label>
-          <Controller
-            name="height"
-            control={control}
-            rules={{
-              required: '키는 필수 입력입니다.',
-              min: { value: 0, message: '0 이상 입력하세요.' },
-            }}
-            render={({ field }) => (
-              <input
-                type="number"
-                id="height"
-                step="0.1"
-                className={errors.height ? styles.inputError : ''}
-                {...field}
+      <div className={styles.predictionForm}>
+        <h2 className={styles.formTitle}>나의 정보</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.formGroup}>
+            <label htmlFor="email">email</label>
+            <span>{memberInfo.email}</span>
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="height">키 (cm)</label>
+            <div className={styles.inputWrapper}>
+              <Controller
+                name="height"
+                control={control}
+                rules={{
+                  required: '키는 필수 입력입니다.',
+                  min: { value: 0, message: '0 이상 입력하세요.' },
+                }}
+                render={({ field }) => (
+                  <input
+                    type="number"
+                    id="height"
+                    step="0.1"
+                    className={errors.height ? styles.inputError : ''}
+                    {...field}
+                  />
+                )}
               />
-            )}
-          />
-          {errors.height && <span className={styles.errorText}>{errors.height.message}</span>}
-        </div>
-        <div className={styles.formGroup}>
-          <label htmlFor="weight">몸무게 (kg)</label>
-          <Controller
-            name="weight"
-            control={control}
-            rules={{
-              required: '몸무게는 필수 입력입니다.',
-              min: { value: 0, message: '0 이상 입력하세요.' },
-            }}
-            render={({ field }) => (
-              <input
-                type="number"
-                id="weight"
-                step="0.1"
-                className={errors.weight ? styles.inputError : ''}
-                {...field}
+              {errors.height && <span className={styles.errorText}>{errors.height.message}</span>}
+            </div>
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="weight">몸무게 (kg)</label>
+            <div className={styles.inputWrapper}>
+              <Controller
+                name="weight"
+                control={control}
+                rules={{
+                  required: '몸무게는 필수 입력입니다.',
+                  min: { value: 0, message: '0 이상 입력하세요.' },
+                }}
+                render={({ field }) => (
+                  <input
+                    type="number"
+                    id="weight"
+                    step="0.1"
+                    className={errors.weight ? styles.inputError : ''}
+                    {...field}
+                  />
+                )}
               />
-            )}
-          />
-          {errors.weight && <span className={styles.errorText}>{errors.weight.message}</span>}
-        </div>
-        <div className={styles.buttonGroup}>
-          <button
-            type="submit"
-            className={styles.consultButton}
-            disabled={isSubmitting || !isDirty}
-          >
-            {isSubmitting ? '저장 중...' : '정보 저장'}
-          </button>
-          <button
-            type="button"
-            className={styles.saveButton}
-            onClick={handleProceedToForm}
-            disabled={isSubmitting}
-          >
-            건강 예측
-          </button>
-        </div>
-      </form>
+              {errors.weight && <span className={styles.errorText}>{errors.weight.message}</span>}
+            </div>
+          </div>
+          <div className={styles.buttonGroup}>
+            <button
+              type="submit"
+              className={styles.consultButton}
+              disabled={isSubmitting || !isDirty}
+            >
+              {isSubmitting ? '저장 중...' : '정보 저장'}
+            </button>
+            <button
+              type="button"
+              className={styles.saveButton}
+              onClick={handleProceedToForm}
+              disabled={isSubmitting}
+            >
+              건강 예측
+            </button>
+          </div>
+        </form>
+      </div>
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
