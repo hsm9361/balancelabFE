@@ -200,14 +200,6 @@ function HealthPredictionIndex() {
           </button>
           <button
             type="button"
-            className={styles.backButton}
-            onClick={handleCancel}
-            disabled={isSubmitting}
-          >
-            취소
-          </button>
-          <button
-            type="button"
             className={styles.saveButton}
             onClick={handleProceedToForm}
             disabled={isSubmitting}

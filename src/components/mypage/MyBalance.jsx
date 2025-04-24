@@ -321,13 +321,6 @@ function MyBalance() {
                       style={{ width: `${Math.min(calorieProgress, 100)}%` }}
                     ></div>
                   </div>
-                  <div
-                    className={`${styles.calorieStatus} ${
-                      calorieProgress > 100 ? styles.overGoal : styles.underGoal
-                    }`}
-                  >
-                    {calorieStatus}
-                  </div>
                 </div>
               </div>
               {/* Other Nutrients Grid */}
