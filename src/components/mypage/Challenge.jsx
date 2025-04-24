@@ -38,6 +38,8 @@ function Challenge() {
     modalOpen,
     modalMessage,
     modalTitle,
+    modalConfirmHandler,
+    setModalConfirmHandler,
     challengeStatus,
     isChallengeRegistered,
     endDate,
@@ -52,6 +54,8 @@ function Challenge() {
     ongoingChallenge,
     allChallenges,
     weightHistory,
+    fetchOngoingChallenge,
+    fetchAllChallenges,
   } = useChallenge();
 
   const { fetchMemberInfo, error: memberError, loading: memberLoading } = useMemberInfo(() => {});
@@ -150,7 +154,7 @@ function Challenge() {
     datasets: [
       {
         label: '몸무게 (kg)',
-        data: weightHistory.map((entry) => entry.weight),
+        data: weightHistory.map((entry) => parseFloat(entry.weight).toFixed(1)),
         borderColor: '#4a90e2',
         backgroundColor: 'rgba(74, 144, 226, 0.2)',
         fill: true,
@@ -162,7 +166,7 @@ function Challenge() {
         ? [
             {
               label: '목표 체중 (kg)',
-              data: Array(weightHistory.length).fill(parseFloat(ongoingChallenge.targetWeight)),
+              data: Array(weightHistory.length).fill(parseFloat(ongoingChallenge.targetWeight).toFixed(1)),
               borderColor: '#d9534f',
               borderDash: [5, 5],
               pointRadius: 0,
@@ -235,11 +239,11 @@ function Challenge() {
           },
         },
         suggestedMin: Math.min(
-          ...weightHistory.map((entry) => entry.weight),
+          ...weightHistory.map((entry) => parseFloat(entry.weight)),
           ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : Infinity
         ) - 5,
         suggestedMax: Math.max(
-          ...weightHistory.map((entry) => entry.weight),
+          ...weightHistory.map((entry) => parseFloat(entry.weight)),
           ongoingChallenge?.targetWeight ? parseFloat(ongoingChallenge.targetWeight) : -Infinity
         ) + 5,
       },
@@ -248,26 +252,39 @@ function Challenge() {
 
   // 유저 정보 로드
   useEffect(() => {
-    const loadData = async () => {
+    const loadMemberData = async () => {
       try {
         const data = await fetchMemberInfo();
         console.log('Fetched member info:', data);
         if (data?.weight) {
-          setUserWeight(parseFloat(data.weight));
-        } else {
-          setModalTitle('오류');
-          setModalMessage('몸무게 정보를 불러올 수 없습니다. 회원 정보 페이지에서 설정해주세요.');
-          setModalOpen(true);
+          setUserWeight(parseFloat(data.weight).toFixed(1));
+        } else if (data?.weight === 0) {
+          setUserWeight("0.0");
         }
       } catch (err) {
-        console.error('Failed to load data:', err);
+        console.error('Failed to load member data:', err);
         setModalTitle('오류');
         setModalMessage('데이터를 불러오는데 실패했습니다: ' + err.message);
         setModalOpen(true);
       }
     };
-    loadData();
-  }, [fetchMemberInfo, setModalTitle, setModalMessage, setModalOpen]);
+    loadMemberData();
+  }, [fetchMemberInfo]);
+
+  // 챌린지 데이터 로드
+  useEffect(() => {
+    const loadChallengeData = async () => {
+      try {
+        await Promise.all([fetchOngoingChallenge(), fetchAllChallenges()]);
+      } catch (err) {
+        console.error('Failed to load challenge data:', err);
+        setModalTitle('오류');
+        setModalMessage('챌린지 데이터를 불러오는데 실패했습니다: ' + err.message);
+        setModalOpen(true);
+      }
+    };
+    loadChallengeData();
+  }, [fetchOngoingChallenge, fetchAllChallenges]);
 
   // 챌린지 상태 디버깅
   useEffect(() => {
@@ -304,7 +321,8 @@ function Challenge() {
 
   // 챌린지 등록 래퍼 함수
   const handleRegisterChallenge = () => {
-    const finalGoal = '체중조절';
+    const { label: weightChangeLabel } = getWeightChangeLabel();
+    const finalGoal = weightChangeLabel || '유지';
 
     if (!period || !targetWeight) {
       setModalTitle('오류');
@@ -320,7 +338,7 @@ function Challenge() {
     }
     if (!Number(targetWeight) || Number(targetWeight) <= 0) {
       setModalTitle('오류');
-      setModalMessage('목표 체중은 1 이상의 숫자를 입력해주세요.');
+      setModalMessage('목표 체중은 0보다 큰 숫자를 입력해주세요.');
       setModalOpen(true);
       return;
     }
@@ -328,6 +346,14 @@ function Challenge() {
       setModalTitle('오류');
       setModalMessage('현재 몸무게 정보를 불러올 수 없습니다.');
       setModalOpen(true);
+      return;
+    }
+
+    if (finalGoal === '유지') {
+      setModalTitle('알림');
+      setModalMessage('목표 체중이 현재 몸무게와 같습니다. 회원 정보 페이지에서 현재 몸무게를 수정해주세요.');
+      setModalOpen(true);
+      setModalConfirmHandler(() => handleCloseModal); // 확인 버튼 클릭 시 모달 닫기
       return;
     }
 
@@ -354,6 +380,7 @@ function Challenge() {
     (!ongoingChallenge || (endDate && new Date() > new Date(endDate)) || !isChallengeRegistered)
     && showRegisterForm
   );
+
   // 상태 한글 변환
   const getStatusLabel = (status) => {
     switch (status) {
@@ -418,32 +445,32 @@ function Challenge() {
           </div>
 
           <div className={styles.section}>
-  <label className={styles.label}>목표 체중 (kg)</label>
-  <div className={styles.weightRow}>
-    {/* 왼쪽: 현재 몸무게 */}
-    <div className={styles.weightColumn}>
-      <div className={styles.inputLikeBox}>
-        🏋️ 현재 몸무게 {userWeight ? `${userWeight}kg` : '로딩 중...'}
-      </div>
-    </div>
+            <label className={styles.label}>목표 체중 (kg)</label>
+            <div className={styles.weightRow}>
+              {/* 왼쪽: 현재 몸무게 */}
+              <div className={styles.weightColumn}>
+                <div className={styles.inputLikeBox}>
+                  🏋️ 현재 몸무게 {userWeight ? `${userWeight}kg` : '로딩 중...'}
+                </div>
+              </div>
 
-    {/* 오른쪽: 목표 체중 + 변화 레이블 */}
-    <div className={styles.weightColumn} style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <input
-        type="number"
-        placeholder="목표 체중"
-        value={targetWeight}
-        onChange={(e) => setTargetWeight(e.target.value)}
-        min="1"
-        step="1"
-        className={styles.input}
-      />
-      <span className={`${styles.weightChangeLabel} ${styles[weightChangeClass]}`}>
-        {weightChangeLabel && `${weightChangeLabel}`}
-      </span>
-    </div>
-  </div>
-</div>
+              {/* 오른쪽: 목표 체중 + 변화 레이블 */}
+              <div className={styles.weightColumn} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <input
+                  type="number"
+                  placeholder="목표 체중"
+                  value={targetWeight}
+                  onChange={(e) => setTargetWeight(e.target.value)}
+                  min="0.1"
+                  step="0.1"
+                  className={styles.input}
+                />
+                <span className={`${styles.weightChangeLabel} ${styles[weightChangeClass]}`}>
+                  {weightChangeLabel && `${weightChangeLabel}`}
+                </span>
+              </div>
+            </div>
+          </div>
 
           <div className={styles.buttonContainer}>
             <button
@@ -543,12 +570,12 @@ function Challenge() {
                   <tr className={styles.challengeRow}>
                     <td className={styles.challengeCell}>
                       <span className={styles.challengeText}>
-                        ⚖️ 시작 몸무게: {ongoingChallenge.startWeight}kg
+                        ⚖️ 시작 몸무게: {parseFloat(ongoingChallenge.startWeight).toFixed(1)}kg
                       </span>
                     </td>
                     <td className={styles.challengeCell}>
                       <span className={styles.challengeText}>
-                        🎯 목표 체중: {ongoingChallenge.targetWeight}kg
+                        🎯 목표 체중: {parseFloat(ongoingChallenge.targetWeight).toFixed(1)}kg
                       </span>
                     </td>
                     <td className={styles.challengeCell}>
@@ -617,8 +644,8 @@ function Challenge() {
                       <td>{challenge.period}{challenge.periodUnit}</td>
                       <td>{new Date(challenge.startDate + 'T00:00:00').toLocaleDateString()}</td>
                       <td>{new Date(challenge.endDate + 'T00:00:00').toLocaleDateString()}</td>
-                      <td>{challenge.startWeight}kg</td>
-                      <td>{challenge.targetWeight}kg</td>
+                      <td>{parseFloat(challenge.startWeight).toFixed(1)}kg</td>
+                      <td>{parseFloat(challenge.targetWeight).toFixed(1)}kg</td>
                       <td>
                         <span className={`${styles.statusLabel} ${styles[challenge.status.toLowerCase()]}`}>
                           {getStatusLabel(challenge.status)}
@@ -643,7 +670,9 @@ function Challenge() {
         message={modalMessage}
         onConfirm={
           modalTitle === '성공' ? handleCloseModal :
-          modalTitle === '확인' ? () => handleModalConfirm('fail') : null
+          modalTitle === '확인' ? () => handleModalConfirm('fail') :
+          modalTitle === '알림' ? handleCloseModal :
+          modalConfirmHandler || null
         }
       />
     </div>
