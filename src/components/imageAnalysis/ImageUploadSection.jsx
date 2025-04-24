@@ -7,41 +7,99 @@ function ImageUploadSection({
   previewUrl,
   setPreviewUrl,
   disabled,
+  onInvalidFile, // 에러 콜백
 }) {
   const fileInputRef = useRef(null);
+  const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']; // 허용된 MIME 타입
+  const allowedExtensions = ['.png', '.jpeg', '.jpg']; // 허용된 확장자
+  const maxFileSize = 5 * 1024 * 1024; // 최대 파일 크기: 5MB
+
+  const validateFile = (file) => {
+    if (!file) {
+      return { isValid: false, message: '파일이 선택되지 않았습니다.' };
+    }
+
+    // 빈 파일 체크
+    if (file.size === 0) {
+      return { isValid: false, message: '빈 파일은 업로드할 수 없습니다.' };
+    }
+
+    // 파일 크기 체크
+    if (file.size > maxFileSize) {
+      return {
+        isValid: false,
+        message: `파일 크기는 ${maxFileSize / (1024 * 1024)}MB를 초과할 수 없습니다.`,
+      };
+    }
+
+    // MIME 타입 체크
+    if (!allowedTypes.includes(file.type)) {
+      return {
+        isValid: false,
+        message: 'PNG, JPG, JPEG 형식의 이미지만 업로드 가능합니다.',
+      };
+    }
+
+    // 확장자 체크
+    const fileName = file.name.toLowerCase();
+    const extension = fileName.substring(fileName.lastIndexOf('.'));
+    if (!allowedExtensions.includes(extension)) {
+      return {
+        isValid: false,
+        message: '파일 확장자는 PNG, JPG, JPEG만 허용됩니다.',
+      };
+    }
+
+    return { isValid: true };
+  };
 
   const handleImageUpload = useCallback(
     (event) => {
-      if (disabled) return; // 비활성화 상태에서는 업로드 불가
+      if (disabled) return;
       const file = event.target.files[0];
-      if (file) {
-        setSelectedImage(file);
-        setPreviewUrl(URL.createObjectURL(file));
+      if (!file) return;
+
+      const validation = validateFile(file);
+      if (!validation.isValid) {
+        onInvalidFile(validation.message);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ''; // 입력 초기화
+        }
+        return;
       }
+
+      setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
     },
-    [setSelectedImage, setPreviewUrl, disabled]
+    [setSelectedImage, setPreviewUrl, disabled, onInvalidFile]
   );
 
   const handleDrop = useCallback(
     (event) => {
-      if (disabled) return; // 비활성화 상태에서는 드롭 불가
+      if (disabled) return;
       event.preventDefault();
       const file = event.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        setSelectedImage(file);
-        setPreviewUrl(URL.createObjectURL(file));
+      if (!file) return;
+
+      const validation = validateFile(file);
+      if (!validation.isValid) {
+        onInvalidFile(validation.message);
+        return;
       }
+
+      setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
     },
-    [setSelectedImage, setPreviewUrl, disabled]
+    [setSelectedImage, setPreviewUrl, disabled, onInvalidFile]
   );
 
   const handleDragOver = useCallback((event) => {
-    if (disabled) return; // 비활성화 상태에서는 드래그 오버 무시
+    if (disabled) return;
     event.preventDefault();
   }, [disabled]);
 
   const handleResetImage = useCallback(() => {
-    if (disabled) return; // 비활성화 상태에서는 리셋 불가
+    if (disabled) return;
     setSelectedImage(null);
     setPreviewUrl(null);
     if (fileInputRef.current) {
@@ -50,7 +108,7 @@ function ImageUploadSection({
   }, [setSelectedImage, setPreviewUrl, disabled]);
 
   const triggerFileInput = useCallback(() => {
-    if (disabled || !fileInputRef.current) return; // 비활성화 상태에서는 클릭 무시
+    if (disabled || !fileInputRef.current) return;
     fileInputRef.current.click();
   }, [disabled]);
 
@@ -84,7 +142,7 @@ function ImageUploadSection({
             </div>
             <input
               type="file"
-              accept="image/*"
+              accept="image/png,image/jpeg,image/jpg"
               onChange={handleImageUpload}
               className={styles.fileInput}
               ref={fileInputRef}
@@ -96,7 +154,7 @@ function ImageUploadSection({
           <div className={styles.uploadPlaceholder}>
             <input
               type="file"
-              accept="image/*"
+              accept="image/png,image/jpeg,image/jpg"
               onChange={handleImageUpload}
               className={styles.fileInput}
               id="imageUpload"
