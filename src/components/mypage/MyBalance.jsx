@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from 'assets/css/pages/mypage/mypage.module.css';
 import axios from 'axios';
+import empty from 'assets/images/empty.png'; // Reuse the same image as MealCards
 
 function MyBalance() {
   const [clickedRecordIndex, setClickedRecordIndex] = useState(null);
@@ -292,15 +293,26 @@ function MyBalance() {
     <div className={styles.tabContent}>
       <h2 className={styles.contentTitle}>MyBalance</h2>
       <div className={styles.balanceContainer}>
+        {(nutritionData.calories === 0 &&
+          nutritionData.protein === 0 &&
+          nutritionData.carbo === 0 &&
+          nutritionData.fat === 0)? (
+            <div className={`${styles.noData} ${styles.fullWidth}`}>
+              <img src={empty} alt="No data icon" />
+              <p>영양 섭취 데이터가 없습니다.</p>
+              <button
+                className={styles.addButton}
+                onClick={() => navigate('/calendar', { state: { selectedDate: new Date().toISOString() } })}
+              >
+                식단 캘린더로
+              </button>
+            </div>
+          ):(
+            <>
         <div className={styles.summarySection}>
           <h3 className={styles.sectionTitle}>영양 섭취 요약</h3>
           <h5 className={styles.sectionTitle2}>최근 7일 영양소 평균</h5>
-          {nutritionData.calories === 0 &&
-          nutritionData.protein === 0 &&
-          nutritionData.carbo === 0 &&
-          nutritionData.fat === 0 ? (
-            <p>영양 섭취 데이터가 없습니다.</p>
-          ) : (
+          {nutritionData.calories !== 0 || nutritionData.protein !== 0 || nutritionData.carbo !== 0 || nutritionData.fat !== 0 ? (
             <>
               {/* Calories Progress Bar */}
               <div
@@ -369,7 +381,7 @@ function MyBalance() {
                 </div>
               </div>
             </>
-          )}
+          ) : null}
         </div>
         <div className={styles.chartSection}>
           <h3 className={styles.sectionTitle}>주간 {getNutrientLabel()} 섭취</h3>
@@ -446,6 +458,8 @@ function MyBalance() {
             </div>
           )}
         </div>
+        </>
+          )}
       </div>
     </div>
   );

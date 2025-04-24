@@ -160,12 +160,12 @@
   margin: 15px 0;
 }
 .noEvents img {
-  width: 10rem;
-  height: 10rem;
-  margin-bottom: 15px;
+  width: 25rem;
+  height: 25rem;
 }
 .addButton {
   padding: 10px 20px;
+  margin-top:30px;
   background-color: #2b6cb0;
   color: #fff;
   border: none;
