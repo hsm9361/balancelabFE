@@ -1,10 +1,7 @@
 /* CSS Variables for Consistency */
-.diet-consulting {
-  --diet-primary-color: #4A90E2;
+.dietConsultingResult {
+  --diet-primary-color: #2C5282;
   --diet-primary-light: #E6F0FA;
-  --diet-primary-dark: #357ABD;
-  --diet-accent-color: #50E3C2;
-  --diet-accent-dark: #40C4B4;
   --diet-text-primary: #1A3C6D;
   --diet-text-secondary: #5A7391;
   --diet-text-light: #A3BFFA;
@@ -23,7 +20,7 @@
 }
 
 /* Base Layout */
-.diet-consulting h1 {
+.dietConsultingResult h1 {
   text-align: center;
   color: var(--diet-text-primary);
   font-size: 2.5rem;
@@ -33,7 +30,7 @@
 }
 
 /* Analysis Section */
-.analysis-section {
+.analysisSection {
   background: var(--diet-background-gray);
   border-radius: var(--diet-border-radius);
   padding: 2rem;
@@ -41,7 +38,7 @@
   margin-bottom: 2rem;
 }
 
-.analysis-section h2 {
+.analysisSection h2 {
   text-align: center;
   color: var(--diet-text-primary);
   margin: 1rem 0;
@@ -49,7 +46,7 @@
 }
 
 /* Speech Bubble */
-.speech-bubble {
+.speechBubble {
   position: relative;
   background: var(--diet-background-light);
   border-radius: var(--diet-border-radius);
@@ -64,7 +61,7 @@
   border: 1px solid var(--diet-border-color);
 }
 
-.speech-bubble::after {
+.speechBubble::after {
   content: '';
   position: absolute;
   bottom: -15px;
@@ -74,11 +71,11 @@
 }
 
 /* Meal Recommendations Container */
-.meal-recommendations {
+.mealRecommendations {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  background: linear-gradient(to bottom, var(--diet-primary-light), var(--diet-background-gray));
+  background: var(--diet-background-gray);
   border-radius: var(--diet-border-radius);
   padding: 1.5rem;
   box-shadow: var(--diet-shadow);
@@ -86,7 +83,7 @@
 }
 
 /* Food Recommend */
-.food-recommend {
+.foodRecommend {
   flex: 1;
   min-width: 200px;
   background: var(--diet-background-light);
@@ -97,19 +94,19 @@
   border: 1px solid var(--diet-border-color);
 }
 
-.food-recommend:hover {
+.foodRecommend:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.meal-header {
+.mealHeader {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 1rem;
 }
 
-.meal-icon {
+.mealIcon {
   width: 36px;
   height: 36px;
   object-fit: cover;
@@ -118,23 +115,23 @@
   transition: transform 0.3s ease;
 }
 
-.meal-icon:hover {
+.mealIcon:hover {
   transform: scale(1.1);
 }
 
-.food-recommend h3 {
+.foodRecommend h3 {
   font-size: 1.5rem;
   color: var(--diet-text-primary);
   margin: 0;
 }
 
-.food-recommend ul {
+.foodRecommend ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.food-recommend li {
+.foodRecommend li {
   font-size: 1rem;
   color: var(--diet-text-secondary);
   padding: 0.5rem 0;
@@ -142,21 +139,24 @@
   padding-left: 20px;
 }
 
-.food-recommend li::before {
+.foodRecommend li::before {
   content: '•';
   position: absolute;
   left: 0;
-  color: var(--diet-accent-color);
+  color: var(--diet-primary-color);
 }
 
 /* Button Group */
-.button-group {
+.buttonGroup {
   text-align: center;
   margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
-.action-button {
-  background: linear-gradient(to bottom, var(--diet-primary-color), var(--diet-accent-color));
+.actionButton {
+  background: var(--diet-primary-color);
   color: var(--diet-text-light);
   border: none;
   padding: 0.8rem 2rem;
@@ -166,13 +166,33 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.action-button:hover {
+.actionButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.actionButton:disabled {
+  background: var(--diet-background-gray);
+  color: var(--diet-text-secondary);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.actionButton.return {
+  background: var(--diet-background-light);
+  color: var(--diet-text-primary);
+  border: 1px solid var(--diet-border-color);
+}
+
+.actionButton.return:hover {
+  background: var(--diet-background-gray);
   transform: scale(1.05);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Loading Spinner */
-.loading-container {
+.loadingContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -180,7 +200,7 @@
   min-height: 50vh;
 }
 
-.loading-spinner {
+.loadingSpinner {
   border: 6px solid var(--diet-background-gray);
   border-top: 6px solid var(--diet-primary-color);
   border-radius: 50%;
@@ -190,13 +210,13 @@
   margin-bottom: 1rem;
 }
 
-.loading-container p {
+.loadingContainer p {
   font-size: 1.2rem;
   color: var(--diet-text-primary);
 }
 
 /* Error Container */
-.error-container {
+.errorContainer {
   text-align: center;
   padding: 3rem;
   background: var(--diet-background-light);
@@ -227,13 +247,13 @@
   }
 }
 
-.fade-in {
+.fadeIn {
   animation: fadeIn 0.6s ease-out forwards;
 }
 
 /* Media Queries */
 @media (max-width: 992px) {
-  .meal-recommendations {
+  .mealRecommendations {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -241,63 +261,72 @@
 }
 
 @media (max-width: 768px) {
-  .diet-consulting {
+  .dietConsultingResult {
     padding: 1rem;
   }
 
-  .diet-consulting h1 {
+  .dietConsultingResult h1 {
     font-size: 2rem;
   }
 
-  .analysis-section {
+  .analysisSection {
     padding: 1.5rem;
   }
 
-  .meal-recommendations {
+  .mealRecommendations {
     padding: 1rem;
   }
 
-  .food-recommend {
+  .foodRecommend {
     padding: 0.8rem;
   }
 
-  .meal-icon {
+  .mealIcon {
     width: 32px;
     height: 32px;
     border-width: 1px;
   }
 
-  .food-recommend h3 {
+  .foodRecommend h3 {
     font-size: 1.4rem;
   }
 
-  .action-button {
+  .actionButton {
     padding: 0.6rem 1.5rem;
     font-size: 0.9rem;
   }
 }
 
 @media (max-width: 576px) {
-  .meal-recommendations {
+  .mealRecommendations {
     grid-template-columns: 1fr;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .actionButton {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .diet-consulting h1 {
+  .dietConsultingResult h1 {
     font-size: 1.8rem;
   }
 
-  .speech-bubble {
+  .speechBubble {
     padding: 1rem;
     font-size: 1rem;
   }
 
-  .food-recommend li {
+  .foodRecommend li {
     font-size: 0.95rem;
   }
 
-  .meal-icon {
+  .mealIcon {
     width: 28px;
     height: 28px;
   }

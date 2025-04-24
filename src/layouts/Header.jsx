@@ -18,6 +18,10 @@ const Header = memo(() => {
   const location = useLocation();
   const loginWindowRef = useRef(null);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]); // 경로가 변경될 때마다 실행
+
   const handleGoogleLogin = useCallback(() => {
     try {
       if (loginWindowRef.current) {

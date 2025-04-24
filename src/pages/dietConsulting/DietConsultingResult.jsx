@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { memberService } from '../../services/memberService';
-import '../../assets/css/pages/dietConsulting/DietConsultingResult.css'
+import styles from '../../assets/css/pages/dietConsulting/DietConsultingResult.module.css';
 import breakfastImg from 'assets/images/breakfast.png';
 import lunchImg from 'assets/images/lunch.png';
 import dinnerImg from 'assets/images/dinner.png';
 import snackImg from 'assets/images/snack.png';
+import useSaveAsPDF from '../../hooks/recommendAsPdf.js';
 
 const mealImages = {
   아침: breakfastImg,
@@ -14,7 +15,7 @@ const mealImages = {
   간식: snackImg,
 };
 
-function DietConsulting() {
+function DietConsultingResult() {
   const location = useLocation();
   const navigate = useNavigate();
   const [dietData, setDietData] = useState(null);
@@ -22,12 +23,13 @@ function DietConsulting() {
   const [memberId, setMemberId] = useState(null);
   const [error, setError] = useState(null);
   const [name, setName] = useState(null);
+  const { saveAsPDF, isSaving } = useSaveAsPDF('diet-analysis-content', 'AI의 식단 추천');
 
   const fetchMemberInfo = async () => {
     try {
       const data = await memberService.getMemberInfo();
       setMemberId(data.id);
-      setName(data.username);
+      setName(data.membername);
     } catch (err) {
       if (err.message === 'Authentication required') {
         localStorage.setItem('redirectPath', window.location.pathname);
@@ -81,20 +83,22 @@ function DietConsulting() {
 
   if (error) {
     return (
-      <div className="diet-consulting">
+      <div className={styles.dietConsultingResult}>
         <h1>오류 발생</h1>
         <p>{error}</p>
-        <button className="action-button" onClick={() => navigate('/')}>홈으로 돌아가기</button>
+        <button className={`${styles.actionButton} ${styles.return}`} onClick={() => navigate('/')}>
+          홈으로 돌아가기
+        </button>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="diet-consulting">
+      <div className={styles.dietConsultingResult}>
         <h1>데이터를 불러오는 중...</h1>
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
         </div>
       </div>
     );
@@ -102,9 +106,11 @@ function DietConsulting() {
 
   if (!dietData || dietData.error || !dietData['식단 추천']) {
     return (
-      <div className="diet-consulting">
+      <div className={styles.dietConsultingResult}>
         <h1>🙅‍♀️{dietData?.error || '데이터를 불러올 수 없습니다'}🙅‍♂️</h1>
-        <button className="action-button" onClick={() => navigate('/')}>홈으로 돌아가기</button>
+        <button className={`${styles.actionButton} ${styles.return}`} onClick={() => navigate('/')}>
+          홈으로 돌아가기
+        </button>
       </div>
     );
   }
@@ -114,50 +120,61 @@ function DietConsulting() {
   const mealTypes = ['아침', '점심', '저녁', '간식'];
 
   return (
-    <div className="diet-consulting">
-      <h1>🍽️ {name}님의 식단 추천</h1>
+    <div className={styles.dietConsultingResult}>
+      <div id="diet-analysis-content">
+        <h1>🍽️ {name}님의 식단 추천</h1>
 
-      <div className="analysis-section">
-        <h2>건강 위험도 분석</h2>
-        <div className="speech-bubble">{riskAnalysis}</div>
+        <div className={styles.analysisSection}>
+          <h2>건강 위험도 분석</h2>
+          <div className={styles.speechBubble}>{riskAnalysis}</div>
 
-        <h2>목표 기반 추천</h2>
-        <div className="speech-bubble">{goalRec}</div>
+          <h2>목표 기반 추천</h2>
+          <div className={styles.speechBubble}>{goalRec}</div>
 
-        <h2>식단 추천</h2>
-        <div className="meal-recommendations">
-          {mealTypes.map((mealType) => (
-            <div className="food-recommend" key={mealType}>
-              <div className="meal-header">
-                <img src={mealImages[mealType]} alt={mealType} className="meal-icon" />
-                <h3>
-                  {mealType === '아침' && '🥚'}
-                  {mealType === '점심' && '🍔'}
-                  {mealType === '저녁' && '🍖'}
-                  {mealType === '간식' && '🍩'}
-                  {mealType}
-                </h3>
+          <h2>식단 추천</h2>
+          <div className={styles.mealRecommendations}>
+            {mealTypes.map((mealType) => (
+              <div className={styles.foodRecommend} key={mealType}>
+                <div className={styles.mealHeader}>
+                  <img src={mealImages[mealType]} alt={mealType} className={styles.mealIcon} />
+                  <h3>
+                    {mealType === '아침' && '🥚'}
+                    {mealType === '점심' && '🍔'}
+                    {mealType === '저녁' && '🍖'}
+                    {mealType === '간식' && '🍩'}
+                    {mealType}
+                  </h3>
+                </div>
+                <ul>
+                  {meals[mealType]?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
               </div>
-              <ul>
-                {meals[mealType]?.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <h2>주의사항</h2>
+          <div className={styles.speechBubble}>{caution}</div>
         </div>
-
-        <h2>주의사항</h2>
-        <div className="speech-bubble">{caution}</div>
       </div>
-
-      <div className="button-group">
-        <button className="action-button" onClick={() => navigate('/healthprediction')}>
+      <div className={styles.buttonGroup}>
+        <button
+          className={`${styles.actionButton} ${styles.return}`}
+          onClick={() => navigate('/healthprediction')}
+        >
           돌아가기
+        </button>
+        <button
+          className={styles.actionButton}
+          onClick={saveAsPDF}
+          disabled={isSaving}
+        >
+          {isSaving ? 'PDF 저장 중...' : 'PDF로 저장'}
         </button>
       </div>
     </div>
   );
 }
 
-export default DietConsulting;
+export default DietConsultingResult;
