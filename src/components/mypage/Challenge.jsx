@@ -418,25 +418,32 @@ function Challenge() {
           </div>
 
           <div className={styles.section}>
-            <label className={styles.label}>목표 체중 (kg)</label>
-            <span className={styles.currentWeightLabel}>
-              🏋️ 현재 몸무게 {userWeight ? `${userWeight}kg` : '로딩 중...'}
-            </span>
-            <div className={styles.inputGroup}>
-              <input
-                type="number"
-                placeholder="목표 체중"
-                value={targetWeight}
-                onChange={(e) => setTargetWeight(e.target.value)}
-                min="1"
-                step="1"
-                className={styles.input}
-              />
-              <span className={`${styles.weightChangeLabel} ${styles[weightChangeClass]}`}>
-                {weightChangeLabel}
-              </span>
-            </div>
-          </div>
+  <label className={styles.label}>목표 체중 (kg)</label>
+  <div className={styles.weightRow}>
+    {/* 왼쪽: 현재 몸무게 */}
+    <div className={styles.weightColumn}>
+      <div className={styles.inputLikeBox}>
+        🏋️ 현재 몸무게 {userWeight ? `${userWeight}kg` : '로딩 중...'}
+      </div>
+    </div>
+
+    {/* 오른쪽: 목표 체중 + 변화 레이블 */}
+    <div className={styles.weightColumn} style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <input
+        type="number"
+        placeholder="목표 체중"
+        value={targetWeight}
+        onChange={(e) => setTargetWeight(e.target.value)}
+        min="1"
+        step="1"
+        className={styles.input}
+      />
+      <span className={`${styles.weightChangeLabel} ${styles[weightChangeClass]}`}>
+        {weightChangeLabel && `${weightChangeLabel}`}
+      </span>
+    </div>
+  </div>
+</div>
 
           <div className={styles.buttonContainer}>
             <button
