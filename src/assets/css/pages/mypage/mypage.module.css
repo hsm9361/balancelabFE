@@ -357,6 +357,7 @@ body {
   color: white;
   font-weight: bold;
   font-size: 16px;
+  padding: 0px !important;
 }
 
 :global(.react-calendar__navigation button:enabled:hover,
