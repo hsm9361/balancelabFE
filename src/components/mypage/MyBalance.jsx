@@ -326,20 +326,6 @@ function MyBalance() {
               {/* Other Nutrients Grid */}
               <div className={styles.nutritionCards}>
                 <div
-                  className={`${styles.nutritionCard} ${selectedNutrient === 'protein' ? styles.active : ''}`}
-                  onClick={() => setSelectedNutrient('protein')}
-                >
-                  <div className={styles.nutritionIcon}>🥩</div>
-                  <div className={styles.nutritionInfo}>
-                    <div className={styles.nutritionValue}>
-                      {Math.round(nutritionData.protein / 7 * 100) / 100}g
-                    </div>
-                    <div className={styles.nutritionLabel}>
-                      단백질 (목표: {Math.round(goalNutrition.goalProtein || 0)}g)
-                    </div>
-                  </div>
-                </div>
-                <div
                   className={`${styles.nutritionCard} ${selectedNutrient === 'carbo' ? styles.active : ''}`}
                   onClick={() => setSelectedNutrient('carbo')}
                 >
@@ -350,6 +336,20 @@ function MyBalance() {
                     </div>
                     <div className={styles.nutritionLabel}>
                       탄수화물 (목표: {Math.round(goalNutrition.goalCarbo || 0)}g)
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`${styles.nutritionCard} ${selectedNutrient === 'protein' ? styles.active : ''}`}
+                  onClick={() => setSelectedNutrient('protein')}
+                >
+                  <div className={styles.nutritionIcon}>🥩</div>
+                  <div className={styles.nutritionInfo}>
+                    <div className={styles.nutritionValue}>
+                      {Math.round(nutritionData.protein / 7 * 100) / 100}g
+                    </div>
+                    <div className={styles.nutritionLabel}>
+                      단백질 (목표: {Math.round(goalNutrition.goalProtein || 0)}g)
                     </div>
                   </div>
                 </div>
