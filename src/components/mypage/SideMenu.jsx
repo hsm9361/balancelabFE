@@ -10,15 +10,6 @@ function SideMenu({ activeTab, setActiveTab }) {
 
   const menuItems = [
     { id: 'myInfo', name: '내정보', icon: <FaCircleUser /> },
-    // {
-    //   id: 'calendar',
-    //   name: '식단표',
-    //   icon: <FaCalendarAlt />,
-    //   subMenu: [
-    //     { id: 'calendar-week', name: '주간 식단표' },
-    //     { id: 'calendar-month', name: '월간 식단표' },
-    //   ],
-    // },
     { id: 'myBalance', name: 'MyBalance', icon: <HiDocumentReport /> },
     { id: 'challenge', name: 'Challenge', icon: <HiDocumentAdd /> },
   ];

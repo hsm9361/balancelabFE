@@ -20,9 +20,15 @@ dayjs.locale('ko');
 
 function CalendarPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
-  const [date, setDate] = useState(new Date());
+  const { isAuthenticated, user } = useAuth();
+  
+  // location.state에서 selectedDate를 받아 초기 date 설정
+  const initialDate = location.state?.selectedDate
+    ? new Date(location.state.selectedDate)
+    : new Date();
+  const [date, setDate] = useState(initialDate);
+  
   const [viewMode, setViewMode] = useState('month');
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
@@ -251,6 +257,20 @@ function CalendarPage() {
   const toggleCalendarVisibility = () => {
     setIsCalendarVisible((prev) => !prev);
   };
+
+  // selectedDate가 변경될 때 date 상태 및 이벤트 업데이트
+  useEffect(() => {
+    if (location.state?.selectedDate) {
+      const selectedDate = new Date(location.state.selectedDate);
+      if (!isNaN(selectedDate.getTime())) {
+        setDate(selectedDate);
+        if (isAuthenticated) {
+          handleDateChange(selectedDate);
+          fetchDietEvents(selectedDate, viewMode);
+        }
+      }
+    }
+  }, [location.state, isAuthenticated, handleDateChange, fetchDietEvents, viewMode]);
 
   useEffect(() => {
     const { minDate, maxDate } = getDateRange(date, viewMode);
