@@ -110,7 +110,7 @@
 
 
 .description {
-  font-size: clamp(1rem, 2.5vw, 1.5rem); /* 반응형 폰트 */
+  font-size: clamp(1rem, 2.5vw, 1.2rem); /* 반응형 폰트 */
   color: #4A5568;
   font-weight: 400;
   line-height: 1.5;
