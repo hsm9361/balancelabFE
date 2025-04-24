@@ -16,11 +16,12 @@
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   padding: 32px;
-  max-width: 600px;
+  max-width: 650px;
   width: 100%;
   transition: transform 0.3s ease;
   margin-bottom: 24px;
   margin-top: 0px;
+  background: #ffffff;
 }
 
 .card:hover {
@@ -125,11 +126,18 @@
   color: #6c757d;
 }
 
+/* 현재 몸무게 라벨 */
+.currentWeightLabel {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #7d91a5;
+}
+
 /* 버튼 컨테이너 */
 .buttonContainer {
   display: flex;
-  justify-content: center;
-  margin-top: 24px;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 
 /* 등록 버튼 */
@@ -248,8 +256,9 @@
   padding: 24px;
   position: relative;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
+  overflow: visible;
   margin-bottom: 16px;
+  background: #ffffff;
 }
 
 .challengeCard:hover {
@@ -263,6 +272,8 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
+  position: relative;
+  justify-content: space-between;
 }
 
 /* 목표 아이콘 */
@@ -276,11 +287,18 @@
   font-weight: 600;
   color: #3b5a7a;
   margin: 0;
+  flex: 1;
+  text-align: left;
+
 }
 
 /* 진행률 컨테이너 */
 .progressContainer {
   margin: 16px 0;
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 /* 진행률 바 */
@@ -289,7 +307,28 @@
   border-radius: 8px;
   height: 8px;
   overflow: hidden;
-  width: 100%;
+  width: calc(100% - 28px);
+  position: relative;
+}
+
+/* 진행률 0% 텍스트 */
+.progressZero {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* 진행률 텍스트 */
+.progressText {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* 진행률 텍스트 컨테이너 */
+.progressTextContainer {
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 28px);
+  margin-top: 4px;
 }
 
 .progressFill {
@@ -298,65 +337,162 @@
   transition: width 0.5s ease-in-out;
 }
 
-/* 진행률 텍스트 */
-.progressText {
-  display: block;
-  font-size: 0.8rem;
-  color: #6c757d;
-  margin-top: 4px;
-  text-align: right;
-}
-
 /* 챌린지 세부 정보 */
 .challengeDetails {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-/* 챌린지 세부 항목 */
-.challengeDetail {
+/* 챌린지 테이블 */
+.challengeTable {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 0.9rem;
   color: #6c757d;
-  margin: 0;
+}
+
+/* 챌린지 행 */
+.challengeRow {
+  display: flex;
+}
+
+/* 챌린지 셀 */
+.challengeCell {
+  flex: 1;
+  padding: 4px 8px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* 세부 항목 아이콘 */
-.detailIcon {
-  font-size: 1rem;
-  color: #4a90e2;
-}
-
-/* 챌린지 정보 */
-.challengeInfo {
+/* 챌린지 텍스트 */
+.challengeText {
   flex: 1;
+  font-size: 0.9rem;
+  color: #6c757d;
 }
 
-/* 실패 버튼 */
-.failButton {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  padding: 8px 24px;
-  font-size: 0.9rem;
+/* 더보기 버튼 */
+.moreButton {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1.2rem;
   font-weight: 500;
+  color: #6c757d;
+  background: #e6ecef;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.moreButton:hover:not(:disabled) {
+  background: #d5dde4;
+  transform: translateY(-2px);
+}
+
+.moreButton:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 드롭다운 메뉴 */
+.dropdownMenu {
+  position: absolute;
+  top: 100%; /* 버튼 바로 아래 */
+  right: 0;
+  margin-top: 4px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  padding: 4px 0;
+  min-width: 36px; /* 버튼과 너비 같게 */
+  width: 36px;
+  animation: slideDown 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 중단 버튼 */
+.failButton {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1rem;
+  color: #d9534f;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.failButton:hover {
+  background: #f8e9e9;
+}
+
+
+.failButton:hover:not(:disabled) {
+  background: #c9302c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+.failButton:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.failButtonIcon {
+  font-size: 0.9rem;
+}
+
+/* 챌린지 시작하기 버튼 */
+.startChallengeButton {
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 600;
   color: white;
-  background: linear-gradient(90deg, #d9534f, #c9302c);
+  background: linear-gradient(90deg, #4a90e2, #6baaf1);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.failButton:hover:not(:disabled) {
-  background: linear-gradient(90deg, #c9302c, #b22222);
+.startChallengeButton:hover:not(:disabled) {
+  background: linear-gradient(90deg, #4a90e2, #5a7896);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.4);
+  box-shadow: 0 4px 12px rgba(59, 90, 122, 0.3);
 }
 
-.failButton:disabled {
+.startChallengeButton:disabled {
   background: #6c757d;
   cursor: not-allowed;
   opacity: 0.6;
@@ -381,12 +517,31 @@
 
 /* 챌린지 없음 메시지 */
 .noChallenges {
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  padding: 32px;
+  max-width: 650px;
+  width: 100%;
+  transition: transform 0.3s ease;
+  margin-bottom: 24px;
+  background: #ffffff;
   text-align: center;
   font-size: 1rem;
-  color: #6c757d;
-  padding: 20px;
-  background: #e6ecef;
-  border-radius: 8px;
+  color: #3b5a7a;
+}
+
+.noChallenges:hover {
+  transform: translateY(-4px);
+}
+
+.noChallenges p {
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+
+/* 챌린지 정보 */
+.challengeInfo {
+  flex: 1;
 }
 
 /* 몸무게 히스토리 섹션 */
@@ -431,7 +586,7 @@
   margin-bottom: 16px;
 }
 
-/* 챌린지 테이블 */
+/* 챌린지 테이블 (과거 챌린지용) */
 .challengeTable {
   width: 100%;
   border-collapse: collapse;
@@ -454,7 +609,7 @@
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  text-align : center;
+  text-align: left;
 }
 
 .challengeTable tr {
@@ -467,7 +622,7 @@
 
 .challengeTable td {
   vertical-align: middle;
-  text-align : center;
+  text-align: left;
 }
 
 .challengeTable .goalIcon {
@@ -497,6 +652,7 @@
 
   .buttonContainer {
     flex-direction: column;
+    align-items: flex-end;
   }
 
   .registerButton {
@@ -506,13 +662,6 @@
 
   .challengeCard {
     padding: 20px;
-  }
-
-  .failButton {
-    position: static;
-    width: 100%;
-    margin-top: 16px;
-    padding: 12px;
   }
 
   .challengeDetails {
@@ -542,5 +691,44 @@
 
   .challengeTable .goalIcon {
     font-size: 1rem;
+  }
+
+  .challengeRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .challengeCell {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .moreButton {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .dropdownMenu {
+    min-width: 100px;
+    right: -8px;
+  }
+
+  .failButton {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .startChallengeButton {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .noChallenges {
+    padding: 24px;
+  }
+
+  .currentWeightLabel {
+    width: 100%;
   }
 }
