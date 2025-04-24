@@ -6,6 +6,7 @@ import breakfastImg from 'assets/images/breakfast.png';
 import lunchImg from 'assets/images/lunch.png';
 import dinnerImg from 'assets/images/dinner.png';
 import snackImg from 'assets/images/snack.png';
+import useSaveAsPDF from '../../hooks/recommendAsPdf.js'; // 훅 임포트
 
 const mealImages = {
   아침: breakfastImg,
@@ -23,12 +24,13 @@ function DietConsulting() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState(null);
+  const { saveAsPDF, isSaving } = useSaveAsPDF('diet-analysis-content', 'AI의 식단 추천');
 
   const fetchMemberInfo = async () => {
     try {
       const data = await memberService.getMemberInfo();
       setMemberId(data.id);
-      setName(data.username);
+      setName(data.membername);
     } catch (err) {
       if (err.message === 'Authentication required') {
         localStorage.setItem('redirectPath', window.location.pathname);
@@ -119,74 +121,82 @@ function DietConsulting() {
 
   return (
     <div className="diet-consulting">
-      <h1>🍽️ {name}님의 식단 추천</h1>
+      <div id="diet-analysis-content">
+        <h1>🍽️ {name}님의 식단 추천</h1>
 
-      <div className="analysis-section">
-        <h2>건강 위험도 분석</h2>
-        <div className="speech-bubble">{riskAnalysis}</div>
+        <div className="analysis-section">
+          <h2>건강 위험도 분석</h2>
+          <div className="speech-bubble">{riskAnalysis}</div>
 
-        <h2>목표 기반 추천</h2>
-        <div className="speech-bubble">{goalRec}</div>
+          <h2>목표 기반 추천</h2>
+          <div className="speech-bubble">{goalRec}</div>
 
-        <h2>식단 추천</h2>
+          <h2>식단 추천</h2>
+          <div className="food-recommend">
+            <div className="meal-header">
+              <img src={mealImages['아침']} alt="Breakfast" className="meal-icon" />
+              <h3>🥚아침</h3>
+            </div>
+            <ul>
+              {meals?.['아침']?.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
         <div className="food-recommend">
-        <div className="meal-header">
-          <img src={mealImages['아침']} alt="Breakfast" className="meal-icon" />
-          <h3>🥚아침</h3>
+          <div className="meal-header">
+            <img src={mealImages['점심']} alt="Lunch" className="meal-icon" />
+            <h3>🍔점심</h3>
+          </div>
+          <ul>
+            {meals['점심']?.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
         </div>
-        <ul>
-          {meals?.['아침']?.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </div>
 
-      <div className="food-recommend">
-        <div className="meal-header">
-          <img src={mealImages['점심']} alt="Lunch" className="meal-icon" />
-          <h3>🍔점심</h3>
+        <div className="food-recommend">
+          <div className="meal-header">
+            <img src={mealImages['저녁']} alt="Dinner" className="meal-icon" />
+            <h3>🍖저녁</h3>
+          </div>
+          <ul>
+            {meals['저녁']?.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
         </div>
-        <ul>
-          {meals['점심']?.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </div>
 
-      <div className="food-recommend">
-        <div className="meal-header">
-          <img src={mealImages['저녁']} alt="Dinner" className="meal-icon" />
-          <h3>🍖저녁</h3>
+        <div className="food-recommend">
+          <div className="meal-header">
+            <img src={mealImages['간식']} alt="Snack" className="meal-icon" />
+            <h3>🍩간식</h3>
+          </div>
+          <ul>
+            {meals['간식']?.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
         </div>
-        <ul>
-          {meals['저녁']?.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </div>
 
-      <div className="food-recommend">
-        <div className="meal-header">
-          <img src={mealImages['간식']} alt="Snack" className="meal-icon" />
-          <h3>🍩간식</h3>
+          <h2>주의사항</h2>
+          <div className="speech-bubble">{caution}</div>
         </div>
-        <ul>
-          {meals['간식']?.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
       </div>
-
-        <h2>주의사항</h2>
-        <div className="speech-bubble">{caution}</div>
-      </div>
-
       <div className="button-group">
         <button 
           className="back-button"
           onClick={() => navigate('/healthprediction')}
         >
           돌아가기
+        </button>
+        <button
+          className="save-pdf-button"
+          onClick={saveAsPDF}
+          disabled={isSaving}
+        >
+          {isSaving ? 'PDF 저장 중...' : 'PDF로 저장'}
         </button>
       </div>
     </div>

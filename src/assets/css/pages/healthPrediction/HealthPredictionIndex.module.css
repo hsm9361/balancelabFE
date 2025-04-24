@@ -214,7 +214,7 @@
  }
 
  .saveButton {
-  background: linear-gradient(90deg, #7fb3ff 0%, #50e3c2 100%);
+  background-color: #2C5282;
   color: white;
   display: flex;
   align-items: center;

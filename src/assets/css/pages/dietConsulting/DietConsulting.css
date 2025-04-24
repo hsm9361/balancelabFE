@@ -118,7 +118,7 @@
   width: 100%;
   padding: 1.2rem;
   font-size: 1.1rem;
-  background-color: #3498DB;
+  background-color: #2c5282;
   color: white;
   border: none;
   border-radius: 10px;
@@ -127,7 +127,7 @@
 }
 
 .recommend-button:hover {
-  background-color: #2980B9;
+  background-color: rgba(25, 90, 170, 0.827);
   transform: translateY(-2px);
 }
 
@@ -246,6 +246,14 @@
   transition: transform 0.3s ease;
 }
 
+.food-recommend ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+.food-recommend li {
+  list-style-type: none !important;
+}
+
 .food-recommend:hover {
   transform: translateY(-5px);
 }
@@ -311,14 +319,6 @@
   padding: 0.1rem 0;
   position: relative;
   padding-left: 20px;
-}
-
-.food-recommend li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: #4a90e2;
-  font-size: 1.2rem;
 }
 
 /* Button Group */
@@ -450,4 +450,26 @@
   .food-recommend li {
     font-size: 1rem;
   }
+}
+
+.save-pdf-button {
+  background-color: #2c5282;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.save-pdf-button:hover {
+  background: rgba(25, 90, 170, 0.827);
+  transform: translateY(-2px);
+}
+
+
+.save-pdf-button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
 }

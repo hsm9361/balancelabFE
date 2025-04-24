@@ -122,7 +122,7 @@ function HealthPredictionIndex() {
   }
 
   return (
-    <div className={styles.healthPrediction}>
+    <div className="health-prediction">
       <header className={styles.header}>
         <h1 className={styles.title}>맞춤형 건강 예측</h1>
         <p className={styles.description}>
@@ -204,7 +204,7 @@ function HealthPredictionIndex() {
             onClick={handleProceedToForm}
             disabled={isSubmitting}
           >
-            건강 예측 시작 <img src={Predict} alt="예측" className={styles.planeIcon} />
+            건강 예측
           </button>
         </div>
       </form>

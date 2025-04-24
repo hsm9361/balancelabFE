@@ -173,32 +173,38 @@
 }
 
 .result-item {
-  margin-bottom: 1.5rem;
-  padding: 1.2rem;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 1s ease-in-out;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+}
+
+.result-item:hover {
+  transform: translateY(-4px);
 }
 
 .result-item p {
-  margin: 0.5rem 0;
-  font-size: 1.2rem;
-  color: #4A5568;
+  font-size: 1.1rem;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .warning {
-  color: #d93025 !important;
+  color: #dc2626 !important;
   font-weight: 600;
 }
 
 .medium {
-  color: #f9ab00 !important;
+  color: #f59e0b !important;
   font-weight: 600;
 }
 
 .safe {
-  color: #27ae60 !important;
+  color: #10b981 !important;
   font-weight: 600;
 }
 
@@ -383,41 +389,41 @@
   justify-content: center;
 }
 
-.back-button {
-  padding: 0.8rem 2rem;
+
+.back-button,
+.consult-button {
+  padding: 0.75rem 2rem;
   font-size: 1rem;
-  background-color: #4CAF50;
-  color: white;
+  font-weight: 500;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+  background: #6b7280;
+  color: #ffffff;
 }
 
 .back-button:hover {
-  background-color: #45a049;
+  background: #4b5563;
+  transform: translateY(-2px);
 }
 
 .consult-button {
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  background: #2c5282;
+  color: #ffffff;
 }
 
 .consult-button:hover {
-  background-color: #1976D2;
+  background: rgba(25, 90, 170, 0.827);
+  transform: translateY(-2px);
 }
 
 .consult-button:disabled {
-  background-color: #BDBDBD;
+  background: #d1d5db;
   cursor: not-allowed;
-}
-
-.consult-button:disabled:hover {
-  background-color: #BDBDBD;
+  transform: none;
 }
