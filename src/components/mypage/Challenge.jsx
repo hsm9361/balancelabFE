@@ -518,6 +518,7 @@ function Challenge() {
                         </span>
                       </span>
                     </td>
+                    <td className={styles.challengeCell}></td>
                   </tr>
                   <tr className={styles.challengeRow}>
                     <td className={styles.challengeCell}>
@@ -530,6 +531,7 @@ function Challenge() {
                         🏁 종료 날짜: {new Date(ongoingChallenge.endDate + 'T00:00:00').toLocaleDateString()}
                       </span>
                     </td>
+                    <td className={styles.challengeCell}></td>
                   </tr>
                   <tr className={styles.challengeRow}>
                     <td className={styles.challengeCell}>
