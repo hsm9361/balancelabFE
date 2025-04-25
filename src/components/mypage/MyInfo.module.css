@@ -227,21 +227,25 @@
 }
 
 .saveButton {
-  background-color: #1e3a8a;
-  color: white;
+  background-color: #f2f5ff;
+  border: 1px solid #1e3a8a;
+  color: #1e3a8a;
 }
 
 .saveButton:hover {
   background-color: #2447a8ab;
+  color: white;
 }
 
 .cancelButton {
-  background-color: #dc3545;
-  color: white;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  background: #ffeff0;
 }
 
 .cancelButton:hover {
   background-color: #c82333;
+  color: white;
 }
 
 .retryButton {
