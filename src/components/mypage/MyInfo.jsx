@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { FaUser, FaCalendarAlt } from 'react-icons/fa';
 import Select from 'react-select';
 import { useForm, Controller } from 'react-hook-form';
@@ -14,6 +14,8 @@ import { getImageUrl } from '../../utils/imageUtils';
 const MyInfo = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [isFormReady, setIsFormReady] = useState(false);
+  const calendarRef = useRef(null);
+  const inputRef = useRef(null);
 
   const {
     control,
@@ -26,7 +28,7 @@ const MyInfo = () => {
       membername: '',
       height: '',
       weight: '',
-      birthDate: '', // 초기값을 빈 문자열로 설정
+      birthDate: '',
       gender: null,
       activityLevel: null,
     },
@@ -80,6 +82,14 @@ const MyInfo = () => {
 
   const { bmi, status } = calculateBMI(height, weight);
 
+  // 로컬 시간대에 맞는 날짜 포맷팅 함수
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     const loadMemberInfo = async () => {
       try {
@@ -89,7 +99,7 @@ const MyInfo = () => {
             membername: memberInfo.membername || '',
             height: memberInfo.height || '',
             weight: memberInfo.weight || '',
-            birthDate: memberInfo.birthDate || '1990-01-01', // 서버 데이터 우선
+            birthDate: memberInfo.birthDate || '1990-01-01',
             gender: memberInfo.gender || null,
             activityLevel: memberInfo.activityLevel || null,
           });
@@ -101,7 +111,7 @@ const MyInfo = () => {
           membername: '',
           height: '',
           weight: '',
-          birthDate: '1990-01-01', // 에러 시 기본값
+          birthDate: '1990-01-01',
           gender: null,
           activityLevel: null,
         });
@@ -110,6 +120,24 @@ const MyInfo = () => {
     };
     loadMemberInfo();
   }, [fetchMemberInfo, reset]);
+
+  // 캘린더 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
+        setShowCalendar(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleImageChange = useCallback((e) => {
     const file = e.target.files[0];
@@ -292,16 +320,17 @@ const MyInfo = () => {
                         value={field.value || ''}
                         onChange={(e) => field.onChange(e.target.value)}
                         onFocus={() => setShowCalendar(true)}
+                        ref={inputRef}
                       />
                       <FaCalendarAlt
                         className={styles.calendarIcon}
                         onClick={() => setShowCalendar(!showCalendar)}
                       />
-                      {showCalendar && birthDate && (
-                        <div className={styles.calendarContainer}>
+                      {showCalendar && (
+                        <div className={styles.calendarContainer} ref={calendarRef}>
                           <Calendar
                             onChange={(date) => {
-                              const formattedDate = date.toISOString().split('T')[0];
+                              const formattedDate = formatDate(date);
                               field.onChange(formattedDate);
                               setShowCalendar(false);
                             }}
