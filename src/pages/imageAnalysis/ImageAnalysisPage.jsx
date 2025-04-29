@@ -20,6 +20,15 @@ function ImageAnalysisPage() {
   const navigate = useNavigate();
   const { uploadImage, loading } = useImageUpload('');
 
+  // 파일 형식 에러 처리
+  const handleInvalidFile = (message) => {
+    setModalState({
+      isOpen: true,
+      title: '잘못된 파일 형식',
+      message: message,
+    });
+  };
+
   const handleAnalysis = async () => {
     if (!selectedImage) {
       setModalState({
@@ -42,12 +51,16 @@ function ImageAnalysisPage() {
       });
     } catch (err) {
       console.error('Analysis error:', err.message);
-      setModalState({
-        isOpen: true,
-        onConfirm: false,
-        title: '분석 오류',
-        message: err.message || '분석 중 오류가 발생했습니다.',
-      });
+      // 서버에서 반환된 파일 형식 에러인지 확인
+      if (err.message.includes('허용된 방식이 아닙니다')) {
+        handleInvalidFile(err.message); // 파일 형식 에러를 모달에 표시
+      } else {
+        setModalState({
+          isOpen: true,
+          title: '분석 오류',
+          message: err.message || '분석 중 오류가 발생했습니다.',
+        });
+      }
     }
   };
 
@@ -70,7 +83,8 @@ function ImageAnalysisPage() {
             setSelectedImage={setSelectedImage}
             previewUrl={previewUrl}
             setPreviewUrl={setPreviewUrl}
-            disabled={loading} // 로딩 중 파일 업로드 비활성화
+            disabled={loading}
+            onInvalidFile={handleInvalidFile} // 콜백 전달
           />
         </section>
         <section className={styles.infoColumn}>
@@ -80,7 +94,7 @@ function ImageAnalysisPage() {
       <AnalysisInfoSection
         selectedImage={selectedImage}
         handleAnalysis={handleAnalysis}
-        disabled={loading} // 로딩 중 분석 버튼 비활성화
+        disabled={loading}
       />
       <FooterSection />
       {loading && <LoadingSpinner />}

@@ -7,24 +7,24 @@
   flex-direction: column;
   align-items: center;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* --font-family */
- }
+}
 
- /* Header */
- .header {
+/* Header */
+.header {
   text-align: center;
   margin-bottom: 40px;
   max-width: 800px;
- }
+}
 
- .title {
+.title {
   font-size: 2.5rem;
   font-weight: 700;
   color: #2D3748; /* --text-primary */
   margin-bottom: 10px;
   position: relative;
- }
+}
 
- .title::after {
+.title::after {
   content: '';
   position: absolute;
   bottom: -8px;
@@ -34,16 +34,16 @@
   height: 3px;
   background: #7FB3FF; /* --primary-light */
   animation: underline 1.5s ease-in-out infinite alternate;
- }
+}
 
- .description {
+.description {
   font-size: 1.2rem;
   color: #4A5568; /* --text-secondary */
   line-height: 1.6;
- }
+}
 
- /* Guide card */
- .guideCard {
+/* Guide card */
+.guideCard {
   background: #ffffff; /* --background-white */
   border-radius: 20px; /* --radius-lg */
   padding: 30px;
@@ -52,47 +52,47 @@
   width: 100%;
   margin-bottom: 30px;
   transition: all 0.3s ease; /* --transition-normal */
- }
+}
 
- .guideCard:hover {
+.guideCard:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
- }
+}
 
- .guideTitle {
+.guideTitle {
   font-size: 1.5rem;
   font-weight: 600;
   color: #2C5282; /* --primary-color */
   margin-bottom: 20px;
- }
+}
 
- .guideList {
+.guideList {
   list-style: none;
   padding: 0;
   color: #4A5568; /* --text-secondary */
   font-size: 1rem;
   line-height: 1.8;
- }
+}
 
- .guideList li {
+.guideList li {
   position: relative;
   padding-left: 40px;
   margin-bottom: 15px;
   display: flex;
   align-items: center;
- }
+}
 
- .guideList li:last-child {
+.guideList li:last-child {
   margin-bottom: 0;
- }
+}
 
- .guideIcon {
+.guideIcon {
   font-size: 1.5rem;
   color: #7FB3FF; /* --primary-light */
   margin-right: 10px;
- }
+}
 
- /* Form styling */
- .predictionForm {
+/* Form styling */
+.predictionForm {
   width: 100%;
   max-width: 800px;
   background: #ffffff; /* --background-white */
@@ -100,37 +100,56 @@
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* --shadow-sm */
   transition: all 0.3s ease; /* --transition-normal */
- }
+}
 
- .predictionForm:hover {
+.predictionForm:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
- }
+}
 
- /* Form group */
- .formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* Form title */
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2C5282; /* --primary-color */
   margin-bottom: 20px;
- }
+  text-align: center;
+}
 
- .formGroup label {
+/* Form group */
+.formGroup {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.formGroup label {
   font-size: 1rem;
   font-weight: 600;
   color: #2D3748; /* --text-primary */
- }
+  width: 120px; /* Fixed width for labels */
+  text-align: right;
+}
 
- .formGroup span {
+.formGroup span {
   font-size: 1rem;
   color: #2D3748; /* --text-primary */
   padding: 12px;
   background: #f9fafb;
   border-radius: 15px; /* --radius-md */
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
- }
+  flex: 1;
+}
 
- /* Inputs */
- .formGroup input[type="number"] {
+/* Input wrapper for alignment */
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inputs */
+.formGroup input[type="number"] {
   padding: 12px;
   border: 2px dashed #7FB3FF; /* --primary-light */
   border-radius: 15px; /* --radius-md */
@@ -139,42 +158,42 @@
   box-sizing: border-box;
   background: #f9fafb;
   transition: all 0.3s ease; /* --transition-normal */
- }
+}
 
- .formGroup input[type="number"]:hover {
+.formGroup input[type="number"]:hover {
   border-color: #2C5282; /* --primary-color */
- }
+}
 
- .formGroup input[type="number"]:focus {
+.formGroup input[type="number"]:focus {
   border: 2px solid #2C5282; /* --primary-color */
   box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.2);
   outline: none;
- }
+}
 
- .inputError {
+.inputError {
   border-color: #dc3545;
- }
+}
 
- /* Error text */
- .errorText {
+/* Error text */
+.errorText {
   font-size: 0.9rem;
   color: #dc3545;
   margin-top: 5px;
- }
+}
 
- /* Button group */
- .buttonGroup {
+/* Button group */
+.buttonGroup {
   display: flex;
   gap: 15px;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 30px;
- }
+}
 
- /* Buttons */
- .consultButton,
- .backButton,
- .saveButton {
+/* Buttons */
+.consultButton,
+.backButton,
+.saveButton {
   padding: 12px 30px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -183,133 +202,152 @@
   cursor: pointer;
   transition: all 0.3s ease; /* --transition-normal */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* --shadow-sm */
- }
+}
 
- .consultButton {
+.consultButton {
   background: linear-gradient(90deg, #2C5282 0%, #7FB3FF 100%); /* --primary-color, --primary-light */
   color: white;
- }
+}
 
- .consultButton:hover:not(:disabled) {
+.consultButton:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
- }
+}
 
- .consultButton:disabled {
+.consultButton:disabled {
   background: #d1d5db; /* --border-color */
   color: #6b7280;
   cursor: not-allowed;
   box-shadow: none;
- }
+}
 
- .backButton {
+.backButton {
   background: #6b7280;
   color: white;
- }
+}
 
- .backButton:hover:not(:disabled) {
+.backButton:hover:not(:disabled) {
   background: #4b5563;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
- }
+}
 
- .saveButton {
-  background: linear-gradient(90deg, #7fb3ff 0%, #50e3c2 100%);
+.saveButton {
+  background-color: #2C5282;
   color: white;
   display: flex;
   align-items: center;
   gap: 8px;
- }
+}
 
- .saveButton:hover:not(:disabled) {
+.saveButton:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* --shadow-md */
- }
+}
 
- .planeIcon {
+.planeIcon {
   width: 1.2rem;
   height: 1.2rem;
- }
+}
 
- /* Loading and error states */
- .loading {
+/* Loading and error states */
+.loading {
   font-size: 1.2rem;
   font-weight: bold;
   color: #007bff;
- }
+}
 
- .error {
+.error {
   font-size: 1.2rem;
   font-weight: bold;
   color: #dc3545;
- }
+}
 
- /* Animations */
- @keyframes underline {
+/* Animations */
+@keyframes underline {
   0% {
-   transform: translateX(-50%) scaleX(0);
+    transform: translateX(-50%) scaleX(0);
   }
   100% {
-   transform: translateX(-50%) scaleX(1);
+    transform: translateX(-50%) scaleX(1);
   }
- }
+}
 
- @keyframes fadeIn {
+@keyframes fadeIn {
   from {
-   opacity: 0;
-   transform: translateY(20px);
+    opacity: 0;
+    transform: translateY(20px);
   }
   to {
-   opacity: 1;
-   transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
   }
- }
+}
 
- /* Responsive design */
- @media (max-width: 768px) {
+/* Responsive design */
+@media (max-width: 768px) {
   .healthPrediction {
-   padding: 20px 15px;
+    padding: 20px 15px;
   }
 
   .title {
-   font-size: 2rem;
+    font-size: 2rem;
   }
 
   .description {
-   font-size: 1rem;
+    font-size: 1rem;
   }
 
   .guideCard {
-   padding: 20px;
+    padding: 20px;
   }
 
   .guideTitle {
-   font-size: 1.3rem;
+    font-size: 1.3rem;
   }
 
   .guideList li {
-   padding-left: 30px;
-   font-size: 0.9rem;
+    padding-left: 30px;
+    font-size: 0.9rem;
   }
 
   .guideIcon {
-   font-size: 1.2rem;
+    font-size: 1.2rem;
   }
 
   .predictionForm {
-   padding: 20px;
+    padding: 20px;
+  }
+
+  .formTitle {
+    font-size: 1.5rem;
+  }
+
+  .formGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .formGroup label {
+    width: auto;
+    text-align: left;
+  }
+
+  .inputWrapper {
+    width: 100%;
   }
 
   .buttonGroup {
-   flex-direction: column;
-   align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .consultButton,
   .backButton,
   .saveButton {
-   width: 100%;
-   max-width: 300px;
-   padding: 10px 20px;
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 20px;
   }
- }
+}

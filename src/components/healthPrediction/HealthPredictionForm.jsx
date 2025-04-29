@@ -84,9 +84,9 @@ function HealthPredictionForm({ onSubmit }) {
           </div>
         </div>
 
-        <div className={styles.formGroup2}>
+        <div className={styles.formGroup}>
           <label>일주일에 몇 번 술을 드시나요?</label>
-          <div className={styles.radioGroup2}>
+          <div className={styles.radioGroup}>
             {['0', '1', '2', '3', '4', '5', '6', '7'].map((value) => (
               <label key={value}>
                 <input
@@ -103,9 +103,9 @@ function HealthPredictionForm({ onSubmit }) {
           </div>
         </div>
 
-        <div className={styles.formGroup2}>
+        <div className={styles.formGroup}>
           <label>일주일에 몇 번 운동하시나요?</label>
-          <div className={styles.radioGroup2}>
+          <div className={styles.radioGroup}>
             {['0', '1', '2', '3', '4', '5', '6', '7'].map((value) => (
               <label key={value}>
                 <input
