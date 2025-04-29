@@ -77,10 +77,10 @@ balancelabFE/
 
 ---
 
-##  기타
+##  관련 저장소
 
-백엔드 레포: [balancelabBE](https://github.com/hsm9361/balancelabBE)  
-개발
+- [BalanceLab BE (백엔드)](https://github.com/hsm9361/balancelabBE)  
+- [BalanceLab ML (머신러닝 모델)](https://github.com/hsm9361/balancelabML)
 
 ---
 
