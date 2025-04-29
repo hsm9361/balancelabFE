@@ -80,7 +80,7 @@ balancelabFE/
 ##  기타
 
 백엔드 레포: [balancelabBE](https://github.com/hsm9361/balancelabBE)  
-개발발
+개발
 
 ---
 
