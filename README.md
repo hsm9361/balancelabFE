@@ -7,8 +7,7 @@ React를 기반으로 구현되었으며, 사용자 식단 등록, 분석 결과
 ## 시연영상(url)
 - [BalanceLab 시연영상(유튜브링크)](유튜브주소)
 ## 산출물(PDF)
-- [Balance Lab.pdf](https://github.com/user-attachments/files/19986954/Balance.Lab.pdf)
-
+- [BalanceLab 포트폴리오](https://drive.google.com/file/d/10AD9D3i2jcFcyxUQTC4aaBBlIYszh8hx/view?usp=sharing)
 ---
 
 ##  사용 기술
