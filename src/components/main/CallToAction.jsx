@@ -13,7 +13,6 @@ const CallToAction = ({ navigate }) => {
             <p className={styles.description}>
                 매일 식단을 등록하면, AI가 영양소를 분석하고 건강의 나침반이 되어줄 거예요.  
                 지금, 더 나은 나를 향한 탐험을 시작해볼까요?
-                문구를 수정했어요
             </p>
             <button
                 className={styles.analyzeButton}
